@@ -196,7 +196,15 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	public void updateStationMaster(@Valid StationMasterVo stationVo) {
 		StationEo stationEo = stationMasterRepo.findByStationCode(stationVo.getStationCode());
 		
+		boolean e=stationEo.isActive();
+		boolean b=stationVo.getStatus();
 		
+		if(stationVo.getStationName().equalsIgnoreCase(stationEo.getStationName() ))
+		{
+			int c=Boolean.compare(e, b);
+			if(c==0)
+				return;
+		}
 
 		List<StationEo> eoData = stationMasterRepo.findAll();
 		if (eoData.size() > 0) {
@@ -218,8 +226,19 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	@Transactional
 	@Override
 	public void updateRegionMaster(RegionMasterVo regionVo) {
+		
+		
 
 		RegionEo regionEo = regionMasterRepo.findByRegionCode(regionVo.getRegionCode());
+		boolean e=regionEo.isActive();
+		boolean b=regionVo.getStatus();
+		
+		if(regionVo.getRegionName().equalsIgnoreCase(regionEo.getRegionName() ))
+		{
+			int c=Boolean.compare(e, b);
+			if(c==0)
+				return;
+		}
 		List<RegionEo> eoData = regionMasterRepo.findAll();
 		if (eoData.size() > 0) {
 			for (RegionEo eo : eoData) {
@@ -242,7 +261,20 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	@Transactional
 	@Override
 	public void updateSchoolMaster(@Valid SchoolMasterUpdateReqVO reqVO) {
+		
+		
 		SchoolMasterEO schoolEo = schoolMasterRepo.findById(reqVO.getId()).get();
+		
+		boolean e=schoolEo.isSchoolStatus();
+		boolean b=reqVO.getStatus();
+		
+		if(reqVO.getSchoolName().equalsIgnoreCase(schoolEo.getSchoolName() ))
+		{
+			int c=Boolean.compare(e, b);
+			if(c==0)
+				return;
+		}
+		
 		List<SchoolMasterEO> eoData = schoolMasterRepo.findAll();
 		if (eoData.size() > 0) {
 			for (SchoolMasterEO eo : eoData) {
@@ -266,17 +298,34 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	@Transactional
 	@Override
 	public void updateStationCategoryMaster(@Valid CategoryMasterVo categoryVo) {
+		
+     CategoryEo eo = categoryMasterRepository.findById(categoryVo.getId()).get();
+     
+     boolean e=eo.isActive();
+		boolean b=categoryVo.getStatus();
+		
+
+		if(categoryVo.getCategoryName().equalsIgnoreCase(eo.getCategoryName()))
+		{
+
+			int c=Boolean.compare(e, b);
+			if(c==0)
+				return;
+		}
+		
+		
 		List<CategoryEo> eoData = categoryMasterRepository.findAll();
 		if (eoData.size() > 0) {
-			for (CategoryEo eo : eoData) {
-				if (categoryVo.getCategoryName().equalsIgnoreCase(eo.getCategoryName())) {
+			for (CategoryEo eo1 : eoData) {
+				if (categoryVo.getCategoryName().equalsIgnoreCase(eo1.getCategoryName())) {
 					throw new SchoolCodeAlreadyExistException(
-							eo.getCategoryName() + " category name is already present.");
+							eo1.getCategoryName() + " category name is already present.");
 				}
 
 			}
 		}
-		CategoryEo eo = categoryMasterRepository.findById(categoryVo.getId()).get();
+		
+		
 		eo.setCategoryName(categoryVo.getCategoryName().toUpperCase());
 		eo.setActive(categoryVo.getStatus());
 		eo.setUpdatedDate(UneecopsDateUtils.getCurrentTimeStamp());
@@ -287,6 +336,18 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	public void saveStaffTypeMaster(@Valid StaffTypeMasterReqVO staffTypeMasterReqVO) {
 
 		System.out.println("StaffTypeMasterReqVO ->" + staffTypeMasterReqVO.getStaffType());
+		
+		List<StaffTypeMasterEO> list = staffTypeMasterRepository.findAll();
+		  
+		  for(StaffTypeMasterEO s:list)
+		  {
+			  if(s.getStaffType().equalsIgnoreCase(staffTypeMasterReqVO.getStaffType()))
+					  {
+				 throw new SchoolCodeAlreadyExistException(
+							s.getStaffType() +  "  is already present.");
+					  }
+		  }
+		
 		StaffTypeMasterEO staffTypeEO = new StaffTypeMasterEO();
 		staffTypeEO.setStaffType(staffTypeMasterReqVO.getStaffType().toUpperCase());
 		staffTypeEO.setStatus(staffTypeMasterReqVO.isStatus());
@@ -298,6 +359,18 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	@Override
 	public void updateStaffTypeMaster(@Valid StaffTypeUpdateMasterReqVO staffTypeUpdateReqVO) {
 		Optional<StaffTypeMasterEO> eo = staffTypeMasterRepository.findById(staffTypeUpdateReqVO.getId());
+		
+		List<StaffTypeMasterEO> list = staffTypeMasterRepository.findAll();
+		  
+		  for(StaffTypeMasterEO s:list)
+		  {
+			  if(s.getStaffType().equalsIgnoreCase(eo.get().getStaffType()))
+					  {
+				 throw new SchoolCodeAlreadyExistException(
+							s.getStaffType() +  "  is already present.");
+					  }
+		  }
+		
 		eo.get().setStaffType(staffTypeUpdateReqVO.getStaffType());
 		eo.get().setStatus(staffTypeUpdateReqVO.getStatus());
 		eo.get().setUpdatedDate(UneecopsDateUtils.getCurrentTimeStamp());
@@ -307,6 +380,19 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	@Override
 	public void saveDesignationMaster(@Valid DesignationMasterReqVO designationMasterReqVO) {
 		DesignationMasterEO designationEO = new DesignationMasterEO();
+		
+		
+		 List<DesignationMasterEO> list = designationMasterRepository.findAll();
+		  
+		  for(DesignationMasterEO s:list)
+		  {
+			  if(s.getPostCode().equalsIgnoreCase(designationMasterReqVO.getPostCode())&& s.getPostName().equalsIgnoreCase(designationMasterReqVO.getPostName()))
+					  {
+				 throw new SchoolCodeAlreadyExistException(
+							s.getPostCode() + " And " +s.getPostName()+ "  is already present.");
+					  }
+		  }
+		
 		designationEO.setPostCode(designationMasterReqVO.getPostCode().toUpperCase());
 		designationEO.setPostName(designationMasterReqVO.getPostName().toUpperCase());
 		designationEO.setStatus(true);
@@ -319,6 +405,20 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	public void updateDesignationMaster(@Valid DesignationUpdateMasterReqVO designationUpdateReqVO) {
 		Optional<DesignationMasterEO> designationMasterEO = designationMasterRepository
 				.findById(designationUpdateReqVO.getId());
+		
+
+		 List<DesignationMasterEO> list = designationMasterRepository.findAll();
+		  
+		  for(DesignationMasterEO s:list)
+		  {
+			  if(s.getPostCode().equalsIgnoreCase(designationMasterEO.get().getPostCode())&& s.getPostName().equalsIgnoreCase(designationMasterEO.get().getPostName()))
+					  {
+				 throw new SchoolCodeAlreadyExistException(
+							s.getPostCode() + " And " +s.getPostName()+ "  is already present.");
+					  }
+		  }
+		
+		
 		designationMasterEO.get().setPostCode(designationUpdateReqVO.getPostCode().toUpperCase());
 		designationMasterEO.get().setPostName(designationUpdateReqVO.getPostName().toUpperCase());
 		designationMasterEO.get().setStatus(designationUpdateReqVO.getStatus());
@@ -328,6 +428,16 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	@Override
 	public void saveSubjectMaster(@Valid SubjectMasterReqVO subjectMasterReqVO) {
 		SubjectMasterEO subMasterEO = new SubjectMasterEO();
+  List<SubjectMasterEO> list = subjectMasterRepository.findAll();
+  
+  for(SubjectMasterEO s:list)
+  {
+	  if(s.getSubjectCode().equalsIgnoreCase(subjectMasterReqVO.getSubjectCode())&& s.getSubjectName().equalsIgnoreCase(subjectMasterReqVO.getSubjectName()))
+			  {
+		 throw new SchoolCodeAlreadyExistException(
+					s.getSubjectCode() + " And " +s.getSubjectName()+"  is already present.");
+			  }
+  }
 		subMasterEO.setSubjectCode(subjectMasterReqVO.getSubjectCode().toUpperCase());
 		subMasterEO.setSubjectName(subjectMasterReqVO.getSubjectName().toUpperCase());
 		// subMasterEO.setDescription(subjectMasterReqVO.getDescription());
@@ -340,6 +450,18 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	@Override
 	public void updateSubjectMaster(@Valid SubjectMasterUpdateReqVO subUpdateReqVO) {
 		Optional<SubjectMasterEO> subMasterEO = subjectMasterRepository.findById(subUpdateReqVO.getId());
+		
+		 List<SubjectMasterEO> list = subjectMasterRepository.findAll();
+		  
+		  for(SubjectMasterEO s:list)
+		  {
+			  if(s.getSubjectCode().equalsIgnoreCase(subMasterEO.get().getSubjectCode())&& s.getSubjectName().equalsIgnoreCase(subMasterEO.get().getSubjectName()))
+					  {
+				 throw new SchoolCodeAlreadyExistException(
+							s.getSubjectCode() + " And " +s.getSubjectName()+"  is already present.");
+					  }
+		  }
+		
 		subMasterEO.get().setSubjectCode(subUpdateReqVO.getSubjectCode().toUpperCase());
 		subMasterEO.get().setSubjectName(subUpdateReqVO.getSubjectName().toUpperCase());
 //		subMasterEO.get().setDescription(subUpdateReqVO.getDescription());
