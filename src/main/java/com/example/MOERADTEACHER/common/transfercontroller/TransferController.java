@@ -46,6 +46,7 @@ import com.example.MOERADTEACHER.common.transfermodel.TransferHistory;
 import com.example.MOERADTEACHER.common.transfermodel.TransferKVTeacherDetails;
 import com.example.MOERADTEACHER.common.transferservice.TransferImpl;
 import com.example.MOERADTEACHER.common.util.ApiPaths;
+import com.example.MOERADTEACHER.common.util.CustomObjectMapper;
 import com.example.MOERADTEACHER.common.util.CustomResponse;
 import com.example.MOERADTEACHER.common.util.ResponseEntityBeans;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -61,6 +62,10 @@ public class TransferController {
 
 	@Value("${userBucket.path}")
 	private String UPLOADED_FOLDER;
+	
+	@Autowired
+	CustomObjectMapper customObjectMapper;
+	
 
 	@RequestMapping(value = "/saveTeacherTransfer", method = RequestMethod.POST)
 	public ResponseEntity<CustomResponse> saveTeacherTransfer(@RequestBody String data,
@@ -368,6 +373,9 @@ public class TransferController {
 	@RequestMapping(value = "/getDocumentByTeacherId", method = RequestMethod.POST)
 	public ResponseEntity<?> getDocumentByTeacherId(@RequestHeader("username") String username,
 			@RequestBody String data) throws Exception {
+		
+		System.out.println("Techer Id--->"+data);
+		
 		return ResponseEntity.ok(transferImpl.getDocumentByTeacherId(data));
 	}
 
@@ -474,6 +482,14 @@ public class TransferController {
 	public ResponseEntity<CustomResponse> getInitiatedTransferByUdisecode(@RequestBody String data) throws Exception {		
 		return ResponseEntity.ok(ResponseEntityBeans.reponseBoject(1, "sucess", transferImpl.getInitiatedTransferByUdisecode(data), HttpStatus.OK.toString()));
 	}
+	
+	
+	@RequestMapping(value = "/getInitiatedTransferByKvCode", method = RequestMethod.POST)
+	public ResponseEntity<CustomResponse> getInitiatedTransferByKvCode(@RequestBody String data) throws Exception {		
+		Map<String,Object>  dataObj=customObjectMapper.getMapObject(data);
+		return ResponseEntity.ok(ResponseEntityBeans.reponseBoject(1, "sucess", transferImpl.getInitiatedTransferByKvCode(String.valueOf(dataObj.get("kvCode"))), HttpStatus.OK.toString()));
+	}
+	
 	
 	@RequestMapping(value = "/resetTransfer", method = RequestMethod.POST)
 	public ResponseEntity<CustomResponse> resetTransfer(@RequestBody String data) throws Exception {		

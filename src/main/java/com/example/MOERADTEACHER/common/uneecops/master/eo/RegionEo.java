@@ -28,6 +28,8 @@ public class RegionEo {
 	private Timestamp updatedDate;
 	@Column(name="is_active")
 	private boolean isActive;
+	@Column(name="region_type")
+	private Integer regionType;
 	
 	public int getRegionCode() {
 		return regionCode;
@@ -76,6 +78,12 @@ public class RegionEo {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public Integer getRegionType() {
+		return regionType;
+	}
+	public void setRegionType(Integer regionType) {
+		this.regionType = regionType;
 	}
 	
 	

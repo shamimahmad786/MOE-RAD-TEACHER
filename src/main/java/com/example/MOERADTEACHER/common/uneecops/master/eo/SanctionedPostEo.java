@@ -139,6 +139,7 @@ public class SanctionedPostEo {
 
 	
 	
+	
 	@Column(name="school_code")
 	private int schoolCode;
 	
@@ -176,5 +177,17 @@ public class SanctionedPostEo {
 	
 	@Column(name="updated_by")
 	private String updatedBy;
+	
+	@Column(name="freezed_sanction_post")
+	private Integer freezedSanctionPost;
+
+	public Integer getFreezedSanctionPost() {
+		return freezedSanctionPost;
+	}
+
+	public void setFreezedSanctionPost(Integer freezedSanctionPost) {
+		this.freezedSanctionPost = freezedSanctionPost;
+	}
+	
 
 	}

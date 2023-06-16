@@ -22,7 +22,7 @@ public interface StaffTypeMasterRepository extends JpaRepository<StaffTypeMaster
 	Optional<StaffTypeMasterEO> findById(Integer id);
 
 	@Query("Select new com.example.MOERADTEACHER.common.uneecops.master.vo.StaffTypeMasterResVO"
-			+ "(s.id, s.staffType, s.status) from StaffTypeMasterEO s where s.status = :status")
+			+ "(s.id, s.staffType, s.status) from StaffTypeMasterEO s where s.status = :status order by s.staffType")
 	
 	List<StaffTypeMasterResVO> findActiveAndInactiveStaffType(@Param("status") Boolean status);
 

@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("unee-api/v1/mapping/master")
+@RequestMapping("/unee-api/v1/mapping/master")
 public class UneecopsMasterPostSubjectMappingController {
 	@Autowired
 	private PostSubjectMappingService postSubjectMappingService;
@@ -45,5 +45,10 @@ public class UneecopsMasterPostSubjectMappingController {
 		log.debug("Request received in PostSubjectMappingController --> fetchPostSubjectMappingList()"+ postSubjectMappingSearchListReqVO.toString());
 		return new ResponseEntity<>(postSubjectMappingService.fetchPostSubjectMappingListWithStaffDetails(postSubjectMappingSearchListReqVO, pageable),HttpStatus.OK);
 	}
+	
+
+	
+	
+	
 
 }

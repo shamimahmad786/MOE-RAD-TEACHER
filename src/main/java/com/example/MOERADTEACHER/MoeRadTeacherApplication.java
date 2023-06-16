@@ -31,6 +31,5 @@ public class MoeRadTeacherApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MoeRadTeacherApplication.class, args);
 		LOGGER.info("Simple log statement with inputs {}, {} and {}", 1,2,3);
-	
 	}
 }

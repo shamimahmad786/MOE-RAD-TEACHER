@@ -26,7 +26,7 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.StationCategoryMappin
 //import com.example.MOERADTEACHER.common.uneecops.master.vo.StationCategoryMappingReqVO;
 import lombok.extern.slf4j.Slf4j;
 @RestController
-@RequestMapping("unee-api/v1/mapping/save")
+@RequestMapping("/unee-api/v1/mapping/save")
 @Slf4j
 public class UneecopsMasterMappingController {
 

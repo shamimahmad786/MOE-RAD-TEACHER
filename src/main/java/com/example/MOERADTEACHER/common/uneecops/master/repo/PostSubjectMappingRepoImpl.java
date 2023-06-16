@@ -26,57 +26,62 @@ public class PostSubjectMappingRepoImpl implements  PostSubjectMappingRepo{
 		StringBuilder select = new StringBuilder(
 		
 				"SELECT new com.example.MOERADTEACHER.common.uneecops.master.vo.PostSubjectMappingSearchResponseVO(");
-		select.append("st.id, ");
+//		select.append("st.id, ");
 		select.append("dm.id, ");
 		select.append("sm.id, ");
-		select.append("st.staffType, ");
+//		select.append("st.staffType, ");
 		select.append("dm.postCode, ");
 		select.append("dm.postName, ");
 		select.append("sm.subjectCode, ");
 		select.append("sm.subjectName)");
 		
 		StringBuilder from = new StringBuilder();
-		from.append(" from PostSubjectMappingEo psm inner join DesignationMasterEO dm on psm.postId=dm.id inner join SubjectMasterEO sm on sm.id=psm.subjectId inner join StaffTypePostMappingEO stpm on stpm.designationId=psm.postId ,StaffTypeMasterEO st");
-		String where = "";
-		if (reqVO.getPostName() != null) {
-			where += " where dm.postName =:postName ";
-
-		}
-		if (reqVO.getSubjectName()!= null) {
-			where += where.isEmpty() ? " where sm.subjectName =:subjectName "
-					: " and sm.subjectName =:subjectName";
-		}
+//		from.append(" from PostSubjectMappingEo psm inner join DesignationMasterEO dm on psm.postId=dm.id inner join SubjectMasterEO sm on sm.id=psm.subjectId inner join StaffTypePostMappingEO stpm on stpm.designationId=psm.postId ,StaffTypeMasterEO st");
+		from.append(" from PostSubjectMappingEo psm , SubjectMasterEO sm, DesignationMasterEO dm  ");
+		
+		String where = " where psm.subjectId=sm.id and dm.id= psm.postId  Order by dm.postName  ";
+//		if (reqVO.getPostName() != null) {
+//			where += " where dm.postName =:postName ";
+//
+//		}
+//		if (reqVO.getSubjectName()!= null) {
+//			where += where.isEmpty() ? " where sm.subjectName =:subjectName "
+//					: " and sm.subjectName =:subjectName";
+//		}
 
 		
 		select.append(from);
+		
+//		select.append(" where ");
 		select.append(where);
 		
-		select.append(" Order By psm.createdDate desc ");
+//		select.append(" Order By psm.createdDate desc ");
 		
+		System.out.println(select.toString());
 		
-		 Query query = entityManager.createQuery(select.toString(), PostSubjectMappingSearchResponseVO.class)
-				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
+		 Query query = entityManager.createQuery(select.toString(), PostSubjectMappingSearchResponseVO.class);
+//				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
 		
-		String countStr = "Select count (psm.id) As count ";
-		String qry = countStr + from + where;
-
-		Query query1 = entityManager.createQuery(qry);
-
-		if (reqVO.getPostName() != null) {
-			query.setParameter("postName", reqVO.getPostName());
-			query1.setParameter("postName", reqVO.getPostName());
-		}
-		if (reqVO.getSubjectName() != null) {
-			query.setParameter("subjectName", reqVO.getSubjectName());
-			query1.setParameter("subjectName", reqVO.getSubjectName());
-		}
+//		String countStr = "Select count (psm.id) As count ";
+//		String qry = countStr + from + where;
+//
+//		Query query1 = entityManager.createQuery(qry);
+//
+//		if (reqVO.getPostName() != null) {
+//			query.setParameter("postName", reqVO.getPostName());
+//			query1.setParameter("postName", reqVO.getPostName());
+//		}
+//		if (reqVO.getSubjectName() != null) {
+//			query.setParameter("subjectName", reqVO.getSubjectName());
+//			query1.setParameter("subjectName", reqVO.getSubjectName());
+//		}
 		
 		List<PostSubjectMappingSearchResponseVO> list = query.getResultList();
-		List<Long> list2 = query1.getResultList();
-		long count = list2.isEmpty() ? 0 : list2.get(0);
+//		List<Long> list2 = query1.getResultList();
+//		long count = list2.isEmpty() ? 0 : list2.get(0);
 		
 		
-		return new PageImpl<PostSubjectMappingSearchResponseVO>(list, pageable, count);
+		return new PageImpl<PostSubjectMappingSearchResponseVO>(list);
 
 	}
 

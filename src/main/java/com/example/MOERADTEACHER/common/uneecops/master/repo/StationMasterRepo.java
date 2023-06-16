@@ -16,11 +16,11 @@ public interface StationMasterRepo extends JpaRepository<StationEo, Integer> {
 
 	
 	@Query(value = "SELECT new com.example.MOERADTEACHER.common.uneecops.master.vo.StationMasterResVo"
-			+ "(s.id, s.stationCode, s.stationName, s.isActive) FROM StationEo s where s.isActive = :status", nativeQuery = false)
+			+ "(s.id, s.stationCode, s.stationName, s.isActive) FROM StationEo s where s.isActive = :status order by s.stationName", nativeQuery = false)
 	List<StationMasterResVo> findStationCodeAndStationName(@Param("status") Boolean status);
 
 	@Query(value = "SELECT new com.example.MOERADTEACHER.common.uneecops.master.vo.StationMasterResVo"
-			+ "(s.id, s.stationCode, s.stationName, s.isActive) FROM StationEo s order by s.createdDate desc ")
+			+ "(s.id, s.stationCode, s.stationName, s.isActive) FROM StationEo s order by s.stationCode ")
 	List<StationMasterResVo> findListOfStationCodeAndStationName();
 
 	Optional<StationEo> findById(Integer id);

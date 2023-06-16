@@ -1,5 +1,7 @@
 package com.example.MOERADTEACHER.common.uneecops.master.service;
 
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -35,4 +37,6 @@ public interface SanctionedPostService {
 
 	SanctionedPostSchoolCodeCheckResponeseVo CheckSanctionedPostSchoolCodeExistOrNot(
 			SanctionedPostSchoolCodeCheckRequestVo sanctionedPostSchoolCodeCheckRequestVo);
+	
+	public Map<String,Object> freezeSanctionPost(Map<String,Object> data);
 }

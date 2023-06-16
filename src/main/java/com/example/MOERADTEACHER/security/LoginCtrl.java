@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,7 +37,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RestController
 //@RequestMapping(ApiPaths.LoginCtrl.CTRL)
 @RequestMapping("/api/login")
-@CrossOrigin(origins = {"https://kvsdemo.udiseplus.gov.in/","https://kvsonlinetransfer.kvs.gov.in","http://10.25.26.251:4200","http://10.25.26.10:4200","http://10.25.26.10:6200","http://demo.sdmis.gov.in","http://pgi.seshagun.gov.in","https://pgi.udiseplus.gov.in","http://pgi.udiseplus.gov.in","https://demopgi.udiseplus.gov.in","https://dashboard.seshagun.gov.in/","https://dashboard.udiseplus.gov.in"}, allowedHeaders = "*",allowCredentials = "true")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://10.25.26.251:4200/","https://kvsdemo.udiseplus.gov.in/","https://kvsonlinetransfer.kvs.gov.in","http://10.25.26.251:4200","http://10.25.26.10:4200","http://10.25.26.10:6200","http://demo.sdmis.gov.in","http://pgi.seshagun.gov.in","https://pgi.udiseplus.gov.in","http://pgi.udiseplus.gov.in","https://demopgi.udiseplus.gov.in","https://dashboard.seshagun.gov.in/","https://dashboard.udiseplus.gov.in"}, allowedHeaders = "*",allowCredentials = "true")
 public class LoginCtrl {
 	
 	private final AuthenticationManager authenticationManager;
@@ -72,7 +74,7 @@ public class LoginCtrl {
 	}
 
 	@RequestMapping(value = "/sign-in", method = RequestMethod.POST)
-	public ResponseEntity<TokenResponse> login(@RequestBody String data,@RequestHeader("username") String username) throws Exception {
+	public ResponseEntity<?> login(@RequestBody String data,@RequestHeader("username") String username) throws Exception {
 // System.out.println("call  for sigin");@RequestBody LoginRequest request
 		ObjectMapper mapperObj = new ObjectMapper();
 		LoginRequest request=new LoginRequest();
@@ -89,8 +91,15 @@ public class LoginCtrl {
 		System.out.println("In login request--->"+request.getUsername());
 		System.out.println("Password--->"+request.getPassword());
 		
+		try {
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			 return ResponseEntity
+		            .status(HttpStatus.UNAUTHORIZED)
+		            .body("Invalid userId and password");
+		}
  System.out.println("After authenticat--->");
 		final User user = userRepository.findByUsername(request.getUsername());
 		final String token = jwtTokenUtil.generateToken(user);

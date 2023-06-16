@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,8 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.StaffTypePostMappingR
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StaffTypePostMappingSearchReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StationCategoryMappingSearchReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StationCategoryMappingSearchResVO;
+import com.example.MOERADTEACHER.common.util.NativeRepository;
+import com.example.MOERADTEACHER.common.util.QueryResult;
 @Repository
 public class MappingRepositoryIMPL implements MappingRepository{
 
@@ -26,6 +29,9 @@ public class MappingRepositoryIMPL implements MappingRepository{
 
 	@PersistenceContext
 	EntityManager entityManager;
+	
+	@Autowired
+	NativeRepository nativeRepository;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -68,11 +74,14 @@ public class MappingRepositoryIMPL implements MappingRepository{
 		select.append(from);
 		select.append(where);
 		
-		select.append(" Order By rsm.createdDate desc ");
+		select.append(" Order By mr.regionName, ms.stationName ");
 		
 		
-		 Query query = entityManager.createQuery(select.toString(), RegionStationMappingSearchResponseVO.class)
-				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
+		System.out.println("Query---"+select.toString());
+		
+		
+		 Query query = entityManager.createQuery(select.toString(), RegionStationMappingSearchResponseVO.class);
+//				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
 		
 		String countStr = "Select count (rsm.id) As ct ";
 		String qry = countStr + from + where;
@@ -100,10 +109,26 @@ public class MappingRepositoryIMPL implements MappingRepository{
 		List<Long> list2 = query1.getResultList();
 		long count = list2.isEmpty() ? 0 : list2.get(0);
 		
-		
+		System.out.println(list.size());
 		return new PageImpl<RegionStationMappingSearchResponseVO>(list, pageable, count);
 	}
 
+	
+	public QueryResult fetchSanctionPost(RegionStationMappingSearchListReqVO data) {
+		String query=null;
+		QueryResult res=null;
+		if(data.getRegionCode()==0) {
+			query="select stpm.stafftype_id ,md.post_code , md.post_name ,ms.subject_code , ms.subject_name ,     sum(spm.sanctioned_post ) as sanctioned_post,     sum( spm.occupied_post) as occupied_post,     sum(spm.vacant) as vacant,     sum( spm.surplus  ) as surplus from uneecops.sanctioned_post_mapping spm ,uneecops.m_designation md , uneecops.m_subject ms  , uneecops.staff_type_post_mapping stpm , uneecops.m_schools ms2 ,kv.kv_school_master ksm where spm.post_id = md.id      and  spm.subject_id = ms.id      and stpm.designation_id = md.id      and spm.post_id = stpm.designation_id      and spm.school_code = ms2.kv_code      and spm.shift::numeric = ms2.shift::numeric      and ksm.kv_code = ms2.kv_master_kv_code      and ksm.region_code = '7'      and (spm.sanctioned_post > 0  or spm.occupied_post > 0)      group by stpm.stafftype_id ,md.post_code , md.post_name ,ms.subject_code , ms.subject_name";
+		}
+		try {
+		 res=nativeRepository.executeQueries(query);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return res;
+	}
+	
+	
 	@Override
 	public Page<StationCategoryMappingSearchResVO> searchStationCategoryMappingList(
 			StationCategoryMappingSearchReqVO reqVO, Pageable pageable) throws Exception {
@@ -137,11 +162,13 @@ public class MappingRepositoryIMPL implements MappingRepository{
 		select.append(from);
 		select.append(where);
 		
-		select.append(" Order By scm.createdDate desc ");
+		select.append(" Order By sm.stationName ");
 		
 		
-		 Query query = entityManager.createQuery(select.toString(), StationCategoryMappingSearchResVO.class)
-				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
+		System.out.print(select.toString());
+		
+		 Query query = entityManager.createQuery(select.toString(), StationCategoryMappingSearchResVO.class);
+//				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
 		
 		String countStr = "Select count (scm.id) As ct ";
 		String qry = countStr + from + where;
@@ -208,8 +235,8 @@ public class MappingRepositoryIMPL implements MappingRepository{
 		select.append(" Order By ssm.createdDate desc ");
 		
 		
-		 Query query = entityManager.createQuery(select.toString(), SchoolStationMappingSearchResVO.class)
-				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
+		 Query query = entityManager.createQuery(select.toString(), SchoolStationMappingSearchResVO.class);
+//				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
 		
 		String countStr = "Select count (ssm.id) As ct ";
 		String qry = countStr + from + where;
@@ -229,6 +256,8 @@ public class MappingRepositoryIMPL implements MappingRepository{
 			query1.setParameter("schoolName", reqVO.getSchoolName());
 		}
 		
+		
+		System.out.println("query--->"+query);
 		
 		List<SchoolStationMappingSearchResVO> list = query.getResultList();
 		List<Long> list2 = query1.getResultList();
@@ -273,7 +302,7 @@ public class MappingRepositoryIMPL implements MappingRepository{
 		select.append(from);
 		select.append(where);
 		
-		select.append(" Order By stp.createdDate desc ");
+		select.append(" Order By st.staffType desc ,d.postName,d.postCode ");
 		
 		
 		 Query query = entityManager.createQuery(select.toString(), StaffTypePostMappingResVO.class)

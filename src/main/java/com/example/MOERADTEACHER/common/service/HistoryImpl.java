@@ -51,71 +51,64 @@ public class HistoryImpl {
 							
 										+ "'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from teacher_profile where teacher_id="+teacherId;
 											
-			
-//		System.out.println("query1--->"+query1);
-		
 				nativeRepository.insertQueries(query1);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 //			
-			try {
-		
-		
-		String query2="insert into  history.teacher_awards_history (id,award_by,award_name,award_year,remarks,teacher_id,award_id,verify_flag,modified_by,modified_time,ipaddress,created_by,created_time)  select id,award_by,award_name,award_year,remarks,teacher_id,award_id,verify_flag,modified_by,modified_time,'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from public.teacher_awards where teacher_id="+teacherId;
-		
-//		System.out.println("query2--->"+query2);
-		
-				nativeRepository.insertQueries(query2);
-			}catch(Exception ex) {
-				ex.printStackTrace();
-			}
+//			try {
+//		
+//		
+//		String query2="insert into  history.teacher_awards_history (id,award_by,award_name,award_year,remarks,teacher_id,award_id,verify_flag,modified_by,modified_time,ipaddress,created_by,created_time)  select id,award_by,award_name,award_year,remarks,teacher_id,award_id,verify_flag,modified_by,modified_time,'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from public.teacher_awards where teacher_id="+teacherId;
+//	
+//		
+//				nativeRepository.insertQueries(query2);
+//			}catch(Exception ex) {
+//				ex.printStackTrace();
+//			}
 ////			
-			try {
-		
-		String query3="insert into  history.teacher_educational_qualification_detail_history (teacher_educational_qualification_id,teacher_id,teacher_qualification_type,qualification_degree_id,qualification_degree_major,qualification_degree_minor,board_university,institution "
-										+ ",year_of_passing,total_marks,marks_obtaioned,verify_flag,verified_type,modified_by,modified_time,ipaddress,created_by,created_time) select teacher_educational_qualification_id,teacher_id,teacher_qualification_type,qualification_degree_id,qualification_degree_major,qualification_degree_minor,board_university,institution "
-										+ ",year_of_passing,total_marks,marks_obtaioned,verify_flag,verified_type,modified_by,modified_time,'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from public.teacher_educational_qualification_detail where teacher_id="+teacherId;
-		
-		
-//		System.out.println("query3--->"+query3);
-		
-				nativeRepository.insertQueries(query3);
-
-			}catch(Exception ex) {
-				ex.printStackTrace();
-			}
+//			try {
+//		
+//		String query3="insert into  history.teacher_educational_qualification_detail_history (teacher_educational_qualification_id,teacher_id,teacher_qualification_type,qualification_degree_id,qualification_degree_major,qualification_degree_minor,board_university,institution "
+//										+ ",year_of_passing,total_marks,marks_obtaioned,verify_flag,verified_type,modified_by,modified_time,ipaddress,created_by,created_time) select teacher_educational_qualification_id,teacher_id,teacher_qualification_type,qualification_degree_id,qualification_degree_major,qualification_degree_minor,board_university,institution "
+//										+ ",year_of_passing,total_marks,marks_obtaioned,verify_flag,verified_type,modified_by,modified_time,'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from public.teacher_educational_qualification_detail where teacher_id="+teacherId;
+//		
+//		
+//		
+//				nativeRepository.insertQueries(query3);
+//
+//			}catch(Exception ex) {
+//				ex.printStackTrace();
+//			}
 ////			
-			try {
-		
-		String query4="insert into history.teacher_professional_qualification_detail_history (teacher_professional_qualification_id,teacher_id,qualification_degree_id,qualification_degree_major,qualification_degree_minor,board_university,institution,year_of_passing "
-									+ "	,total_marks,marks_obtaioned,teacher_qualification_type,verify_flag,verified_type,modified_by,modified_time,ipaddress,created_by,created_time) select  teacher_professional_qualification_id,teacher_id,qualification_degree_id,qualification_degree_major,qualification_degree_minor,board_university,institution,year_of_passing "
-										+ "	,total_marks,marks_obtaioned,teacher_qualification_type,verify_flag,verified_type,modified_by,modified_time,'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from public.teacher_professional_qualification_detail  where teacher_id ="+teacherId;
-
-//		System.out.println("query4--->"+query4);
-		//			
-				nativeRepository.insertQueries(query4);
-
-				
-			}catch(Exception ex) {
-				ex.printStackTrace();
-			}
+//			try {
+//		
+//		String query4="insert into history.teacher_professional_qualification_detail_history (teacher_professional_qualification_id,teacher_id,qualification_degree_id,qualification_degree_major,qualification_degree_minor,board_university,institution,year_of_passing "
+//									+ "	,total_marks,marks_obtaioned,teacher_qualification_type,verify_flag,verified_type,modified_by,modified_time,ipaddress,created_by,created_time) select  teacher_professional_qualification_id,teacher_id,qualification_degree_id,qualification_degree_major,qualification_degree_minor,board_university,institution,year_of_passing "
+//										+ "	,total_marks,marks_obtaioned,teacher_qualification_type,verify_flag,verified_type,modified_by,modified_time,'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from public.teacher_professional_qualification_detail  where teacher_id ="+teacherId;
+//
+//		
+//				nativeRepository.insertQueries(query4);
+//
+//				
+//			}catch(Exception ex) {
+//				ex.printStackTrace();
+//			}
 ////			
 ////			
-			try {
-		
-		String query5="insert into history.teacher_promotion_detail_history (promotion_id,teacher_id,udise_sch_code,school_id,business_unit_code,business_unit_type_id,currently_working_yn,work_start_date,work_end_date,position_type "
-										+ "	,nature_of_appontment,verify_flag,verified_type,modified_by,modified_time,ipaddress,created_by,created_time) select promotion_id,teacher_id,udise_sch_code,school_id,business_unit_code,business_unit_type_id,currently_working_yn,work_start_date,work_end_date,position_type "
-										+ ",nature_of_appontment,verify_flag,verified_type,modified_by,modified_time,'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from  public.teacher_promotion_detail where teacher_id ="+teacherId;
-//		System.out.println("query5--->"+query5);
-				
-				nativeRepository.insertQueries(query5);
-				
-				
-				
-			}catch(Exception ex) {
-				ex.printStackTrace();
-			}
+//			try {
+//		
+//		String query5="insert into history.teacher_promotion_detail_history (promotion_id,teacher_id,udise_sch_code,school_id,business_unit_code,business_unit_type_id,currently_working_yn,work_start_date,work_end_date,position_type "
+//										+ "	,nature_of_appontment,verify_flag,verified_type,modified_by,modified_time,ipaddress,created_by,created_time) select promotion_id,teacher_id,udise_sch_code,school_id,business_unit_code,business_unit_type_id,currently_working_yn,work_start_date,work_end_date,position_type "
+//										+ ",nature_of_appontment,verify_flag,verified_type,modified_by,modified_time,'"+request.getRemoteAddr()+"','"+updateby+"','"+date+"' from  public.teacher_promotion_detail where teacher_id ="+teacherId;
+//				
+//				nativeRepository.insertQueries(query5);
+//				
+//				
+//				
+//			}catch(Exception ex) {
+//				ex.printStackTrace();
+//			}
 //			
 			try {
 		

@@ -23,7 +23,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "role")
+@Table(name = "role", schema="public")
 @Data
 public class Role implements Serializable {
 

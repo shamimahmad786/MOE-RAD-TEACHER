@@ -34,6 +34,7 @@ public class TeacherTransferProfileCtrl {
 	@RequestMapping(value = "/saveTransProfile", method = RequestMethod.POST)
 	@Transactional(rollbackFor = {Exception.class})
 	public ResponseEntity<CustomResponse> saveTeacher(@RequestBody String data,@RequestHeader("username") String username) throws Exception {
+		System.out.println(data);
 		ObjectMapper mapperObj = new ObjectMapper();
 		TeacherTransferProfile tdata=new TeacherTransferProfile();
 		TeacherFormStatus formData=new TeacherFormStatus();

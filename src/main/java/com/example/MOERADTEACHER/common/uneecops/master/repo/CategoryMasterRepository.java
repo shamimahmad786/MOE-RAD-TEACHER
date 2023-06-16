@@ -16,7 +16,7 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.CategoryMasterResVo;
 public interface CategoryMasterRepository extends JpaRepository<CategoryEo, Integer> {
 
 	@Query("Select new com.example.MOERADTEACHER.common.uneecops.master.vo.CategoryMasterResVo"
-			+ "(c.id, c.categoryName, c.isActive) from CategoryEo c where c.isActive = :status")
+			+ "(c.id, c.categoryName, c.isActive) from CategoryEo c where c.isActive = :status order by c.categoryName")
 	List<CategoryMasterResVo> findCategoryNameAndId(@Param("status") Boolean status);
 
 	@Query("Select new com.example.MOERADTEACHER.common.uneecops.master.vo.CategoryMasterResVo"

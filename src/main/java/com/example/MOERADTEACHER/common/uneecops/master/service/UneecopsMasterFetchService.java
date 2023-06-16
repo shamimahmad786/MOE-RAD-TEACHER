@@ -1,10 +1,12 @@
 package com.example.MOERADTEACHER.common.uneecops.master.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.MOERADTEACHER.common.uneecops.master.eo.RegionStationMappingEo;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.ActiveOrInactiveReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.CategoryMasterResVo;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.DesignationMasterResVO;
@@ -21,6 +23,7 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.StationCategoryMappin
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StationCategoryMappingSearchResVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StationMasterResVo;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.SubjectMasterResVO;
+import com.example.MOERADTEACHER.common.util.QueryResult;
 
 //import com.example.MOERADTEACHER.common.uneecops.master.vo.ActiveOrInactiveReqVO;
 //import com.example.MOERADTEACHER.common.uneecops.master.vo.CategoryMasterResVo;
@@ -56,12 +59,16 @@ public interface UneecopsMasterFetchService {
 	public List<SubjectMasterResVO> findListOfActiveInactiveSubject(ActiveOrInactiveReqVO reqVO);
 
 	public List<StationMasterResVo> fetchListOfAllStation();
+	
+	public QueryResult findListOfAllUnmapedStations();
 
 	public List<RegionMasterResVo> fetchListOfAllRegion();
 
 	public List<CategoryMasterResVo> fetchListOfAllCategory();
 
 	public List<SchoolMasterResVO> fetchListOfAllSchools();
+	
+	public QueryResult findListOfAllUnmappedSchools();
 
 	public Page<RegionStationMappingSearchResponseVO> findRegionStationMappingList(RegionStationMappingSearchListReqVO reqVO, Pageable pageable) throws Exception;
 
@@ -76,6 +83,16 @@ public interface UneecopsMasterFetchService {
 	public List<SubjectMasterResVO> fetchListOfSubjects();
 
 	public Page<StaffTypePostMappingResVO> findStaffTypePostMappingList(StaffTypePostMappingSearchReqVO reqVO, Pageable pageable);
+	
+	public QueryResult fetchStationListByRegion(RegionStationMappingSearchResponseVO reqVo);
+	
+	public QueryResult getSubjectByPost(Map<String,Object> data);
+	
+	public QueryResult fetchRegionStationSchool();
+	
+	public QueryResult fetchSanctionPost(Map<String,Object> data);
+	
+	public QueryResult getStationCategoryByRegion(Map<String,Object> data);
 
 	
 }

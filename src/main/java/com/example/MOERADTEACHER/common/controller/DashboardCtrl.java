@@ -111,6 +111,13 @@ public class DashboardCtrl {
 	}
 	
 	
+	@RequestMapping(value = "/getkvsDashboardReport", method = RequestMethod.POST)
+	public ResponseEntity<CustomResponse> getkvsDashboardReport() {
+//		System.out.println("calledddddd");
+		return  ResponseEntity.ok(new CustomResponse(1,"sucess",dashboardInterface.getkvsDashboardReport(),"200"));
+	}
+	
+	
 	
 	
 }

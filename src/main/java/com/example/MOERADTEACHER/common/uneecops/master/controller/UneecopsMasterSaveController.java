@@ -41,7 +41,7 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.SubjectMasterUpdateRe
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
-@RequestMapping("unee-api/v1/master")
+@RequestMapping("/unee-api/v1/master")
 public class UneecopsMasterSaveController {
 	@Autowired
 	private UneecopsMasterService uneecopsMasterService;

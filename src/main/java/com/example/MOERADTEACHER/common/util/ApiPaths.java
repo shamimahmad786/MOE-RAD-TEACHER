@@ -68,4 +68,9 @@ public final class ApiPaths {
 	public static final class TeacherTransProCtrl {
 		public static final String CTRL = BASE_PATH + "/transprofile";
 	}
+	
+	public static final class MailOtpCtrl {
+		public static final String CTRL = BASE_PATH + "/notifications";
+	}
+	
 }

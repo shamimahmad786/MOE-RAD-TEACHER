@@ -264,10 +264,14 @@ public class TeacherProfile implements Serializable{
 	private String shiftChangeSameSchool;
 	
 	
+	@Transient
+	private String postName;
+	
+	@Transient
+	private String subjectName;
 	
 	
-	
-	
+		
 	public String getSpouseName() {
 		return spouseName;
 	}
@@ -819,6 +823,18 @@ public class TeacherProfile implements Serializable{
 	}
 	public void setKvCode(String kvCode) {
 		this.kvCode = kvCode;
+	}
+	public String getPostName() {
+		return postName;
+	}
+	public void setPostName(String postName) {
+		this.postName = postName;
+	}
+	public String getSubjectName() {
+		return subjectName;
+	}
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
 	}
 	
 	

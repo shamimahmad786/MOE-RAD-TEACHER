@@ -10,5 +10,6 @@ import com.example.MOERADTEACHER.common.uneecops.master.eo.RegionStationMappingE
 public interface RegionStationMappingRepository extends JpaRepository<RegionStationMappingEo, Integer> {
 
 	List<RegionStationMappingEo> findByStationCode(Integer stationCode);
+	List<RegionStationMappingEo> findByRegionCode(Integer regionCode);
 
 }

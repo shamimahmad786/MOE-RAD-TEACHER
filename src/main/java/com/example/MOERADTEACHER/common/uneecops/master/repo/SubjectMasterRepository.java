@@ -14,12 +14,12 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.SubjectMasterResVO;
 @Repository
 public interface SubjectMasterRepository extends JpaRepository<SubjectMasterEO,Integer>{
 
-	@Query("Select new com.example.MOERADTEACHER.common.uneecops.master.vo.SubjectMasterResVO(s.id,s.subjectCode, s.subjectName, s.status, s.description) from SubjectMasterEO s order by s.createdDate desc")
+	@Query("Select new com.example.MOERADTEACHER.common.uneecops.master.vo.SubjectMasterResVO(s.id,s.subjectCode, s.subjectName, s.status, s.description) from SubjectMasterEO s order by s.subjectName,s.subjectCode")
 	List<SubjectMasterResVO> findListOfSubjects();
 	
 	Optional<SubjectMasterEO> findById(Integer id);
 
 	@Query("Select new com.example.MOERADTEACHER.common.uneecops.master.vo.SubjectMasterResVO"
-			+ "(s.id,s.subjectCode, s.subjectName, s.status, s.description) from SubjectMasterEO s where s.status = :status")
+			+ "(s.id,s.subjectCode, s.subjectName, s.status, s.description) from SubjectMasterEO s where s.status = :status order by s.subjectName")
 	List<SubjectMasterResVO> findActiveAndInactiveSubject(@Param ("status") Boolean status);
 }

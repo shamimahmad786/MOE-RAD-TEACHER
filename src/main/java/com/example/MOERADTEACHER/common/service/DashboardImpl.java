@@ -529,4 +529,22 @@ public class DashboardImpl implements DashboardInterface{
 		return qrObj1.getRowValue();
 	}
 	
+	@Override
+	public List<Map<String, Object>> getkvsDashboardReport(){
+		QueryResult qrObj1=null;
+		String query="select sch.no_of_school,re.no_of_region,ms.no_of_station,mz.no_of_zone,tt.no_of_teaching_teacher,ntt.no_of_nonteaching_teacher from \r\n"
+				+ "(select count(*) as no_of_school from uneecops.m_schools ksm where ksm.school_type=1 and shift in ('1','0')  and ksm.school_status=true)  sch, \r\n"
+				+ "(select count(*) as no_of_region from uneecops.m_region mr where mr.region_type=3 and mr.is_active=true) re,\r\n"
+				+ "(select count(*) as no_of_station from uneecops.m_station ms) ms,\r\n"
+				+ "(select count(*) as no_of_zone from uneecops.m_schools mz where mz.school_type=2 and mz.school_status=true ) mz,\r\n"
+				+ "(select count(*) as no_of_teaching_teacher from public.teacher_profile tp where tp.teaching_nonteaching='1' ) tt,\r\n"
+				+ "(select count(*) as no_of_nonteaching_teacher from public.teacher_profile tp where tp.teaching_nonteaching='2' ) ntt";
+		try {
+		 qrObj1= nativeRepository.executeQueries(query);
+		}catch(Exception ex) {
+			
+		}
+		return qrObj1.getRowValue();
+	}
+	
 }

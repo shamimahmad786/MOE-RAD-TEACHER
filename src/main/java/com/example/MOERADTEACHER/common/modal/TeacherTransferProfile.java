@@ -1,5 +1,7 @@
 package com.example.MOERADTEACHER.common.modal;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -85,10 +87,31 @@ public class TeacherTransferProfile {
 	private String patientMedicalOfficerName;
 	@Column(name = "patient_medical_officer_designation")
 	private String patientMedicalOfficerDesignation;
+	@Column(name = "medical_certificate_issue_date")
+	private Date medicalCertificateIssueDate;
 	@Column(name = "personal_status_spD")
 	private Integer personalStatusSpD;
+	@Column(name = "single_parent_ground")
+	private String singleParentGround;  
+	@Column(name = "single_parent_certificate_issue_date")
+	private Date singleParentCertificateIssueDate; 
 	@Column(name = "personal_status_dfpD")
 	private Integer personalStatusDfpD;
+	
+	@Column(name = "death_of_family_ground")
+	private String deathOfFamilyGround;
+	
+	@Column(name = "name_of_family_member")
+	private String nameOfFamilyMember;
+	
+	@Column(name = "death_certificate_issue_date")
+	private Date deathCertificateIssueDate;
+	
+	@Column(name = "relation_of_death_person")
+	private String relationOfDeathPerson;
+	
+	
+	
 	@Column(name = "child_different_name")
 	private String childDifferentName;
 	@Column(name = "child_different_disability_name")
@@ -97,6 +120,8 @@ public class TeacherTransferProfile {
 	private Integer childDifferentDisabilityPrcnt;
 	@Column(name = "memberJCM")
 	private Integer memberJCM;
+	@Column(name = "position_of_njcm_rjcm")
+	private String positionOfNjcmRjcm;
 	@Column(name = "child_10_12_ynD")
 	private Integer child_10_12YnD;
 	@Column(name = "care_giver_ynD")
@@ -123,6 +148,18 @@ public class TeacherTransferProfile {
 	private String shiftChangeSameSchool;
 	@Column(name = "care_giver_faimly_ynD")
 	private String careGiverFaimlyYnD;
+	@Column(name = "disciplinary_yn")
+	private Integer disciplinaryYn;
+	@Column(name = "absence_days_one")
+	private Integer absenceDaysOne;
+	@Column(name = "transfer_status")
+	private Integer transferStatus;
+	@Column(name = "transfer_id")
+	private String transferId;
+	@Column(name = "teacher_employee_code")
+	private String teacherEmployeeCode;
+	
+	
 	public Integer getId() {
 		return id;
 	}
@@ -435,7 +472,86 @@ public class TeacherTransferProfile {
 	public void setCareGiverFaimlyYnD(String careGiverFaimlyYnD) {
 		this.careGiverFaimlyYnD = careGiverFaimlyYnD;
 	}
+	public Integer getDisciplinaryYn() {
+		return disciplinaryYn;
+	}
+	public void setDisciplinaryYn(Integer disciplinaryYn) {
+		this.disciplinaryYn = disciplinaryYn;
+	}
+	public Integer getAbsenceDaysOne() {
+		return absenceDaysOne;
+	}
+	public void setAbsenceDaysOne(Integer absenceDaysOne) {
+		this.absenceDaysOne = absenceDaysOne;
+	}
+	public Date getMedicalCertificateIssueDate() {
+		return medicalCertificateIssueDate;
+	}
+	public void setMedicalCertificateIssueDate(Date medicalCertificateIssueDate) {
+		this.medicalCertificateIssueDate = medicalCertificateIssueDate;
+	}
+	public String getSingleParentGround() {
+		return singleParentGround;
+	}
+	public void setSingleParentGround(String singleParentGround) {
+		this.singleParentGround = singleParentGround;
+	}
+	public Date getSingleParentCertificateIssueDate() {
+		return singleParentCertificateIssueDate;
+	}
+	public void setSingleParentCertificateIssueDate(Date singleParentCertificateIssueDate) {
+		this.singleParentCertificateIssueDate = singleParentCertificateIssueDate;
+	}
+	public String getDeathOfFamilyGround() {
+		return deathOfFamilyGround;
+	}
+	public void setDeathOfFamilyGround(String deathOfFamilyGround) {
+		this.deathOfFamilyGround = deathOfFamilyGround;
+	}
+	public Date getDeathCertificateIssueDate() {
+		return deathCertificateIssueDate;
+	}
+	public void setDeathCertificateIssueDate(Date deathCertificateIssueDate) {
+		this.deathCertificateIssueDate = deathCertificateIssueDate;
+	}
+	public String getRelationOfDeathPerson() {
+		return relationOfDeathPerson;
+	}
+	public void setRelationOfDeathPerson(String relationOfDeathPerson) {
+		this.relationOfDeathPerson = relationOfDeathPerson;
+	}
+	public String getPositionOfNjcmRjcm() {
+		return positionOfNjcmRjcm;
+	}
+	public void setPositionOfNjcmRjcm(String positionOfNjcmRjcm) {
+		this.positionOfNjcmRjcm = positionOfNjcmRjcm;
+	}
+	public Integer getTransferStatus() {
+		return transferStatus;
+	}
+	public void setTransferStatus(Integer transferStatus) {
+		this.transferStatus = transferStatus;
+	}
+	public String getTransferId() {
+		return transferId;
+	}
+	public void setTransferId(String transferId) {
+		this.transferId = transferId;
+	}
+	public String getNameOfFamilyMember() {
+		return nameOfFamilyMember;
+	}
+	public void setNameOfFamilyMember(String nameOfFamilyMember) {
+		this.nameOfFamilyMember = nameOfFamilyMember;
+	}
+	public String getTeacherEmployeeCode() {
+		return teacherEmployeeCode;
+	}
+	public void setTeacherEmployeeCode(String teacherEmployeeCode) {
+		this.teacherEmployeeCode = teacherEmployeeCode;
+	}
 	
 	
 	
+
 }

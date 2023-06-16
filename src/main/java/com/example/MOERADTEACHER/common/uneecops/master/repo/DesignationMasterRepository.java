@@ -16,12 +16,12 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.SchoolMasterResVO;
 public interface DesignationMasterRepository  extends JpaRepository<DesignationMasterEO,Integer> {
 
 	@Query("Select new com.example.MOERADTEACHER.common.uneecops.master.vo.DesignationMasterResVO"
-			+ "(d.id, d.postCode, d.postName, d.status) from DesignationMasterEO d order by d.createdDate desc")
+			+ "(d.id, d.postCode, d.postName, d.status) from DesignationMasterEO d order by d.postName ")
 	List<DesignationMasterResVO> findListOfDesignation();
 	
 	Optional<DesignationMasterEO> findById(Integer id);
 
 	@Query("Select new com.example.MOERADTEACHER.common.uneecops.master.vo.DesignationMasterResVO"
-			+ "(d.id,d.postCode, d.postName, d.status) from DesignationMasterEO d where d.status = :status")
+			+ "(d.id,d.postCode, d.postName, d.status) from DesignationMasterEO d where d.status = :status order by d.postName")
 	List<DesignationMasterResVO> findActiveAndInactiveDesigantions(@Param("status") Boolean status);
 }

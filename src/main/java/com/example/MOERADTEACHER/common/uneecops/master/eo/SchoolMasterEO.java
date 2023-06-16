@@ -31,6 +31,9 @@ public class SchoolMasterEO {
 	private Timestamp updatedDate;
 	@Column(name="school_status")
 	private boolean schoolStatus;
+	@Column(name="school_type")
+	private Integer schoolType;
+	
 	public int getId() {
 		return id;
 	}
@@ -85,6 +88,13 @@ public class SchoolMasterEO {
 	public void setSchoolStatus(boolean schoolStatus) {
 		this.schoolStatus = schoolStatus;
 	}
+//	public Integer getSchoolType() {
+//		return schoolType;
+//	}
+//	public void setSchoolType(Integer schoolType) {
+//		this.schoolType = schoolType;
+//	}
+
 	
 	
 }

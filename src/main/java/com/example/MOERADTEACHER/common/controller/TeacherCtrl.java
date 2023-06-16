@@ -43,6 +43,7 @@ import com.example.MOERADTEACHER.common.service.KVTeacherImpl;
 import com.example.MOERADTEACHER.common.service.KvMasterImpl;
 import com.example.MOERADTEACHER.common.service.TeacherImpl;
 import com.example.MOERADTEACHER.common.util.ApiPaths;
+import com.example.MOERADTEACHER.common.util.CommonMailRequest;
 import com.example.MOERADTEACHER.common.util.CustomResponse;
 import com.example.MOERADTEACHER.common.util.FixHashing;
 import com.example.MOERADTEACHER.common.util.HandlingNull;
@@ -80,7 +81,7 @@ public class TeacherCtrl {
 	@Autowired
 	ExperienceCtrl  experienceCtrl; 
 	
-	
+
 	
 	@RequestMapping(value = "/getTeacherBySchool", method = RequestMethod.POST)
 	public ResponseEntity<CustomResponse> getTeacherBySchool(@RequestBody Teacher data,@RequestHeader("username") String username) throws Exception {
@@ -152,10 +153,8 @@ public class TeacherCtrl {
 		HandlingNull hObj=new HandlingNull();	
 		TeacherProfile result=teacherInterface.getTeacherByTeacherId(Integer.parseInt(data));
 		LOGGER.warn("##################################"+String.valueOf(result.getTeacherId()));
-		
 		 ObjectMapper objectMapper = new ObjectMapper();
-		 Map<Object, Object> map = objectMapper.convertValue(result, 
-				    Map.class);
+		 Map<Object, Object> map = objectMapper.convertValue(result, Map.class);
 		return ResponseEntity.ok(new CustomResponse(1,"sucess",hObj.handling(map),"200"));
 	}
 	

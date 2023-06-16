@@ -19,11 +19,11 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.RegionMasterResVo;
 public interface RegionMasterRepo extends JpaRepository<RegionEo, Integer> {
 
 	@Query(value = "SELECT new com.example.MOERADTEACHER.common.uneecops.master.vo.RegionMasterResVo"
-			+ "(r.id, r.regionCode, r.regionName, r.isActive) from RegionEo r where r.isActive = :status", nativeQuery = false)
+			+ "(r.id, r.regionCode, r.regionName, r.isActive,r.regionType) from RegionEo r where r.isActive = :status order by r.regionName", nativeQuery = false)
 	List<RegionMasterResVo> findRegionCodeAndRegionName(@Param("status") Boolean status);
 
 	@Query(value = "SELECT new com.example.MOERADTEACHER.common.uneecops.master.vo.RegionMasterResVo"
-			+ "(r.id, r.regionCode, r.regionName, r.isActive) from RegionEo r  order by r.createdDate desc")
+			+ "(r.id, r.regionCode, r.regionName, r.isActive,r.regionType) from RegionEo r  order by r.regionType desc, r.isActive,r.regionCode")
 	List<RegionMasterResVo> findListOfRegionCodeAndRegionName();
 
 	

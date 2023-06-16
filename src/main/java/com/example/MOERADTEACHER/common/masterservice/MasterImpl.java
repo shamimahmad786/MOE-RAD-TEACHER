@@ -18,12 +18,14 @@ import com.example.MOERADTEACHER.common.masterbean.RegionMaster;
 import com.example.MOERADTEACHER.common.masterbean.SchoolMaster;
 import com.example.MOERADTEACHER.common.masterbean.StationBean;
 import com.example.MOERADTEACHER.common.masterbean.StationMaster;
+import com.example.MOERADTEACHER.common.masterbean.SubjectMaster;
 import com.example.MOERADTEACHER.common.masterbean.TeacherAwardsMaster;
 import com.example.MOERADTEACHER.common.masterbean.TeacherQualification;
 import com.example.MOERADTEACHER.common.masterrepository.PositionTypeRepository;
 import com.example.MOERADTEACHER.common.masterrepository.RegionMasterRepository;
 import com.example.MOERADTEACHER.common.masterrepository.SchoolMasterRepository;
 import com.example.MOERADTEACHER.common.masterrepository.StationMasterRepository;
+import com.example.MOERADTEACHER.common.masterrepository.SubjectMastersRepository;
 import com.example.MOERADTEACHER.common.masterrepository.TeacherAwardsMasterRepository;
 import com.example.MOERADTEACHER.common.masterrepository.TeacherQualificationRepository;
 import com.example.MOERADTEACHER.common.modal.Master;
@@ -58,6 +60,9 @@ public class MasterImpl {
 	
 	@Autowired
 	SchoolMasterRepository schoolMasterRepository;
+	
+	@Autowired
+	SubjectMastersRepository  subjectMastersRepository;
 	
 	public StaticReportBean getMaster(MasterBean data) throws Exception {
 		String query="";
@@ -279,6 +284,31 @@ public List<Map<Object,Object>> getSchoolByMultipleStation(StationBean data) thr
 	}
 	
 	return ltObj;
+}
+
+
+public Map<Integer,String> getPostNameAndTeacherTypeId(){
+	List<PositionType> pObj=positionTypeRepository.findAll();
+	Map<Integer,String> postionMap= new HashMap<Integer,String>();
+	pObj.stream().forEach(x -> {
+		postionMap.put(Integer.parseInt(String.valueOf(x.getTeacherTypeId())), x.getOrganizationTeacherTypeName());
+		
+	});
+	return postionMap;
+}
+
+
+public Map<Integer,String> getSubjectName() {
+	List<SubjectMaster> sObj=subjectMastersRepository.findAll();
+	
+	System.out.println("sObj--->"+sObj);
+	
+	Map<Integer,String> subjectMap= new HashMap<Integer,String>();
+	sObj.stream().forEach(x -> {
+		subjectMap.put(Integer.parseInt(String.valueOf(x.getSubjectId())), x.getSubjectName());
+		
+	});
+	return subjectMap;
 }
 
 

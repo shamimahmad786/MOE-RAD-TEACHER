@@ -10,13 +10,15 @@ public class PostSubjectMappingSearchResponseVO {
 	private String postName;
 	private String subjectCode;
 	private String subjectName;
-	public PostSubjectMappingSearchResponseVO(Integer staffTypeId, Integer postId, Integer subjectId, String staffType,
-			String postCode, String postName, String subjectCode, String subjectName) {
+//	public PostSubjectMappingSearchResponseVO(Integer staffTypeId, Integer postId, Integer subjectId, String staffType,
+//			String postCode, String postName, String subjectCode, String subjectName) {
+		public PostSubjectMappingSearchResponseVO(Integer postId, Integer subjectId, 
+				String postCode, String postName, String subjectCode, String subjectName) {
 		super();
-		this.staffTypeId = staffTypeId;
+//		this.staffTypeId = staffTypeId;
 		this.postId = postId;
 		this.subjectId = subjectId;
-		this.staffType = staffType;
+//		this.staffType = staffType;
 		this.postCode = postCode;
 		this.postName = postName;
 		this.subjectCode = subjectCode;

@@ -340,12 +340,17 @@ public class TeacherImpl implements TeacherInterface {
 	public TeacherProfile changeTeacherSchool(SchoolFetchTeacherBean data) {
 		Map<String, Object> mp = new HashMap<String, Object>();
 		try {
+			
+			System.out.println(data.getTeacherId());
+			System.out.println(data.getCurrentUdiseSchCode());
+//			System.out.println(data.get);
+			
 			nativeRepository.updateQueries(
-					"update public.teacher_profile set drop_box_flag =0 , \r\n" + "current_udise_sch_code = '"
-							+ data.getCurrentUdiseSchCode() + "'\r\n" + "where teacher_id = " + data.getTeacherId());
+					"update public.teacher_profile set drop_box_flag =0 , \r\n" + "kv_code = '"
+							+ data.getCurrentUdiseSchCode() + "' , current_udise_sch_code='" +data.getCurrentUdiseSchCode()+"' " + "where teacher_id = " + data.getTeacherId());
 
-			nativeRepository.updateQueries("update public.teacher_work_experience wk\r\n" + "set udise_sch_code ='"
-					+ data.getCurrentUdiseSchCode() + "',\r\n" + "    currently_active_yn = '1'\r\n"
+			nativeRepository.updateQueries("update public.teacher_work_experience wk\r\n" + "set kv_code ='"
+					+ data.getCurrentUdiseSchCode() + "', udise_school_name='"+data.getKvName()+"' ,  udise_sch_code='" +data.getCurrentUdiseSchCode()+"' "+ ",    currently_active_yn = '1'\r\n"
 					+ "from public.teacher_profile tp \r\n"
 					+ "where tp.work_experience_id_present_kv = wk.work_experience_id and tp.teacher_id="
 					+ data.getTeacherId());
@@ -370,7 +375,12 @@ public class TeacherImpl implements TeacherInterface {
 //	    	    String url = "http://10.25.26.251:8090/api/user/updateRoleOnDropbox";
 	    	    
 //	            String url = "http://10.247.141.216:8080/UserService/api/user/updateRoleOnDropbox";
-	            this.restService.updateRole(requestJson);
+	    	    
+	    	    
+//	    	    
+//	            this.restService.updateRole(requestJson);  // commented by shamim
+                
+                
                 }catch(Exception ex) {
                 	System.out.println("::::::::::::Error in get teacher from other school::::::::::::::::::::");
                 	ex.printStackTrace();

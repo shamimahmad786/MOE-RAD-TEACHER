@@ -7,6 +7,8 @@ public class SchoolFetchTeacherBean implements Serializable{
 private String currentUdiseSchCode;
 private Integer teacherId;
 private String businessUnitTypeCode;
+private String kvName;
+
 public String getCurrentUdiseSchCode() {
 	return currentUdiseSchCode;
 }
@@ -24,6 +26,12 @@ public String getBusinessUnitTypeCode() {
 }
 public void setBusinessUnitTypeCode(String businessUnitTypeCode) {
 	this.businessUnitTypeCode = businessUnitTypeCode;
+}
+public String getKvName() {
+	return kvName;
+}
+public void setKvName(String kvName) {
+	this.kvName = kvName;
 }
 
 

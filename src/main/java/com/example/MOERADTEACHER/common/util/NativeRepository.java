@@ -51,7 +51,7 @@ public class NativeRepository {
 	  public QueryResult executeQueries(String queryData){    
 		  QueryResult queryResult =new QueryResult();
 		  try {
-//		  // System.out.println("queryData---->"+queryData);
+//		   System.out.println("queryData---->"+queryData);
 	        MapSqlParameterSource parameters = new MapSqlParameterSource();
 	        List<Object> columnList=new ArrayList<Object>();
 	        List<Object> columnDataType=new ArrayList<Object>();
@@ -71,11 +71,12 @@ public class NativeRepository {
 		  }catch(Exception ex) {
 			  ex.printStackTrace();
 		  }
+//		  System.out.println("Before return");
 			return queryResult;
 	    }
 	  
 	  public int updateQueries(String queryData){  
-//		  // System.out.println("Update Query--->"+queryData);
+//		   System.out.println("Update Query--->"+queryData);
 		  try {
 	      return  jdbcTemplate.update(queryData);
 		  }catch(Exception ex) {

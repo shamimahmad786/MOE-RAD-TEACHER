@@ -120,6 +120,7 @@ public class UneecopsMasterMappingServiceImpl implements UneecopsMasterMappingSe
 	}
 
 	private void validateRegionStationInRange(Integer stationCode, LocalDate fromdate, LocalDate todate) {
+		try {
 		List<RegionStationMappingEo> data = regionStationMappingRepository.findByStationCode(stationCode);
 		RegionStationMappingEo regionStationMappingEo2 = null;
 		if (data.size() > 0) {
@@ -145,6 +146,7 @@ public class UneecopsMasterMappingServiceImpl implements UneecopsMasterMappingSe
 			StationEo stationEo=stationMasterRepo.findStationNameByStationCode(stationCode);
 			RegionEo regionEo=regionMasterRepo.findRegionNameByRegionCode(eo.getRegionCode());
 			LocalDate fromDate=eo.getFromDate();
+			System.out.println("fromDate---->"+fromDate);
 			LocalDate toDate=eo.getToDate();
 			DateTimeFormatter dateTimeFormatter=DateTimeFormatter.ofPattern("dd-MM-yyyy");
 			String Formatteddate1=fromDate.format(dateTimeFormatter);
@@ -171,6 +173,9 @@ public class UneecopsMasterMappingServiceImpl implements UneecopsMasterMappingSe
 						+ " is already mapped with Region "+regionEo.getRegionName()+ "("+regionEo.getRegionCode()+") for date range " +Formatteddate1 + " to " + Formatteddate2);
 			}
 
+		}
+		}catch(Exception ex) {
+			ex.printStackTrace();
 		}
 
 	}
@@ -333,6 +338,9 @@ public class UneecopsMasterMappingServiceImpl implements UneecopsMasterMappingSe
 			} else {
 				schoolStationMappingEo.setActive(Boolean.TRUE);
 			}
+			
+			System.out.println("Mapping school Station");
+			
 			schoolStationMappingRepository.save(schoolStationMappingEo);
 
 		}

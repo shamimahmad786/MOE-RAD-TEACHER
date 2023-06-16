@@ -12,6 +12,6 @@ public class SchoolMasterUpdateReqVO {
 	@NotNull(message = "please enter schoolName")
 	private String schoolName;
 	private String shift;
-
+private Integer schoolType;
 	private Boolean status;
 }

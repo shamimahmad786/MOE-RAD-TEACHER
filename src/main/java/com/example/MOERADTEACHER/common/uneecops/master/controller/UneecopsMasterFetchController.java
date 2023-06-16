@@ -1,10 +1,12 @@
 package com.example.MOERADTEACHER.common.uneecops.master.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.MOERADTEACHER.common.uneecops.master.service.UneecopsMasterFetchService;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.ActiveOrInactiveReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.RegionStationMappingSearchListReqVO;
+import com.example.MOERADTEACHER.common.uneecops.master.vo.RegionStationMappingSearchResponseVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.SchoolStationMappingSearchReqVO;
+import com.example.MOERADTEACHER.common.uneecops.master.vo.StaffTypePostMappingResVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StaffTypePostMappingSearchReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StationCategoryMappingSearchReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StationMasterResVo;
+import com.example.MOERADTEACHER.common.util.CustomObjectMapper;
+import com.example.MOERADTEACHER.common.util.QueryResult;
 
 //import com.example.MOERADTEACHER.common.uneecops.master.service.UneecopsMasterFetchService;
 //import com.example.MOERADTEACHER.common.uneecops.master.vo.ActiveOrInactiveReqVO;
@@ -33,11 +39,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("unee-api/v1/master/fetch")
+@RequestMapping("/unee-api/v1/master/fetch")
 public class UneecopsMasterFetchController {
 
 	@Autowired
 	UneecopsMasterFetchService uneecopsMasterFetchService;
+	
+	@Autowired
+	CustomObjectMapper  customObjectMapper;
 
 	@PostMapping("/active-or-inactive-stations-list")
 	public ResponseEntity<?> findListOfActiveInactiveStation(@RequestBody @Valid ActiveOrInactiveReqVO reqVO,
@@ -96,9 +105,17 @@ public class UneecopsMasterFetchController {
 		log.debug("Request received in UneecopsMasterFetchController --> findListOfAllStations()");
 		return new ResponseEntity<>(uneecopsMasterFetchService.fetchListOfAllStation(), HttpStatus.OK);
 	}
+	
+	@PostMapping("/list-of-unmaped-station")
+	public ResponseEntity<?> findListOfAllUnmapedStations() {
+		log.debug("Request received in UneecopsMasterFetchController --> findListOfAllStations()");
+		return new ResponseEntity<>(uneecopsMasterFetchService.findListOfAllUnmapedStations(), HttpStatus.OK);
+	}
+	
 
 	@PostMapping("/list-of-all-region")
 	public ResponseEntity<?> findListOfAllRegion() {
+		System.out.println("List of All Region");
 		log.debug("Request received in UneecopsMasterFetchController --> findListOfAllRegion()");
 		return new ResponseEntity<>(uneecopsMasterFetchService.fetchListOfAllRegion(), HttpStatus.OK);
 	}
@@ -108,12 +125,29 @@ public class UneecopsMasterFetchController {
 		log.debug("Request received in UneecopsMasterFetchController --> findListOfAllCategory()");
 		return new ResponseEntity<>(uneecopsMasterFetchService.fetchListOfAllCategory(), HttpStatus.OK);
 	}
+	
+	
+	@PostMapping("/list-of-all-station-by-region")
+	public ResponseEntity<?> fetchStationListByRegion(@RequestBody RegionStationMappingSearchResponseVO reqVO) {
+		log.debug("Request received in fetchStationListByRegion");
+		return new ResponseEntity<>(uneecopsMasterFetchService.fetchStationListByRegion(reqVO), HttpStatus.OK);
+	}
+	
+	
+	
 
 	@PostMapping("/list-of-all-school")
 	public ResponseEntity<?> findListOfAllSchools() {
 		log.debug("Request received in UneecopsMasterFetchController --> findListOfAllSchools()");
 		return new ResponseEntity<>(uneecopsMasterFetchService.fetchListOfAllSchools(), HttpStatus.OK);
 	}
+	
+	@PostMapping("/list-of-all-unmapped-school")
+	public ResponseEntity<?> findListOfAllUnmappedSchools() {
+		log.debug("Request received in UneecopsMasterFetchController --> findListOfAllSchools()");
+		return new ResponseEntity<>(uneecopsMasterFetchService.findListOfAllUnmappedSchools(), HttpStatus.OK);
+	}
+	
 
 	@PostMapping("/list-of-all-staff-type")
 	public ResponseEntity<?> findListOfAllStaffTypes() {
@@ -163,6 +197,19 @@ public class UneecopsMasterFetchController {
 		log.debug("Request received in UneecopsMasterFetchController --> fetchStaffTypePostMappingList()"
 				+ reqVO.toString());
 		return new ResponseEntity<>(uneecopsMasterFetchService.findStaffTypePostMappingList(reqVO, pageable), HttpStatus.OK);
+	}
+	
+	@PostMapping("/get-region-station-school")
+	public ResponseEntity<?> fetchRegionStationSchool() throws Exception {
+		return new ResponseEntity<>(uneecopsMasterFetchService.fetchRegionStationSchool(), HttpStatus.OK);
+	}
+	
+	
+	@PostMapping("/get-station-category-by-region")
+	public ResponseEntity<QueryResult> getStationCategoryByRegion(@RequestBody String data) {
+		System.out.println(data);
+		Map<String,Object> reqObj=customObjectMapper.getMapObject(data);
+		return new ResponseEntity<>(uneecopsMasterFetchService.getStationCategoryByRegion(reqObj), HttpStatus.OK);
 	}
 
 }
