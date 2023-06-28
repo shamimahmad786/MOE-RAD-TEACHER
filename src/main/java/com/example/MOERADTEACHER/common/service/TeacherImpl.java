@@ -257,9 +257,7 @@ public class TeacherImpl implements TeacherInterface {
 
 	@Override
 	public TeacherFormStatus getUpdatdFlag(Integer teacherId) {
-
 		 System.out.println("Get updated flag--->"+teacherId);
-
 		return teacherFormStatusRepository.findAllByTeacherId(teacherId);
 	}
 

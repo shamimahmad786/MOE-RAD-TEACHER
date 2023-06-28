@@ -23,7 +23,7 @@ public interface RegionMasterRepo extends JpaRepository<RegionEo, Integer> {
 	List<RegionMasterResVo> findRegionCodeAndRegionName(@Param("status") Boolean status);
 
 	@Query(value = "SELECT new com.example.MOERADTEACHER.common.uneecops.master.vo.RegionMasterResVo"
-			+ "(r.id, r.regionCode, r.regionName, r.isActive,r.regionType) from RegionEo r  order by r.regionType desc, r.isActive,r.regionCode")
+			+ "(r.id, r.regionCode, r.regionName, r.isActive,r.regionType) from RegionEo r where r.regionType=3  order by r.regionType desc, r.isActive,r.regionCode")
 	List<RegionMasterResVo> findListOfRegionCodeAndRegionName();
 
 	

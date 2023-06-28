@@ -241,8 +241,16 @@ public StaticReportBean getDistrictByStateId(Integer stateId) throws Exception {
 }
 
 //@Cacheable(value="master")
-public List<RegionMaster> getKVRegion() throws Exception {
-	return regionMasterRepository.findByOrderByRegionNameAsc();
+public QueryResult getKVRegion() throws Exception {
+	QueryResult qrObj =null;
+	try {
+	String query="select distinct region_name,region_code from kv.kv_school_master ksm order by region_name";
+	qrObj = nativeRepository.executeQueries(query);
+	}catch(Exception ex) {
+		ex.printStackTrace();
+	}
+//	return regionMasterRepository.findByOrderByRegionNameAsc();
+	return qrObj;
 }
 
 

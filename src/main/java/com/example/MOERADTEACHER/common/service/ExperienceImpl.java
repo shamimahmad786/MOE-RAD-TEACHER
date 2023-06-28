@@ -45,7 +45,7 @@ public class ExperienceImpl implements ExperienceInterface{
 	
 	@Override
 	public List<TeacherExperience> saveExperience(List<TeacherExperience> data) {
-		
+		System.out.println("groundTransfer--->");
 		List<TeacherExperience> lt=new ArrayList<TeacherExperience>();
 		if(data.size()>0) {
 		teacherTransferGroundRepository.deleteAllByTeacherId(Integer.parseInt(String.valueOf(data.get(0).getTeacherId())));
@@ -178,15 +178,16 @@ public class ExperienceImpl implements ExperienceInterface{
 				+ "twe.currently_active_yn,\r\n"
 				+ "k.kv_name as udise_school_name\r\n"
 				+ "				 from public.teacher_work_experience twe , kv.kv_school_master k \r\n"
-				+ "				 where twe.udise_sch_code = k.udise_sch_code \r\n"
-				+ "				 and twe.teacher_id = "+data +" order by work_start_date desc"
-;		
+				+ "				 where twe.udise_sch_code = k.kv_code \r\n"
+				+ "				 and twe.teacher_id = "+data +" order by work_start_date desc";
+//System.out.println(query);
 		QueryResult qrObj=nativeRepository.executeQueries(query);
 //		return teacherExperienceRepository.findAllByTeacherId(data);
 		ObjectMapper mapperObj = new ObjectMapper();
 //		List<TeacherExperience> expObj=new ArrayList<TeacherExperience>();
 		
 		if(qrObj !=null) {
+			System.out.println("Experience Size--->"+qrObj.getRowValue().size());
 		for(int i=0;i<qrObj.getRowValue().size();i++) {
 			final ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
 			

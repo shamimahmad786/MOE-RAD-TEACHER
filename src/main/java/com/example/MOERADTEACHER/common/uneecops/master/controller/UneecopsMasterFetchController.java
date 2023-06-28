@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.MOERADTEACHER.common.uneecops.master.eo.FreezMasterConfigurationEO;
 import com.example.MOERADTEACHER.common.uneecops.master.service.UneecopsMasterFetchService;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.ActiveOrInactiveReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.RegionStationMappingSearchListReqVO;
@@ -211,5 +212,24 @@ public class UneecopsMasterFetchController {
 		Map<String,Object> reqObj=customObjectMapper.getMapObject(data);
 		return new ResponseEntity<>(uneecopsMasterFetchService.getStationCategoryByRegion(reqObj), HttpStatus.OK);
 	}
+	
+	@PostMapping("/get-freeze-master")
+	public ResponseEntity<List<FreezMasterConfigurationEO>> getFreezeMaster(){	
+		return new ResponseEntity<>(uneecopsMasterFetchService.getFreezeMaster(),HttpStatus.OK);
+	}
 
+	
+	@PostMapping("/get-freeze-master-by-id")
+	public ResponseEntity<Map<String,Object>> getFreezeMasterById(@RequestBody String data){	
+		return new ResponseEntity<>(uneecopsMasterFetchService.getFreezeMasterById(Integer.parseInt(data)),HttpStatus.OK);
+	}
+	
+	@PostMapping("/school-region-mapping-list")
+	public ResponseEntity<?> fetchSchoolRegionMappingList(@RequestBody String data,
+			Pageable pageable) throws Exception {
+		Map<String,Object> reqObj=customObjectMapper.getMapObject(data);
+		return new ResponseEntity<>(uneecopsMasterFetchService.fetchSchoolRegionMappingList(reqObj), HttpStatus.OK);
+	}
+	
+	
 }

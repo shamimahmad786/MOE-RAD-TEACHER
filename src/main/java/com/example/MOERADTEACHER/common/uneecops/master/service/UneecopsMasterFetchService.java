@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.MOERADTEACHER.common.uneecops.master.eo.FreezMasterConfigurationEO;
 import com.example.MOERADTEACHER.common.uneecops.master.eo.RegionStationMappingEo;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.ActiveOrInactiveReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.CategoryMasterResVo;
@@ -93,6 +94,12 @@ public interface UneecopsMasterFetchService {
 	public QueryResult fetchSanctionPost(Map<String,Object> data);
 	
 	public QueryResult getStationCategoryByRegion(Map<String,Object> data);
+	
+	public List<FreezMasterConfigurationEO>  getFreezeMaster();
+	
+	public Map<String,Object>  getFreezeMasterById(Integer id);
+	
+	public QueryResult  fetchSchoolRegionMappingList(Map<String,Object> data);
 
 	
 }

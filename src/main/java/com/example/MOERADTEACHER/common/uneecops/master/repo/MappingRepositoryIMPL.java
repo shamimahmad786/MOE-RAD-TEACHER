@@ -215,8 +215,11 @@ public class MappingRepositoryIMPL implements MappingRepository{
 		from.append("from SchoolStationMappingEo ssm  inner join StationEo ms on ssm.stationCode=ms.stationCode inner join SchoolMasterEO sm on sm.schoolCode=ssm.schoolCode");
 
 		String where = "";
+		
+//		where += " where sm.schoolType in (1,3) ";
+		
 		if (reqVO.getStationName() != null) {
-			where += " where ms.stationName =:stationName ";
+			where += " and where ms.stationName =:stationName ";
 
 		}
 		if (reqVO.getStationCode() != null) {
@@ -234,7 +237,7 @@ public class MappingRepositoryIMPL implements MappingRepository{
 		
 		select.append(" Order By ssm.createdDate desc ");
 		
-		
+		System.out.println(select.toString());
 		 Query query = entityManager.createQuery(select.toString(), SchoolStationMappingSearchResVO.class);
 //				.setFirstResult(startIndex).setMaxResults(pageable.getPageSize());
 		

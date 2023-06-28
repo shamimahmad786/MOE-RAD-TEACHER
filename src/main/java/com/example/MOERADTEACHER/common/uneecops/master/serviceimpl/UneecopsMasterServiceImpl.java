@@ -1,6 +1,8 @@
 package com.example.MOERADTEACHER.common.uneecops.master.serviceimpl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -13,6 +15,7 @@ import com.example.MOERADTEACHER.common.uneecops.exception.customException.Regio
 import com.example.MOERADTEACHER.common.uneecops.exception.customException.SchoolCodeAlreadyExistException;
 import com.example.MOERADTEACHER.common.uneecops.master.eo.CategoryEo;
 import com.example.MOERADTEACHER.common.uneecops.master.eo.DesignationMasterEO;
+import com.example.MOERADTEACHER.common.uneecops.master.eo.FreezMasterConfigurationEO;
 import com.example.MOERADTEACHER.common.uneecops.master.eo.RegionEo;
 import com.example.MOERADTEACHER.common.uneecops.master.eo.SchoolMasterEO;
 import com.example.MOERADTEACHER.common.uneecops.master.eo.StaffTypeMasterEO;
@@ -20,6 +23,7 @@ import com.example.MOERADTEACHER.common.uneecops.master.eo.StationEo;
 import com.example.MOERADTEACHER.common.uneecops.master.eo.SubjectMasterEO;
 import com.example.MOERADTEACHER.common.uneecops.master.repo.CategoryMasterRepository;
 import com.example.MOERADTEACHER.common.uneecops.master.repo.DesignationMasterRepository;
+import com.example.MOERADTEACHER.common.uneecops.master.repo.FreezMasterConfigurationRepository;
 import com.example.MOERADTEACHER.common.uneecops.master.repo.RegionMasterRepo;
 import com.example.MOERADTEACHER.common.uneecops.master.repo.SchoolMasterRepo;
 import com.example.MOERADTEACHER.common.uneecops.master.repo.StaffTypeMasterRepository;
@@ -88,6 +92,9 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 	private DesignationMasterRepository designationMasterRepository;
 	@Autowired
 	private SubjectMasterRepository subjectMasterRepository;
+	
+	@Autowired
+	FreezMasterConfigurationRepository freezMasterConfigurationRepository;
 
 	@Override
 	public void saveStationMaster(StationMasterVo req) {
@@ -517,6 +524,20 @@ public class UneecopsMasterServiceImpl implements UneecopsMasterService {
 		subMasterEO.get().setUpdatedDate(UneecopsDateUtils.getCurrentTimeStamp());
 		subjectMasterRepository.save(subMasterEO.get());
 
+	}
+	
+	@Override
+	public Map<String,Object>  freezeMaster(FreezMasterConfigurationEO data){
+		Map<String,Object> mObj=new HashMap<String,Object>();
+		try {
+			freezMasterConfigurationRepository.save(data);
+			mObj.put("status", "1");
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			mObj.put("status", "0");
+		}
+		return mObj;
+		
 	}
 
 }

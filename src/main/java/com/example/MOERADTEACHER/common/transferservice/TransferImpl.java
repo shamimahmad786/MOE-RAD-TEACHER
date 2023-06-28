@@ -1094,13 +1094,13 @@ public class TransferImpl {
 		return transferHistoryRepository.saveAll(data);
 
 	}
-
+//   getTransferBasicProfileByTeacherId This function is called on click of individual teacher transfer
 	public Map<String, Object> getTransferBasicProfileByTeacherId(Integer teacherId) throws Exception {
 		Map<String, Object> mp = new HashMap<String, Object>();
 
 		TransferKVTeacherDetails tsDetails = transferKVTeacherDetailsRepository.findAllByTeacherId(teacherId);
 
-		System.out.println("called");
+		System.out.println(" getTransferBasicProfileByTeacherId called");
 
 		if (tsDetails != null) {
 			// System.out.println("--------Initiated Transfer----------");
@@ -1369,6 +1369,7 @@ public class TransferImpl {
 			qrObj = nativeRepository.executeQueries(
 					"select tp.teacher_id,tp.teacher_employee_code,tp.teacher_name,tp.teacher_gender,tp.teacher_dob,tp.teacher_employee_code,tp.teacher_email,tp.teacher_mobile,ttp.transfer_id ,ttp.transfer_status  from teacher_profile tp, teacher_transfer_profile ttp where tp.teacher_id =ttp.teacher_id and tp.kv_code = '"
 							+ kvcode + "'");
+			System.out.println(qrObj.toString());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

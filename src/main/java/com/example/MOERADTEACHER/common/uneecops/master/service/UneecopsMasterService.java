@@ -1,7 +1,10 @@
 package com.example.MOERADTEACHER.common.uneecops.master.service;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
+import com.example.MOERADTEACHER.common.uneecops.master.eo.FreezMasterConfigurationEO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.CategoryMasterVo;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.DesignationMasterReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.DesignationUpdateMasterReqVO;
@@ -56,5 +59,9 @@ public interface UneecopsMasterService {
 	public void saveSubjectMaster(@Valid SubjectMasterReqVO subjectMasterReqVO);
 
 	public void updateSubjectMaster(@Valid SubjectMasterUpdateReqVO subUpdateReqVO);
+	
+	public Map<String,Object> freezeMaster(FreezMasterConfigurationEO data);
+	
+	
 
 }

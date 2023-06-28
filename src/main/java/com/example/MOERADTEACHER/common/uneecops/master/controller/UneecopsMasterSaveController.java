@@ -1,5 +1,7 @@
 package com.example.MOERADTEACHER.common.uneecops.master.controller;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.MOERADTEACHER.common.uneecops.master.eo.FreezMasterConfigurationEO;
 import com.example.MOERADTEACHER.common.uneecops.master.service.UneecopsMasterService;
 import com.example.MOERADTEACHER.common.uneecops.master.utils.UneeApiResMsgEnum;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.CategoryMasterVo;
@@ -23,6 +26,9 @@ import com.example.MOERADTEACHER.common.uneecops.master.vo.StaffTypeUpdateMaster
 import com.example.MOERADTEACHER.common.uneecops.master.vo.StationMasterVo;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.SubjectMasterReqVO;
 import com.example.MOERADTEACHER.common.uneecops.master.vo.SubjectMasterUpdateReqVO;
+import com.example.MOERADTEACHER.common.util.CustomObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 //import com.example.MOERADTEACHER.common.uneecops.master.service.UneecopsMasterService;
 //import com.example.MOERADTEACHER.common.uneecops.master.utils.UneeApiResMsgEnum;
@@ -45,6 +51,9 @@ import lombok.extern.slf4j.Slf4j;
 public class UneecopsMasterSaveController {
 	@Autowired
 	private UneecopsMasterService uneecopsMasterService;
+	
+	@Autowired
+	CustomObjectMapper customObjectMapper;
 	
 	@PostMapping("/save-station")
 	public ResponseEntity<?> saveStationMaster(@Valid @RequestBody StationMasterVo stationMasterVo){
@@ -143,4 +152,34 @@ public class UneecopsMasterSaveController {
 		uneecopsMasterService.updateSubjectMaster(subUpdateReqVO);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS,HttpStatus.OK);
 	}
+	
+	@PostMapping("/freeze-master")
+	public ResponseEntity<?> freezeMaster(@Valid @RequestBody String data){
+		
+		FreezMasterConfigurationEO mObj=null;
+		try {
+			ObjectMapper mapperObj = new ObjectMapper();
+			try {
+				mObj = mapperObj.readValue(data, new TypeReference<FreezMasterConfigurationEO>() {
+				});
+			} catch (Exception ex) {
+			ex.printStackTrace();
+			}
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return new ResponseEntity<>(uneecopsMasterService.freezeMaster(mObj),HttpStatus.OK);
+	}
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
 }
