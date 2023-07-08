@@ -55,6 +55,9 @@ public class TeacherTransferController {
 		try {
 		 trsBean = mapperObj.readValue(data, new TypeReference<TeacherTransferDetails>() {
 			});
+		 String transfer_id="KVS"+(100000+trsBean.getTeacherId());
+		 trsBean.setTransferId(transfer_id);
+		 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -64,424 +67,468 @@ public class TeacherTransferController {
 	
 	
 	@RequestMapping(value = "/getTeacherTransferDetails", method = RequestMethod.POST)
-	public ResponseEntity<TransferDcBeans> saveTeacherTransfer(@RequestBody String data,
+	public ResponseEntity<?> saveTeacherTransfer(@RequestBody String data,
 			@RequestHeader("username") String username) throws Exception {
-		
-		String kvCode="";
-		String teacherId ="";
+
+		String kvCode = "";
+		String teacherId = "";
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
-			  JsonNode jsonNode = objectMapper.readTree(data);
-			  //{"kvCode":"9999","teacherId":1385}
-			  kvCode = jsonNode.get("kvCode").asText();
-			  teacherId = jsonNode.get("teacherId").asText();
-			  
-			  System.out.println("kv_code: " + kvCode);
-			  System.out.println("teacherId: " + teacherId);
-		}catch(Exception e) {
+			JsonNode jsonNode = objectMapper.readTree(data);
+			// {"kvCode":"9999","teacherId":1385}
+			kvCode = jsonNode.get("kvCode").asText();
+			teacherId = jsonNode.get("teacherId").asText();
+
+			System.out.println("kv_code: " + kvCode);
+			System.out.println("teacherId: " + teacherId);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("data: " + data);
-		  String QUERY ="select ksm.school_type ,tp.teacher_employee_code,tp.teacher_id ,tp.teacher_dob, ttp.absence_days_one, teacher_disability_yn , ttp.personal_status_mdgd , ttp.personal_status_dfpd , tp.marital_status ,tp.spouse_status , ttp.personal_status_spd ,   tp.teacher_gender , ttp.memberjcm from public.teacher_transfer_profile ttp , public.teacher_profile tp , kv.kv_school_master ksm where ttp.teacher_id = tp.teacher_id  and  ttp.teacher_id = '"+teacherId.toString()+"' and ksm.kv_code =tp.kv_code and ksm.kv_code ='"+kvCode.toString()+"'" ;
-//	  System.out.println(QUERY.toString());
-	  
-		  System.out.println("getTeacherTransferDetails data  "+data);
-	      
-		  
-	  String QUERYstation =" select *, DATE_PART('day', work_end_date::timestamp - work_start_date::timestamp) as no_of_days from (\r\n"
-  	  		+ "				 	select ksm.station_code , work_start_date , coalesce(work_end_date,'2023-06-30') as work_end_date, \r\n"
-  	  		+ "				 	teacher_id   \r\n"
-  	  		+ "				 	from 	public.teacher_work_experience twe , kv.kv_school_master ksm \r\n"
-  	  		+ "				 	where teacher_id = '"+teacherId.toString()+"'"
-  	  		+ "				 	and ksm.kv_code = twe.udise_sch_code \r\n"
-  	  		+ "				 	order by work_start_date \r\n"
-  	  		+ "				 	) aa order by work_start_date " ;
 
-	        
-	  
-	  
-	  List<Transfer> transfers = new ArrayList<>();
-	  TransferDcBeans dcObj=new TransferDcBeans();
-    // Open a connection
-    try {
-    	
-    	
-    	
-  	  DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-//  	  Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-//        Statement stmt = conn.createStatement();
-//        ResultSet rs = stmt.executeQuery(QUERY);
-  	  
-  	  System.out.println(QUERY);
-  	  
-  	QueryResult	rs=nativeRepository.executeQueries(QUERY);
-        
-  	  int i = 0;
-  	  
-  	  int teacher_disability_yn= 0;
-  	  int personal_status_mdgd = 0;
-  	  int personal_status_dfpd =0;
-  	  int lessThanThreeYearRetire=0;
-  	  
-  	  int gender =0;
-  	  int marital_status = 4;
-  	  int spouseEmployementStatus=5;
-  	  
-  	  int personal_status_spd = 0 ; // Single Parent
-  	  int teacher_gender = 0;  // Woman Employee
-  	  int memberjcm = 0;
-  	  String idsStartWith ="(0";
-  	  String idsEndsWith =")" ;
-  	  
-  	  // Current Station Staying Period
-  	  
-  	  try {
-  		  
-  		  
-  	QueryResult	qr=nativeRepository.executeQueries(QUERYstation);
-  		  
-//  		  Statement stmtStationDuration = conn.createStatement();
-//  		  ResultSet rsStationDuration = stmtStationDuration.executeQuery(QUERYstation);
-	          
-  	System.out.println("size--->"+qr.getRowValue().size());
-  	
-  	for(int j=0; j<qr.getRowValue().size();j++) {
-//  		System.out.println(j);
-//  		System.out.println(String.valueOf(qr.getRowValue().get(j).get("station_code")));
-//  		System.out.println(qr.getRowValue().get(j).get("work_start_date"));
-//  		System.out.println(qr.getRowValue().get(j).get("work_end_date"));
-  		//System.out.println("no of days--->"+Math.round(Double.parseDouble((String.valueOf(qr.getRowValue().get(j).get("no_of_days"))))));
-  		//System.out.println(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString()));
-  		
-  		SimpleDateFormat sObj=	new SimpleDateFormat("yyyy-MM-dd");
-  		
-  	  Date date1=sObj.parse(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString()));  
-  		
-  	 // System.out.println(date1);
-  	  
-//  		System.out.println(new Date(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString())));
-//  		Date workEndData=null;
-//  		if(qr.getRowValue().get(j).get("work_end_date") !=null) {
-//  			workEndData=new Date(String.valueOf(qr.getRowValue().get(j).get("work_end_date")));
-//  		}
-  		try {
-  		transfers.add(new Transfer(String.valueOf(qr.getRowValue().get(j).get("station_code")), sObj.parse(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString())),sObj.parse(String.valueOf(qr.getRowValue().get(j).get("work_end_date").toString())), (int)Double.parseDouble((String.valueOf(qr.getRowValue().get(j).get("no_of_days"))))));
-  	
-  		}catch(Exception ex) {
-  			ex.printStackTrace();
-  		}
-  		}
-  	
-  	
-//	          while (qr.getRowValue().) {
-//	       	   transfers.add(new Transfer(rsStationDuration.getString("station_code"), rsStationDuration.getDate("work_start_date"), rsStationDuration.getDate("work_start_date"), rsStationDuration.getInt("no_of_days")));
-//	       	   
-//	          } 
-  	  }catch (Exception e) {
-  		  e.printStackTrace();
-  	  }
-  	  int continuousStay = calculateContinuousStay(transfers);   /// Contineous Stay At Current Station
-  	
-  	  
-  	 // System.out.println("continuousStay---->"+continuousStay);
-  	  
-  	  // 
-  	  
-  	  List<Transfer> highestThreeRows = getHighestThreeRows(transfers);
-  	  
-  	  int returnStay = calculateReturnStay(highestThreeRows); 
-  	  
-  	  
-  	  //System.out.println("returnStay--->"+returnStay);
-  	  
-  	  
-  	  for(int k=0;k<rs.getRowValue().size();k++) {
-  	  
-        
-//       while (rs.next()) {
-      	 ++i;
-      	 String inString ="";
-      	// System.out.println(" Teacher ID " + rs.getString("teacher_id"));
-      	 
-      	 DateTime DateOfBirth = formatter.parseDateTime(String.valueOf(rs.getRowValue().get(k).get("teacher_dob")));
-      	 int  teacherAge =  calculateAge(DateOfBirth);
-      	// System.out.println(" DateOfBirth " +DateOfBirth+ " teacherAge "+ teacherAge);
-      	 
-      	 
-      	 // Disability  ID = 3
-      	 
-      	 System.out.println("teacher_disability_yn---->"+rs.getRowValue().get(k).get("teacher_disability_yn"));
-      	 
-      	 if(rs.getRowValue().get(k).get("teacher_disability_yn")==null) {
-      		 teacher_disability_yn= 0;
-      	 }else {
-      		 teacher_disability_yn =  Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("teacher_disability_yn")));
-      	 }
-      	 // Medical Ground
-      	 if(rs.getRowValue().get(k).get("personal_status_mdgd")==null) {
-      		 personal_status_mdgd= 0;
-      	 }else {
-      		 personal_status_mdgd =  Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("personal_status_mdgd")));
-      	 }
-      	 // Death in Family
-      	 if(rs.getRowValue().get(k).get("personal_status_dfpd")==null) {
-      		 personal_status_dfpd= 0;
-      	 }else {
-      		 personal_status_dfpd =  Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("personal_status_dfpd")));
-      	 }
-      	 
-      	 // Less Than 3 Years to retire
-      	 if (teacherAge >= 57) {
-      		 lessThanThreeYearRetire = 1;
-      	 }
-      	 // Maritial Status
-      	 if(rs.getRowValue().get(k).get("marital_status")==null) {  // 1 Married , 4 Single 7 Widow
-      		 marital_status= 4;
-      	 }else {
-      		 marital_status =Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("marital_status")));
-      	 }
-      	 // Spouse Employment Status 
-      	 if (marital_status== 1) {  // ie Person is married
-      		 
-      		 if(rs.getRowValue().get(k).get("spouse_status")==null) {  // 1 KVS 2 Central 3 State 5 None
-      			 spouseEmployementStatus= 5;
-	        	 }else {
-	        		 spouseEmployementStatus =  Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("spouse_status")));
-	        	 }
-      		 
-      	 } //  Single Parent
-      	 if(rs.getRowValue().get(k).get("personal_status_spd")==null ) {  
-      		 personal_status_spd= 0;
-      	 }else {
-      		personal_status_spd = Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("personal_status_spd")));
-      	 }
-      	 // Woman Employee
-      	 if(rs.getRowValue().get(k).get("teacher_gender")==null) {  
-      		 teacher_gender= 0;
-      	 }else {
-      		 teacher_gender =  Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("teacher_gender")));
-      	 }
-      	 // Member of JCM 
-      	 if(rs.getRowValue().get(k).get("memberjcm")==null) {  // RJCM = 1 , NJCM = 2 , for other 0 
-      		 teacher_gender= 0;
-      	 }else {
-      		 teacher_gender =  Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("memberjcm")));
-      	 }
-      	 
-      	 
-      	 // Prepare Points  -- DISABILITY ID 3
-      	 if(teacher_disability_yn == 1) {
-      		 idsStartWith = idsStartWith.concat(",3");
-      	 }
-      	 // MDGD ID -- 4
-      	 if(personal_status_mdgd == 1) {
-      		 idsStartWith = idsStartWith.concat(",4");
-      	 }
-      	 // DFP ID-- 5
-      	 if(personal_status_dfpd == 1) {
-      		 idsStartWith = idsStartWith.concat(",5");
-      	 }
-      	 // Less than 3 years to retire -- 6 
-      	 if(lessThanThreeYearRetire == 1) {
-      		 idsStartWith = idsStartWith.concat(",6");
-      	 }
-      	
-      	 // Spouse Employment Status  ID 7 for KV 8 For Central Govt 9 For State 
-      	 if(spouseEmployementStatus < 5) { //
-      		 spouseEmployementStatus = spouseEmployementStatus + 6;
-      		 String sEmployementStatus = ","+spouseEmployementStatus;
-      		 idsStartWith = idsStartWith.concat(sEmployementStatus);
-      	 }
-      	 // GENDER 2 IE Woman  ID 11
-      	 if(teacher_gender == 2) {
-      		 idsStartWith = idsStartWith.concat(",11");
-      	 }
-      	 // JCM Member ID 12 
-      	 if(memberjcm > 0 ) {
-      		 idsStartWith = idsStartWith.concat(",12");
-      	 }
-      	 inString  = idsStartWith.concat(idsEndsWith);
-      	 System.out.print(inString);
-      	 
-      }
-       
-//  	  }
-//  	absence_days_one;
-  	  
-  	dcObj.setDcStayAtStation(continuousStay);
-  	dcObj.setDcReturnStation(returnStay);
-  	if(rs.getRowValue().get(0).get("personal_status_spd") !=null) {
-  	dcObj.setDcPeriodAbsence(Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("absence_days_one"))));
-  	}else {
-  		dcObj.setDcPeriodAbsence(0);
-  	}
-  	
-  //	System.out.println(dcObj.getDcStayAtStation());
-  //	System.out.println(dcObj.getDcPeriodAbsence());
-  //	System.out.println(dcObj.getDcReturnStation());
-  	dcObj.setDcStayStationPoint((int)Math.floor((dcObj.getDcStayAtStation()+dcObj.getDcReturnStation()-dcObj.getDcPeriodAbsence())/365)*2);
-  	
-  	
-//  	dcObj.setDcStayStationPoint(dcStayStationPoint); To be calculate
-  	dcObj.setDcTenureHardPoint(0); //Pending from Bibek Ghos
-  	// Disability
-  	if(teacher_disability_yn==1) {  
-  	dcObj.setDcPhysicalChallengedPoint(-20);
+		TeacherTransferDetails savedTeacherTransObj = teacherTransferImpl
+				.getTcDcPointByTeacherId(Integer.parseInt(teacherId));
+
+		if (savedTeacherTransObj != null) {
+			System.out.println("in if condition");// IE TC and DC Point is Saved.
+			return ResponseEntity.ok(savedTeacherTransObj);
+		} else {
+			System.out.println("in else condition");
+
+			System.out.println("data: " + data);
+			 String QUERY =  "select tp.teacher_id ,ksm.school_type,ksm.current_hard_flag_yn ,"
+			+ "public.datediff(tp.work_experience_position_type_present_station_start_date::date,'2023-06-30'::date ) as continuous_stay, "
+			+ "tp.work_experience_position_type_present_station_start_date , ttp.choice_kv1_station_code ,tp.teacher_employee_code,tp.teacher_id ,tp.teacher_dob, ttp.absence_days_one, teacher_disability_yn,ksm.station_code ,tp.spouse_station_code  , ttp.personal_status_mdgd , ttp.personal_status_dfpd , tp.marital_status ,tp.spouse_status , ttp.personal_status_spd ,   tp.teacher_gender , ttp.memberjcm , ttp.surve_hard_yn from public.teacher_transfer_profile ttp , public.teacher_profile tp , kv.kv_school_master ksm \r\n"
+			+ "where ttp.teacher_id = tp.teacher_id  and  ttp.teacher_id = '"+ teacherId.toString() +"' "
+			+ "and ksm.kv_code = tp.kv_code and ksm.kv_code = '"+kvCode.toString() +"'";
+
+			
+			System.out.println(QUERY.toString());
+			System.out.println("getTeacherTransferDetails data  " + data);
+
+			String QUERYstation = " select *, DATE_PART('day', work_end_date::timestamp - work_start_date::timestamp) as no_of_days from (\r\n"
+					+ "				 	select ksm.station_code , work_start_date , coalesce(work_end_date,'2023-06-30') as work_end_date, \r\n"
+					+ "				 	teacher_id   \r\n"
+					+ "				 	from 	public.teacher_work_experience twe , kv.kv_school_master ksm \r\n"
+					+ "				 	where teacher_id = '" + teacherId.toString() + "'"
+					+ "				 	and ksm.kv_code = twe.udise_sch_code \r\n"
+					+ "				 	order by work_start_date \r\n"
+					+ "				 	) aa order by work_start_date ";
+
+			List<Transfer> transfers = new ArrayList<>();
+			TransferDcBeans dcObj = new TransferDcBeans();
+			// Open a connection
+			try {
+				DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+				// System.out.println(QUERY);
+				QueryResult rs = nativeRepository.executeQueries(QUERY);
+
+				int i = 0;
+				int teacherAge = 0;
+				int surve_hard_yn = 0;
+				int tc_current_station_hard_yn = 0;
+				int teacher_disability_yn = 0;
+				int personal_status_mdgd = 0;
+				int personal_status_dfpd = 0;
+				int lessThanThreeYearRetire = 0;
+				int continuousStay = 0;
+
+				int gender = 0;
+				int marital_status = 4;
+				int spouseEmployementStatus = 5;
+
+				int personal_status_spd = 0; // Single Parent
+				int teacher_gender = 0; // Woman Employee
+				int memberjcm = 0;
+				String idsStartWith = "(0";
+				String idsEndsWith = ")";
+
+				// Current Station Staying Period
+
+				try {
+					System.out.println(QUERYstation);
+
+					QueryResult qr = nativeRepository.executeQueries(QUERYstation);
+					System.out.println("size--->" + qr.getRowValue().size());
+
+					for (int j = 0; j < qr.getRowValue().size(); j++) {
+
+						SimpleDateFormat sObj = new SimpleDateFormat("yyyy-MM-dd");
+
+						Date date1 = sObj
+								.parse(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString()));
+
+						try {
+							transfers.add(new Transfer(String.valueOf(qr.getRowValue().get(j).get("station_code")),
+									sObj.parse(
+											String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString())),
+									sObj.parse(String.valueOf(qr.getRowValue().get(j).get("work_end_date").toString())),
+									(int) Double
+											.parseDouble((String.valueOf(qr.getRowValue().get(j).get("no_of_days"))))));
+
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				/*
+				 * Continuous Stay At Current Station Continuous Stay will be Counted in
+				 * Displacement count Here no Leave is Considered
+				 * 
+				 * After That Return Stay will also be counted
+				 */
+
+				//int continuousStay = calculateContinuousStay(transfers);
+				
+				List<Transfer> highestThreeRows = getHighestThreeRows(transfers);
+
+				int returnStay = calculateReturnStay(highestThreeRows);
+				
+							
+
+				for (int k = 0; k < rs.getRowValue().size(); k++) {
+					++i;
+					String inString = "";
+
+					
+					DateTime DateOfBirth = formatter
+							.parseDateTime(String.valueOf(rs.getRowValue().get(k).get("teacher_dob")));
+					teacherAge = calculateAge(DateOfBirth);
+					// Continuous Stay At Current
+					
+					if (rs.getRowValue().get(k).get("continuous_stay") == null) {
+						continuousStay = 0;
+					} else {
+						continuousStay = Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("continuous_stay")));
+					}
+					
+					System.out.println("continuousStay--->"+continuousStay);
+
+					
+					// Hard Station Served
+					if (rs.getRowValue().get(k).get("surve_hard_yn") == null) {
+						surve_hard_yn = 0;
+					} else {
+						surve_hard_yn = Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("surve_hard_yn")));
+					}
+
+					if (rs.getRowValue().get(k).get("current_hard_flag_yn") == null) {
+						tc_current_station_hard_yn = 0;
+					} else {
+						tc_current_station_hard_yn = Integer
+								.parseInt(String.valueOf(rs.getRowValue().get(k).get("current_hard_flag_yn")));
+					}
+
+					// Disability ID = 3
+
+					if (rs.getRowValue().get(k).get("teacher_disability_yn") == null) {
+						teacher_disability_yn = 0;
+					} else {
+						teacher_disability_yn = Integer
+								.parseInt(String.valueOf(rs.getRowValue().get(k).get("teacher_disability_yn")));
+					}
+					// Medical Ground
+					if (rs.getRowValue().get(k).get("personal_status_mdgd") == null) {
+						personal_status_mdgd = 0;
+					} else {
+						personal_status_mdgd = Integer
+								.parseInt(String.valueOf(rs.getRowValue().get(k).get("personal_status_mdgd")));
+					}
+					// Death in Family
+					if (rs.getRowValue().get(k).get("personal_status_dfpd") == null) {
+						personal_status_dfpd = 0;
+					} else {
+						personal_status_dfpd = Integer
+								.parseInt(String.valueOf(rs.getRowValue().get(k).get("personal_status_dfpd")));
+					}
+
+					// Less Than 3 Years to retire
+					if (teacherAge >= 57) {
+						lessThanThreeYearRetire = 1;
+					}
+					// Maritial Status
+					if (rs.getRowValue().get(k).get("marital_status") == null) { // 1 Married , 4 Single 7 Widow
+						marital_status = 4;
+					} else {
+						marital_status = Integer
+								.parseInt(String.valueOf(rs.getRowValue().get(k).get("marital_status")));
+					}
+					// Spouse Employment Status
+					if (marital_status == 1) { // ie Person is married
+
+						if (rs.getRowValue().get(k).get("spouse_status") == null) { // 1 KVS 2 Central 3 State 5 None
+							spouseEmployementStatus = 5;
+						} else {
+							spouseEmployementStatus = Integer
+									.parseInt(String.valueOf(rs.getRowValue().get(k).get("spouse_status")));
+						}
+
+					} // Single Parent
+					if (rs.getRowValue().get(k).get("personal_status_spd") == null) {
+						personal_status_spd = 0;
+					} else {
+						personal_status_spd = Integer
+								.parseInt(String.valueOf(rs.getRowValue().get(k).get("personal_status_spd")));
+					}
+					// Woman Employee
+					if (rs.getRowValue().get(k).get("teacher_gender") == null) {
+						teacher_gender = 0;
+					} else {
+						teacher_gender = Integer
+								.parseInt(String.valueOf(rs.getRowValue().get(k).get("teacher_gender")));
+					}
+					// Member of JCM
+					if (rs.getRowValue().get(k).get("memberjcm") == null) { // RJCM = 1 , NJCM = 2 , for other 0
+						teacher_gender = 0;
+					} else {
+						teacher_gender = Integer.parseInt(String.valueOf(rs.getRowValue().get(k).get("memberjcm")));
+					}
+
+				}
+
+				
+				int dcNoofDays = continuousStay + returnStay;
+				double result = dcNoofDays / 365;
+				int dcNoofYears = (int) result;
+				
+				// Absence Stay at Station
+
+				dcObj.setDcStayAtStation(dcNoofYears);
+				int tcStayAtStationYears = isNullOrEmptyString(
+						rs.getRowValue().get(0).get("absence_days_one").toString());
+				dcObj.setDcStayStationPoint(dcNoofYears * 2);
+				dcObj.setTcStayAtStation(tcStayAtStationYears);
+				dcObj.setTcStayStationPoint(tcStayAtStationYears * 2);
+				System.out.println(" DC Station Point  " + dcObj.getDcStayStationPoint().toString()
+						+ " TC Station Point " + dcObj.getTcStayStationPoint());
+
+				// For DC it is Yes or No , No Point is given for that
+				dcObj.setDcTenureHardPoint("N");
+
+				if (teacherAge < 40) {
+					if (surve_hard_yn == 1) {
+						dcObj.setDcTenureHardPoint("Y");
+					}
+				}
+
+				// Initilize with 0
+				dcObj.setTcTenureHardPoint(0);
+
+				if (tc_current_station_hard_yn == 1) {// Employee Present Station Is Hard
+					if (tcStayAtStationYears >= 3) { // He is Completed More Than 3 Year
+						dcObj.setTcTenureHardPoint(30);
+					}
+				}
+
+				// Disability
+				if (teacher_disability_yn == 1) {
+					dcObj.setDcPhysicalChallengedPoint(-20);
+					dcObj.setTcPhysicalChallengedPoint(40);
 //  	set point from master
-  	}else {
-  		dcObj.setDcPhysicalChallengedPoint(0);
+				} else {
+					dcObj.setDcPhysicalChallengedPoint(0);
+					dcObj.setTcPhysicalChallengedPoint(0);
 //  		dcObj.setDcPhysicalChallengedPoint();	
-  	}
-  	// Medical Ground or Death of Family
-  	if(personal_status_mdgd==1 || personal_status_dfpd==1) {
-  	dcObj.setDcMdDfGroungPoint(-14); 
+				}
+				// Medical Ground or Death of Family
+				if (personal_status_mdgd == 1 || personal_status_dfpd == 1) {
+					dcObj.setDcMdDfGroungPoint(-14);
+					dcObj.setTcMdDfGroungPoint(35);
 //  	set point from master
-  	}else {
-  		dcObj.setDcMdDfGroungPoint(0);
-  	}
-  	// LTR - Less than 3 years to retire
-  	if(lessThanThreeYearRetire==1) {
-  	dcObj.setDcLtrPoint(-6);   
+				} else {
+					dcObj.setDcMdDfGroungPoint(0);
+					dcObj.setTcMdDfGroungPoint(0);
+				}
+				// LTR - Less than 3 years to retire
+				if (lessThanThreeYearRetire == 1) {
+					dcObj.setDcLtrPoint(-6);
+					dcObj.setTcLtrPoint(25);
 //  	set point from master
-  	}else {
-  		dcObj.setDcLtrPoint(0);
-  	}
-  	
-  Map<Integer,Object> spousePointObj=new HashMap<Integer,Object>();
-  
-  List<Integer> applicatblePoint=new ArrayList<Integer>();
-  
-  
-  spousePointObj.put(1, -10);  // same station
-  spousePointObj.put(2, -8);  // same station
-  spousePointObj.put(3, -6); //same station
-  spousePointObj.put(4, -4); // Gender Female
-  spousePointObj.put(6, -12);  	
-  
-  
-  
-  	Integer spouseJobType=null;
-  	Boolean spouseAtSameStation=false;
-  	
-  	System.out.println("Marirtal--->"+rs.getRowValue().get(0).get("marital_status"));
-  	
-  	if(rs.getRowValue().get(0).get("marital_status") !=null &&  String.valueOf(rs.getRowValue().get(0).get("marital_status")).equalsIgnoreCase("1")) {
-  		spouseJobType=Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("spouse_status")));
-  		System.out.println("spouseJobType-->"+spouseJobType);
-  		if(spouseJobType !=null && spouseJobType !=5) {
-  		 spouseAtSameStation =checkSpouseAtSameStation(Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("teacher_id"))));	
-  	System.out.println(spouseAtSameStation);
-  		}
-  		
-  		if(spouseAtSameStation) {
-  			applicatblePoint.add(spouseJobType);	
-  		}
-  		
-  		
-  	}
-  	
-  	Integer teacherGender =  Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("teacher_gender")));
-  	
-  	if(teacherGender==2) {
-  		applicatblePoint.add(4);
-  	}
-  	
-  	if(personal_status_spd==1) {
-  		applicatblePoint.add(6);
-  	}
-  	
-  	Integer minValue=0;
-  	System.out.println("applicatblePoint"+applicatblePoint);
-  	if(applicatblePoint.size()>0) {
- for(int l=0;l<applicatblePoint.size();l++) {
-	Integer dyValue=Integer.parseInt(String.valueOf(spousePointObj.get(applicatblePoint.get(l))));	
-	if(minValue>dyValue) {
-		minValue=dyValue;
-	}
- }
-  	}
-  	
-  	//System.out.println("min Value---->"+minValue);
-  	if(minValue==-4) {
-  		dcObj.setDcNonSopouseSinglePoint(minValue);
-  	}else if(minValue ==-12) {
-  		dcObj.setDcSinglePoint(minValue);
-  	}
-  	dcObj.setDcSpousePoint(minValue);
-  	
-  	System.out.println("min Value---->"+minValue);
-  	
-  	Integer schoolType=Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("school_type")));
-  	
-  	System.out.println("schoolType---->"+schoolType);
-  	
-  	try {
-  		memberjcm=Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("memberjcm")));
-  		System.out.println("memberjcm---->"+memberjcm);
-  	}catch(Exception e) {
-  		memberjcm = 0;
-  	}
-  	 
-  	 
-  
-  	
-  	if((schoolType==2 || schoolType==3) && (memberjcm==1 || memberjcm==2)) {
-  		dcObj.setDcRjcmNjcmPoint(-6);
-  	}else {
-  		dcObj.setDcRjcmNjcmPoint(0);
-  	}
-  	
-  	dcObj.setKvCode(String.valueOf(rs.getRowValue().get(0).get("kv_code")));
-  	dcObj.setTeacherId(Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("teacher_id"))));
-  	dcObj.setTeacherEmployeeCode(String.valueOf(rs.getRowValue().get(0).get("teacher_employee_code")));
-  	
-  	System.out.println("Employee code--->"+String.valueOf(rs.getRowValue().get(0).get("teacher_employee_code")));
-  	
-  	dcObj.setCreatedDateTime(new Date());
-  	dcObj.setUpdateDateTime(new Date());
-  	
-  	Integer maxAmoungFive=0;
-  	
-  	List<Integer> findMax=new ArrayList<Integer>();
-  	findMax.add(dcObj.getDcPhysicalChallengedPoint());
-  	findMax.add(dcObj.getDcMdDfGroungPoint());
-  	findMax.add(dcObj.getDcLtrPoint());
-  	findMax.add(dcObj.getDcSpousePoint());
-  	findMax.add(dcObj.getDcRjcmNjcmPoint());
-  	
-  	System.out.println(findMax);
-  	
-  	maxAmoungFive=findMax.stream().min(Comparator.naturalOrder()).get();
-//  	for()
-//  	if(dcObj.getDcPhysicalChallengedPoint()>dcObj.get) {
-//  		
-//  	}
-  	System.out.println("maxAmoungFive--->"+maxAmoungFive);
-  	Integer dc_total=dcObj.getDcStayStationPoint()+maxAmoungFive ;
-  	
-  	dcObj.setDcTotalPoint(dc_total);
-  	
-  	// Spouse relaitedPoint
-  
-  	
-  	
-  	
-  	  
-//  	dcObj.set
-  	
-       
-//       conn.close();
-  	
-		
+				} else {
+					dcObj.setDcLtrPoint(0);
+					dcObj.setTcLtrPoint(0);
+				}
 
-    }catch(Exception ex) {
-    	ex.printStackTrace();
-    } 
-    
-	
-    
-  	
-				return ResponseEntity.ok(dcObj);
+				Map<Integer, Object> spousePointObj = new HashMap<Integer, Object>();
+
+				List<Integer> applicatblePoint = new ArrayList<Integer>();
+//  List<Integer> tcApplicatblePoint=new ArrayList<Integer>();
+
+				spousePointObj.put(1, -10); // same station
+				spousePointObj.put(2, -8); // same station
+				spousePointObj.put(3, -6); // same station
+				spousePointObj.put(4, -4); // Gender Female
+				spousePointObj.put(6, -12); // Single Parent
+
+				Map<Integer, Object> tcSpousePointObj = new HashMap<Integer, Object>();
+				List<Integer> tcApplicatblePoint = new ArrayList<Integer>();
+
+				tcSpousePointObj.put(1, 15); // Spouse KVS Employee
+				tcSpousePointObj.put(2, 12); // Central
+				tcSpousePointObj.put(3, 10); // State Govt
+				tcSpousePointObj.put(4, 8); // Gender Female
+				tcSpousePointObj.put(6, 20); // Single Parent
+
+				Integer spouseJobType = null;
+				Boolean spouseAtSameStation = false;
+				Boolean spouseChoiceSameStation = false;
+
+				String dc_spouse_station_code = String
+						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("spouse_station_code").toString()));
+
+				String employee_own_station_code = String
+						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("station_code").toString()));
+
+				
+				System.out.println(rs.getRowValue().get(0).get("choice_kv1_station_code"));
+				String tc_spouse_station_choice1_code =null;
+				if(rs.getRowValue().get(0).get("choice_kv1_station_code") !=null) {
+				 tc_spouse_station_choice1_code = String.valueOf(
+						isNullOrEmptyString(rs.getRowValue().get(0).get("choice_kv1_station_code").toString()));
+				}
+				// System.out.println("Marirtal--->"+rs.getRowValue().get(0).get("marital_status"));
+
+				if (rs.getRowValue().get(0).get("marital_status") != null
+						&& String.valueOf(rs.getRowValue().get(0).get("marital_status")).equalsIgnoreCase("1")) {// Person  is  married
+
+					spouseJobType = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("spouse_status"))); // 1  KV  2  Central  3  State  5  None
+
+					if (spouseJobType != null && spouseJobType != 5) {
+						// KV , Central , State Employee
+						if (employee_own_station_code !=null && dc_spouse_station_code !=null && employee_own_station_code.equalsIgnoreCase(dc_spouse_station_code.toString())) { // Same  For DC
+							spouseAtSameStation = true;
+						}
+						if (employee_own_station_code !=null && tc_spouse_station_choice1_code !=null && employee_own_station_code.equalsIgnoreCase(tc_spouse_station_choice1_code.toString())) { // Choice Station  For  TC
+							spouseChoiceSameStation = true;
+						}
+					}
+
+					if (spouseAtSameStation) {
+						applicatblePoint.add(spouseJobType);
+					}
+
+					if (spouseChoiceSameStation) {
+						tcApplicatblePoint.add(spouseJobType);
+					}
+
+				}
+
+				Integer teacherGender = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("teacher_gender")));
+
+				if (teacherGender == 2) {// Female Employee
+					applicatblePoint.add(4);
+					tcApplicatblePoint.add(4);
+				}
+
+				if (personal_status_spd == 1) { // Single Parent
+					applicatblePoint.add(6);
+					tcApplicatblePoint.add(6);
+				}
+
+				Integer minValue = 0;
+				System.out.println("applicatblePoint" + applicatblePoint);
+				if (applicatblePoint.size() > 0) {
+					for (int l = 0; l < applicatblePoint.size(); l++) {
+						Integer dyValue = Integer.parseInt(String.valueOf(spousePointObj.get(applicatblePoint.get(l))));
+						if (minValue > dyValue) {
+							minValue = dyValue;
+						}
+					}
+				}
+
+				Integer maxValue = 0;
+				System.out.println("applicatblePoint" + applicatblePoint);
+				if (tcApplicatblePoint.size() > 0) {
+					for (int l = 0; l < tcApplicatblePoint.size(); l++) {
+						Integer dyValue = Integer
+								.parseInt(String.valueOf(tcSpousePointObj.get(tcApplicatblePoint.get(l))));
+						if (maxValue < dyValue) {
+							maxValue = dyValue;
+						}
+					}
+				}
+
+				// System.out.println("min Value---->"+minValue);
+				if (minValue == -4) {
+					dcObj.setDcNonSopouseSinglePoint(minValue);
+				} else if (minValue == -12) {
+					dcObj.setDcSinglePoint(minValue);
+				}
+				dcObj.setDcSpousePoint(minValue);
+
+				if (maxValue == 8) {
+					dcObj.setTcNonSopouseSinglePoint(maxValue);
+				} else if (minValue == 20) {
+					dcObj.setTcSinglePoint(maxValue);
+				}
+				dcObj.setTcSpousePoint(maxValue);
+
+				System.out.println("min Value---->" + minValue);
+
+				Integer schoolType = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("school_type")));
+
+				System.out.println("schoolType---->" + schoolType);
+
+				try {
+					memberjcm = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("memberjcm")));
+					System.out.println("memberjcm---->" + memberjcm);
+				} catch (Exception e) {
+					memberjcm = 0;
+				}
+
+				if ((schoolType == 2 || schoolType == 3) && (memberjcm == 1 || memberjcm == 2)) {
+					dcObj.setDcRjcmNjcmPoint(-6);
+					//dcObj.setTcRjcmNjcmPoint(6);
+				} else {
+					dcObj.setDcRjcmNjcmPoint(0);
+					dcObj.setTcRjcmNjcmPoint(0);
+				}
+
+				dcObj.setKvCode(String.valueOf(rs.getRowValue().get(0).get("kv_code")));
+				dcObj.setTeacherId(Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("teacher_id"))));
+				dcObj.setTeacherEmployeeCode(String.valueOf(rs.getRowValue().get(0).get("teacher_employee_code")));
+
+				System.out.println("Employee code--->" + String.valueOf(rs.getRowValue().get(0).get("teacher_employee_code")));
+
+				dcObj.setCreatedDateTime(new Date());
+				dcObj.setUpdateDateTime(new Date());
+
+				Integer maxAmoungFive = 0;
+				List<Integer> findMax = new ArrayList<Integer>();
+				findMax.add(dcObj.getDcPhysicalChallengedPoint());  // pwd
+				findMax.add(dcObj.getDcMdDfGroungPoint());  // MDG DFP
+				findMax.add(dcObj.getDcLtrPoint());        // LTR
+				findMax.add(dcObj.getDcSpousePoint());    // Spouse
+				findMax.add(dcObj.getDcRjcmNjcmPoint());
+				maxAmoungFive = findMax.stream().min(Comparator.naturalOrder()).get();
+
+				Integer tcMaxAmoungFive = 0;
+				List<Integer> tcFindMax = new ArrayList<Integer>();
+				tcFindMax.add(dcObj.getTcPhysicalChallengedPoint());
+				tcFindMax.add(dcObj.getTcMdDfGroungPoint());
+				tcFindMax.add(dcObj.getTcLtrPoint());
+				tcFindMax.add(dcObj.getTcSpousePoint());
+				tcFindMax.add(dcObj.getTcRjcmNjcmPoint());
+				tcMaxAmoungFive = tcFindMax.stream().max(Comparator.naturalOrder()).get();
+
+
+				System.out.println("maxAmoungFive--->" + maxAmoungFive);
+				Integer dc_total = dcObj.getDcStayStationPoint() + maxAmoungFive;
+				Integer tc_total = dcObj.getTcStayStationPoint() + tcMaxAmoungFive;
+
+				dcObj.setDcTotalPoint(dc_total);
+				dcObj.setTcTotalPoint(tc_total);
+
+
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			return ResponseEntity.ok(dcObj);
+		}
 	}
 	
 	
@@ -498,7 +545,16 @@ public class TeacherTransferController {
 		   return str== null || str.isEmpty();
 	   }
 	   
-	   
+	   public static Integer  isNullOrEmptyString(String str) {
+		   Integer result=0 ;
+		   System.out.println("str-->"+str);
+	   if (str == null || str.isEmpty()) {
+		    result = 0;
+		} else {
+		    result = Integer.parseInt(str);
+		}
+	   return result;
+	   }
 	  public static int calculateContinuousStay(List<Transfer> transfers) {
 	        int totalStay = 0;
 	        String currentStation = null;
@@ -623,22 +679,8 @@ public class TeacherTransferController {
 	    
 	    public boolean checkSpouseAtSameStation(Integer teacherId) {
 	    	
-	    	QueryResult	spouseStation=nativeRepository.executeQueries("select spouse_station_code from teacher_profile tp where tp.teacher_id =318"); 
-	    	QueryResult	teacherStation=nativeRepository.executeQueries("select station_code from kv.kv_school_master ksm where kv_code in (select kv_code from teacher_profile tp where tp.teacher_id =318) ");
-	       
-	    	System.out.println(spouseStation.getRowValue().get(0).get("spouse_station_code"));
-	    	System.out.println(teacherStation.getRowValue().get(0).get("station_code"));
-	    	if(spouseStation.getRowValue().get(0).get("spouse_station_code") !=null && teacherStation.getRowValue().get(0).get("station_code") !=null) {
-	    		if(String.valueOf(spouseStation.getRowValue().get(0).get("spouse_station_code")).equalsIgnoreCase(String.valueOf(teacherStation.getRowValue().get(0).get("station_code")))) {
-	    			return true;
-	    		}else {
-	    			return false;		
-	    		}
-	    	}else {
-	    		return false;	
-	    	}
-					
-	    }
+	    return true;
+	    }  			
 	    
 	
 }

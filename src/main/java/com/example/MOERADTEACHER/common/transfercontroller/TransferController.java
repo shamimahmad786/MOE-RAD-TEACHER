@@ -42,6 +42,7 @@ import com.example.MOERADTEACHER.common.modal.Teacher;
 import com.example.MOERADTEACHER.common.modal.TeacherProfile;
 //import com.example.MOERADTEACHER.common.service.QualificationImpl;
 import com.example.MOERADTEACHER.common.transferbean.DocumentBean;
+import com.example.MOERADTEACHER.common.transfermodel.TeacherTransferDeclaration;
 import com.example.MOERADTEACHER.common.transfermodel.TransferHistory;
 import com.example.MOERADTEACHER.common.transfermodel.TransferKVTeacherDetails;
 import com.example.MOERADTEACHER.common.transferservice.TransferImpl;
@@ -494,6 +495,32 @@ public class TransferController {
 	@RequestMapping(value = "/resetTransfer", method = RequestMethod.POST)
 	public ResponseEntity<CustomResponse> resetTransfer(@RequestBody String data) throws Exception {		
 		return ResponseEntity.ok(ResponseEntityBeans.reponseBoject(1, "sucess", transferImpl.resetTransfer(data), HttpStatus.OK.toString()));
+	}
+	
+	@RequestMapping(value = "/schoolTransferVerify", method = RequestMethod.POST)
+	public ResponseEntity<?> schoolTransferVerify(@RequestBody String data) throws Exception {		
+		return ResponseEntity.ok(transferImpl.schoolTransferVerify(Integer.parseInt(data)));
+	}
+	
+	@RequestMapping(value = "/saveTransferDeclaration", method = RequestMethod.POST)
+	public ResponseEntity<?> saveTransferDeclaration(@RequestBody String data) throws Exception {		
+		
+		ObjectMapper mapperObj = new ObjectMapper();
+		TeacherTransferDeclaration tdata = new TeacherTransferDeclaration();
+		try {
+			tdata = mapperObj.readValue(data, new TypeReference<TeacherTransferDeclaration>() {
+			});
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			LOGGER.warn("message",ex);
+		}
+		
+		return ResponseEntity.ok(transferImpl.saveTransferDeclaration(tdata));
+	}
+	
+	@RequestMapping(value = "/getTransferDeclaration", method = RequestMethod.POST)
+	public ResponseEntity<?> getTransferDeclaration(@RequestBody String data) throws Exception {				
+		return ResponseEntity.ok(transferImpl.getTransferDeclaration(Integer.parseInt(data)));
 	}
 	
 	

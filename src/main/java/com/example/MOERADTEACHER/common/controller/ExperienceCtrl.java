@@ -86,7 +86,7 @@ public class ExperienceCtrl {
 		expObj.setSchoolId(data.getSchoolId());
 		expObj.setUdiseSchCode(data.getCurrentUdiseSchCode());
 		expObj.setUdiseSchoolName(data.getUdiseSchoolName());
-		expObj.setKvCode(data.getCurrentUdiseSchCode());
+		expObj.setKvCode(data.getKvCode());
 		
 //		// System.out.println("experirnrcr date--->"+d1);
 		

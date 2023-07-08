@@ -85,6 +85,7 @@ public class TeacherProfileBean implements Serializable{
 	
 	public String care_giver_disability_name;
 	public String care_giver_disability_prcnt;
+	public String kvCode;
 	
 	@JsonProperty(value="teacherId", access=JsonProperty.Access.READ_ONLY)
 	public Integer getTeacher_id() {
@@ -677,6 +678,15 @@ public class TeacherProfileBean implements Serializable{
 	@JsonProperty(value="care_giver_disability_name", access=JsonProperty.Access.WRITE_ONLY)
 	public void setCare_giver_disability_name(String care_giver_disability_name) {
 		this.care_giver_disability_name = care_giver_disability_name;
+	}
+	
+	@JsonProperty(value="kvCode", access=JsonProperty.Access.READ_ONLY)
+	public String getKvCode() {
+		return kvCode;
+	}
+	@JsonProperty(value="kv_code", access=JsonProperty.Access.WRITE_ONLY)
+	public void setKvCode(String kvCode) {
+		this.kvCode = kvCode;
 	}
 	
 	

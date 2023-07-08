@@ -9,8 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.vladmihalcea.hibernate.type.array.IntArrayType;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 
 import lombok.Data;
 
@@ -18,6 +24,10 @@ import lombok.Data;
 //@Data
 @Table(name = "teacher_transfer_profile", schema="public")
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@TypeDefs({
+    @TypeDef(name = "json", typeClass = JsonType.class),
+    @TypeDef(name = "string-array", typeClass = IntArrayType.class)
+})
 public class TeacherTransferProfile {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -158,7 +168,17 @@ public class TeacherTransferProfile {
 	private String transferId;
 	@Column(name = "teacher_employee_code")
 	private String teacherEmployeeCode;
+	@Column(name = "surve_hard_yn")
+	private Integer surveHardYn;
 	
+//	  @Type(type = "string-array")
+//	    @Column(name = "period_absent", columnDefinition = "string[]")
+	@Type(type = "jsonb") // See (2)
+    @Column(name = "period_absent", columnDefinition = "jsonb")
+	private String periodAbsent;
+	
+	@Column(name = "relation_with_empl_mdg")
+	private String relationWithEmplMdg;
 	
 	public Integer getId() {
 		return id;
@@ -549,6 +569,30 @@ public class TeacherTransferProfile {
 	}
 	public void setTeacherEmployeeCode(String teacherEmployeeCode) {
 		this.teacherEmployeeCode = teacherEmployeeCode;
+	}
+	public Integer getSurveHardYn() {
+		return surveHardYn;
+	}
+	public void setSurveHardYn(Integer surveHardYn) {
+		this.surveHardYn = surveHardYn;
+	}
+//	public String[] getPeriodAbsent() {
+//		return periodAbsent;
+//	}
+//	public void setPeriodAbsent(String[] periodAbsent) {
+//		this.periodAbsent = periodAbsent;
+//	}
+	public String getPeriodAbsent() {
+		return periodAbsent;
+	}
+	public void setPeriodAbsent(String periodAbsent) {
+		this.periodAbsent = periodAbsent;
+	}
+	public String getRelationWithEmplMdg() {
+		return relationWithEmplMdg;
+	}
+	public void setRelationWithEmplMdg(String relationWithEmplMdg) {
+		this.relationWithEmplMdg = relationWithEmplMdg;
 	}
 	
 	

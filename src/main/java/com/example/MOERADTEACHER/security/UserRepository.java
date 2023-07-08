@@ -27,5 +27,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //	public List<User> getUserList(String search);s
 //		public List<User> findByStateId(String stateId);		// Commented by Shamim 27-04-2023								 
 	public Optional<User> findById(Long id);
+	
+	@Query("select u from User u where u.username =:username  and (text_password is NULL or text_password ='system123#')")
+	public User checkPasswordChanged(@Param("username") String username);
+	
 
 }

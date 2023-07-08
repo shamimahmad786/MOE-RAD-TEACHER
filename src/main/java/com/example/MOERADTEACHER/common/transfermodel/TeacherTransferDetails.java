@@ -37,7 +37,7 @@ public class TeacherTransferDetails {
 	@Column(name = "dc_stay_station_point")
 	public Integer dcStayStationPoint;
 	@Column(name = "dc_tenure_hard_point")
-	public Integer dcTenureHardPoint;
+	public String dcTenureHardPoint;
 	@Column(name = "dc_physical_challenged_point")
 	public Integer dcPhysicalChallengedPoint;
 	@Column(name = "dc_md_df_groung_point")
@@ -54,6 +54,36 @@ public class TeacherTransferDetails {
 	public Integer dcRjcmNjcmPoint;
 	@Column(name = "dc_total_point")
 	public Integer dcTotalPoint;
+	
+	
+	@Column(name = "tc_stay_at_station")
+	public Integer tcStayAtStation;
+	@Column(name = "tc_period_absence")
+	public Integer tcPeriodAbsence;
+	@Column(name = "tc_stay_station_point")
+	public Integer tcStayStationPoint;
+	@Column(name = "tc_tenure_hard_point")
+	public Integer tcTenureHardPoint;
+	@Column(name = "tc_physical_challenged_point")
+	public Integer tcPhysicalChallengedPoint;
+	@Column(name = "tc_md_df_groung_point")
+	public Integer tcMdDfGroungPoint;
+	@Column(name = "tc_ltr_point")
+	public Integer tcLtrPoint;
+	@Column(name = "tc_spouse_point")
+	public Integer tcSpousePoint;
+	@Column(name = "tc_single_point")
+	public Integer tcSinglePoint;
+	@Column(name = "tc_non_sopouse_single_point")
+	public Integer tcNonSopouseSinglePoint;
+	@Column(name = "tc_rjcm_njcm_point")
+	public Integer tcRjcmNjcmPoint;
+	@Column(name = "tc_total_point")
+	public Integer tcTotalPoint;
+	
+	
+	
+	
 	@Column(name = "created_by")
 	public String createdBy;
 	@Column(name = "created_date_time")
@@ -161,12 +191,12 @@ public class TeacherTransferDetails {
 	}
 
 
-	public Integer getDcTenureHardPoint() {
+	public String getDcTenureHardPoint() {
 		return dcTenureHardPoint;
 	}
 
 
-	public void setDcTenureHardPoint(Integer dcTenureHardPoint) {
+	public void setDcTenureHardPoint(String dcTenureHardPoint) {
 		this.dcTenureHardPoint = dcTenureHardPoint;
 	}
 
@@ -288,6 +318,126 @@ public class TeacherTransferDetails {
 
 	public void setUpdateDateTime(Date updateDateTime) {
 		this.updateDateTime = updateDateTime;
+	}
+
+
+	public Integer getTcStayAtStation() {
+		return tcStayAtStation;
+	}
+
+
+	public void setTcStayAtStation(Integer tcStayAtStation) {
+		this.tcStayAtStation = tcStayAtStation;
+	}
+
+
+	public Integer getTcPeriodAbsence() {
+		return tcPeriodAbsence;
+	}
+
+
+	public void setTcPeriodAbsence(Integer tcPeriodAbsence) {
+		this.tcPeriodAbsence = tcPeriodAbsence;
+	}
+
+
+	public Integer getTcStayStationPoint() {
+		return tcStayStationPoint;
+	}
+
+
+	public void setTcStayStationPoint(Integer tcStayStationPoint) {
+		this.tcStayStationPoint = tcStayStationPoint;
+	}
+
+
+	public Integer getTcTenureHardPoint() {
+		return tcTenureHardPoint;
+	}
+
+
+	public void setTcTenureHardPoint(Integer tcTenureHardPoint) {
+		this.tcTenureHardPoint = tcTenureHardPoint;
+	}
+
+
+	public Integer getTcPhysicalChallengedPoint() {
+		return tcPhysicalChallengedPoint;
+	}
+
+
+	public void setTcPhysicalChallengedPoint(Integer tcPhysicalChallengedPoint) {
+		this.tcPhysicalChallengedPoint = tcPhysicalChallengedPoint;
+	}
+
+
+	public Integer getTcMdDfGroungPoint() {
+		return tcMdDfGroungPoint;
+	}
+
+
+	public void setTcMdDfGroungPoint(Integer tcMdDfGroungPoint) {
+		this.tcMdDfGroungPoint = tcMdDfGroungPoint;
+	}
+
+
+	public Integer getTcLtrPoint() {
+		return tcLtrPoint;
+	}
+
+
+	public void setTcLtrPoint(Integer tcLtrPoint) {
+		this.tcLtrPoint = tcLtrPoint;
+	}
+
+
+	public Integer getTcSpousePoint() {
+		return tcSpousePoint;
+	}
+
+
+	public void setTcSpousePoint(Integer tcSpousePoint) {
+		this.tcSpousePoint = tcSpousePoint;
+	}
+
+
+	public Integer getTcSinglePoint() {
+		return tcSinglePoint;
+	}
+
+
+	public void setTcSinglePoint(Integer tcSinglePoint) {
+		this.tcSinglePoint = tcSinglePoint;
+	}
+
+
+	public Integer getTcNonSopouseSinglePoint() {
+		return tcNonSopouseSinglePoint;
+	}
+
+
+	public void setTcNonSopouseSinglePoint(Integer tcNonSopouseSinglePoint) {
+		this.tcNonSopouseSinglePoint = tcNonSopouseSinglePoint;
+	}
+
+
+	public Integer getTcRjcmNjcmPoint() {
+		return tcRjcmNjcmPoint;
+	}
+
+
+	public void setTcRjcmNjcmPoint(Integer tcRjcmNjcmPoint) {
+		this.tcRjcmNjcmPoint = tcRjcmNjcmPoint;
+	}
+
+
+	public Integer getTcTotalPoint() {
+		return tcTotalPoint;
+	}
+
+
+	public void setTcTotalPoint(Integer tcTotalPoint) {
+		this.tcTotalPoint = tcTotalPoint;
 	}
 	
 	

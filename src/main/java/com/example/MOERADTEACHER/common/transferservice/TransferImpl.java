@@ -24,9 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.MOERADTEACHER.common.bean.PostingHistory;
 import com.example.MOERADTEACHER.common.bean.Stationdurationb;
@@ -43,15 +46,19 @@ import com.example.MOERADTEACHER.common.transferbean.HardStationDetailModel;
 import com.example.MOERADTEACHER.common.transferbean.TransferInititateBean;
 import com.example.MOERADTEACHER.common.transfercontroller.TransferController;
 import com.example.MOERADTEACHER.common.transfermodel.TeacherKVTransferGround;
+import com.example.MOERADTEACHER.common.transfermodel.TeacherTransferDeclaration;
 import com.example.MOERADTEACHER.common.transfermodel.TransferHistory;
 import com.example.MOERADTEACHER.common.transfermodel.TransferKVTeacherDetails;
 import com.example.MOERADTEACHER.common.transfermodel.TransferKVTeacherDetailsHistory;
 import com.example.MOERADTEACHER.common.transferrepository.TeacherKVTransferGroundRepository;
+import com.example.MOERADTEACHER.common.transferrepository.TeacherTransferDeclarationRepository;
 import com.example.MOERADTEACHER.common.transferrepository.TransferHistoryRepository;
 import com.example.MOERADTEACHER.common.transferrepository.TransferKVTeacherDetailsHistoryRepository;
 import com.example.MOERADTEACHER.common.transferrepository.TransferKVTeacherDetailsRepository;
+import com.example.MOERADTEACHER.common.util.CustomResponse;
 import com.example.MOERADTEACHER.common.util.NativeRepository;
 import com.example.MOERADTEACHER.common.util.QueryResult;
+import com.example.MOERADTEACHER.common.util.ResponseEntityBeans;
 import com.example.MOERADTEACHER.common.util.StaticReportBean;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -91,6 +98,9 @@ public class TransferImpl {
 
 	@Autowired
 	TeacherKVTransferGroundRepository teacherKVTransferGroundRepository;
+	
+	@Autowired
+	TeacherTransferDeclarationRepository teacherTransferDeclarationRepository;
 
 	final ObjectMapper mapper = new ObjectMapper();
 
@@ -295,12 +305,12 @@ public class TransferImpl {
 			LOGGER.warn("message", ex);
 		}
 
-		HardStationDetailModel modelhard = DisplacementCountHardNew(String.valueOf(teacherId));
-
-		model.setHardStationCode(modelhard.getHardStationCode());
-		model.setHardStationName(modelhard.getHardStationName());
-		model.setHardStationWorkStartDate(modelhard.getHardStationStartDate());
-		model.setHardStationWorkEndDate(modelhard.getHardStationEndDate());
+//		HardStationDetailModel modelhard = DisplacementCountHardNew(String.valueOf(teacherId));
+//
+//		model.setHardStationCode(modelhard.getHardStationCode());
+//		model.setHardStationName(modelhard.getHardStationName());
+//		model.setHardStationWorkStartDate(modelhard.getHardStationStartDate());
+//		model.setHardStationWorkEndDate(modelhard.getHardStationEndDate());
 
 		DisplacementCountAward modelaward = DisplaceCount9Awards(String.valueOf(teacherId));
 
@@ -339,17 +349,17 @@ public class TransferImpl {
 		DateTime DateOfBirth = formatter.parseDateTime(String.valueOf(qrObj.getRowValue().get(0).get("teacher_dob")));
 		Years teacherAge = Years.yearsBetween(DateOfBirth, Configuredt);
 		// System.out.println("teacherAge---->"+teacherAge.getYears());
-		if (teacherAge.getYears() < 40) {
-			// System.out.println("hard--->"+modelhard.getHardStationYN());
-			if (modelhard.getHardStationYN().equals("1")) {
-				model.setQ3DYn("1");
-				model.setQ3DPt("0");
-			} else {
-				model.setQ3DYn("0");
-			}
-		} else {
-			model.setQ3DYn("0");
-		}
+//		if (teacherAge.getYears() < 40) {
+//			// System.out.println("hard--->"+modelhard.getHardStationYN());
+//			if (modelhard.getHardStationYN().equals("1")) {
+//				model.setQ3DYn("1");
+//				model.setQ3DPt("0");
+//			} else {
+//				model.setQ3DYn("0");
+//			}
+//		} else {
+//			model.setQ3DYn("0");
+//		}
 		model.setSpouseKvsYnd("0");
 		model.setSpouseStatusTransfer(model.getSpouseStatus());
 		model.setSpouseStatusDisplacement(model.getSpouseStatus());
@@ -783,30 +793,7 @@ public class TransferImpl {
 		String CurrentStationCode;
 		String PreviousStationCode = "0";
 		Integer employment_interval = 0;
-//		 String QUERY = "  select * from (\r\n"
-//		  + " select * from (\r\n"
-//		  + "select k.station_type , k.station_name , twe.work_start_date , k.station_code , twe.work_end_date ,twe.teacher_id ,\r\n"
-////		  + " to_date(work_end_date, 'YYYY-MM-DD')  - to_date(work_start_date, 'YYYY-MM-DD') AS employment_interval , k.hard_start_date ,k.hard_end_date \r\n"
-//		  +" work_end_date::date- work_start_date::date  as employment_interval ,  k.hard_start_date ,k.hard_end_date  \r\n"		
-//		  + " from kv.kv_school_master k  , teacher_work_experience twe \r\n"
-//		  + " where k.udise_sch_code  = twe.udise_sch_code  \r\n"
-//		  + " and twe.teacher_id = '"+TeacherID+"'\r\n"
-//		  + " and k.ever_been_hard in (1) \r\n"
-//		  + " and twe.work_end_date is not null\r\n"
-//		  + " ) aa \r\n"
-//		  + " union \r\n"
-//		  + " select * from (\r\n"
-//		  + "select k.station_type , k.station_name , twe.work_start_date , k.station_code , '2022-06-30'::date as end_date ,twe.teacher_id ,\r\n"
-//		  +"  '2022-06-30'::Date - work_start_date::Date  AS employment_interval , k.hard_start_date ,k.hard_end_date  "
-////		  + " to_date('2022-06-30', 'YYYY-MM-DD')  - to_date(work_start_date, 'YYYY-MM-DD') AS employment_interval , k.hard_start_date ,k.hard_end_date \r\n"
-//		  + " from kv.kv_school_master k  , teacher_work_experience twe \r\n"
-//		  + " where k.udise_sch_code  = twe.udise_sch_code  \r\n"
-//		  + " and twe.teacher_id = '"+TeacherID+"'\r\n"
-//		  + " and k.ever_been_hard in (1) \r\n"
-//		  + " and twe.work_end_date is  null\r\n"
-//		  + " ) bb\r\n"
-//		  + " ) cc\r\n"
-//		  + " order by work_start_date" ;
+
 
 		String QUERY = " select fin.* , DATE_PART('day', work_end_date::timestamp - work_start_date::timestamp) as no_of_days, "
 				+ "	ksm.station_type, ksm.ever_been_hard , ksm.very_hard_flag  , ksm.very_hard_start_date , ksm.very_hard_end_date , ksm.hard_start_date , ksm.hard_end_date "
@@ -856,52 +843,6 @@ public class TransferImpl {
 			// stationDTOAR.add(i, StationDetail);
 			stationDTOAR.add(StationDetail);
 
-//				 Stationdurationb stationDTO = new Stationdurationb();
-//			      Integer stationType =  Integer.parseInt(String.valueOf(qrObj.getRowValue().get(i).get("station_type")));
-//			       
-//			     
-//			     
-//			        CurrentStationCode =String.valueOf(qrObj.getRowValue().get(i).get("station_code"));
-//			         
-//			         
-//			if (stationType == 0) { // Station Nature Changes From Hard to Normal
-//
-//			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-//			DateTime stationPositionstartDate = formatter.parseDateTime(String.valueOf(qrObj.getRowValue().get(i).get("work_start_date")));
-//			DateTime stationHardEndDate = formatter.parseDateTime(String.valueOf(qrObj.getRowValue().get(i).get("hard_end_date")));
-//			int days = Days.daysBetween(stationPositionstartDate, stationHardEndDate).getDays();
-//			if (days > 0) { // Person Joins Before the Station Nature Changes from Hard To Normal
-//			if (CurrentStationCode.equalsIgnoreCase(PreviousStationCode)) {
-//			employment_interval = employment_interval +  Integer.parseInt(String.valueOf(qrObj.getRowValue().get(i).get("employment_interval")));
-//			PreviousStationCode =String.valueOf(qrObj.getRowValue().get(i).get("station_code"));
-//			} else {
-//			employment_interval =Integer.parseInt(String.valueOf(qrObj.getRowValue().get(i).get("employment_interval")));
-//			}
-//			}
-//			} else {
-//
-//			if (CurrentStationCode.equalsIgnoreCase(PreviousStationCode)) {
-//			employment_interval = employment_interval + Integer.parseInt(String.valueOf(qrObj.getRowValue().get(i).get("employment_interval")));
-//			PreviousStationCode = String.valueOf(qrObj.getRowValue().get(i).get("station_code"));
-//			} else {
-//			employment_interval = Integer.parseInt(String.valueOf(qrObj.getRowValue().get(i).get("employment_interval")));
-//			}
-//			}
-//			model.setHardStationCode(String.valueOf(qrObj.getRowValue().get(i).get("station_code")));
-//			model.setHardStationType(String.valueOf(qrObj.getRowValue().get(i).get("station_type")));
-//			model.setHardStationName(String.valueOf(qrObj.getRowValue().get(i).get("station_name")));
-//			model.setHardStationStartDate(String.valueOf(qrObj.getRowValue().get(i).get("work_start_date")));
-//			model.setHardStationEndDate(String.valueOf(qrObj.getRowValue().get(i).get("work_end_date")));
-//			         
-//			          if (employment_interval/365 >= 3) {
-//			        	  model.setHardStationYN("1");
-//			        	  // System.out.println("hard if query-->"+model.getHardStationYN());
-//			        	  
-//			        	  break;
-//			          }else {
-//			        	  // System.out.println("hard else query-->"+model.getHardStationYN());
-//			        	  model.setHardStationYN("0");
-//			          }
 		}
 
 		try {
@@ -1375,5 +1316,44 @@ public class TransferImpl {
 		}
 		return qrObj;
 	}
+	
+
+	public Map<String,Object> schoolTransferVerify(Integer data) throws Exception {		
+		Map<String,Object> mp=new HashMap<String,Object>();
+		try {
+			System.out.println(data);
+			nativeRepository.updateQueries("update public.teacher_transfer_profile set transfer_status=2 where teacher_id="+data);
+			mp.put("status", 1);
+		} catch (Exception ex) {
+			mp.put("status", 0);
+			ex.printStackTrace();
+		}
+		return mp;
+	}
+	
+	public TeacherTransferDeclaration saveTransferDeclaration(TeacherTransferDeclaration data) {
+		return teacherTransferDeclarationRepository.saveAndFlush(data);
+	}
+	
+	public Map<String,Object>  getTransferDeclaration(Integer teacherId) {
+		Map<String,Object> mObj=new HashMap<String,Object>();
+		
+		TeacherTransferDeclaration obj=teacherTransferDeclarationRepository.findByTeacherId(teacherId);
+		
+		try {
+			if(obj !=null && obj.getId()>0) {
+				mObj.put("status", 1);
+				mObj.put("response", obj);
+			}else {
+				mObj.put("status", 0);
+			}
+		}catch(Exception ex) {
+			mObj.put("status", 0);
+			ex.printStackTrace();
+		}
+		
+		return mObj;
+	}
+	
 
 }

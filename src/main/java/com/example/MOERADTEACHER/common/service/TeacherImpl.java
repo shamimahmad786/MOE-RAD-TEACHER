@@ -23,8 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.MOERADTEACHER.common.bean.DropedTeacherDetails;
+import com.example.MOERADTEACHER.common.bean.KVSchoolBean;
 import com.example.MOERADTEACHER.common.bean.SchoolFetchTeacherBean;
 import com.example.MOERADTEACHER.common.bean.TeacherProfileBean;
+import com.example.MOERADTEACHER.common.bean.TransProfileBean;
 import com.example.MOERADTEACHER.common.bean.TransferSpouseBean;
 import com.example.MOERADTEACHER.common.bean.WorkExperienceBean;
 import com.example.MOERADTEACHER.common.interfaces.TeacherInterface;
@@ -446,8 +448,10 @@ TypeReference<List<TeacherProfileBean>> typeRef = new TypeReference<List<Teacher
 		TeacherProfileBean profilePojo = null;
 		QueryResult subjectMap = null;
 		QueryResult degreeMap = null;
+		KVSchoolBean kvPojo=null;
+		TransProfileBean transPojo=null;
 		String profileQuery = "\r\n"
-				+ "select teacher_id,teacher_name,teacher_gender,teacher_dob,teacher_employee_code,teacher_social_category,teacher_mobile,teacher_email,teacher_religion,teacher_nationality,teacher_blood_group,teacher_permanent_address,public.get_film6('master.mst_state_live','state_name','state_id::varchar = ( select teacher_parmanent_state  from public.teacher_profile tp where teacher_id="
+				+ "select teacher_id,kv_code,teacher_name,teacher_gender,teacher_dob,teacher_employee_code,teacher_social_category,teacher_mobile,teacher_email,teacher_religion,teacher_nationality,teacher_blood_group,teacher_permanent_address,public.get_film6('master.mst_state_live','state_name','state_id::varchar = ( select teacher_parmanent_state  from public.teacher_profile tp where teacher_id="
 				+ data + " )') as teacher_parmanent_state\r\n"
 				+ ",public.get_film6('master.mst_district_live','district_name','district_id::varchar = ( select teacher_permanent_district  from public.teacher_profile tp where teacher_id="
 				+ data
@@ -519,23 +523,33 @@ TypeReference<List<TeacherProfileBean>> typeRef = new TypeReference<List<Teacher
 			
 			for(int i=0;i<wb.size();i++) {
 			String groundForTransfer="";
-				QueryResult qrObj1 = nativeRepository.executeQueries("select * from public.teacher_transfer_ground where work_experienceid="+wb.get(i).getWork_experience_id());
-				
-				
-				// System.out.println("Size--->"+qrObj1.getRowValue().size());
-				
-				for(int j=0;j<qrObj1.getRowValue().size();j++) {
-//					// System.out.println(qrObj1.getRowValue().get(j).get("transfer_ground_id"));
-//                    // System.out.println(GroundForTransfer.mp.get("G1"));
-					groundForTransfer += GroundForTransfer.getGroundTransfer().get("G"+qrObj1.getRowValue().get(j).get("transfer_ground_id"))+",";
-				}
-				wb.get(i).setGround_for_transfer(groundForTransfer.replaceAll(",$", ""));
+//				QueryResult qrObj1 = nativeRepository.executeQueries("select * from public.teacher_transfer_ground where work_experienceid="+wb.get(i).getWork_experience_id());
+//				for(int j=0;j<qrObj1.getRowValue().size();j++) {
+//					groundForTransfer += GroundForTransfer.getGroundTransfer().get("G"+qrObj1.getRowValue().get(j).get("transfer_ground_id"))+",";
+//				}
+			groundForTransfer += GroundForTransfer.getGroundTransfer().get("G"+wb.get(i).getGround_for_transfer());
+				wb.get(i).setGround_for_transfer(groundForTransfer.replaceAll(",$", "") !=null?groundForTransfer.replaceAll(",$", ""):"");
 			}
 			
 		} catch (Exception ex) {
 			LOGGER.warn("--message--", ex);
 		}
 
+		
+		try {
+			QueryResult qrObj = nativeRepository.executeQueries("select station_name,station_code,kv_name,kv_code from  kv.kv_school_master where kv_code='"+profilePojo.getKvCode()+"'");
+			kvPojo = mapper.convertValue(qrObj.getRowValue().get(0), KVSchoolBean.class);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		try {
+			QueryResult qrObj = nativeRepository.executeQueries("select spouse_kvs_ynd,personal_status_mdgd,personal_status_spd,personal_status_dfpd,care_giver_faimly_ynd,memberjcm,absence_days_one,disciplinary_yn,surve_hard_yn from teacher_transfer_profile where teacher_id="+data);
+			transPojo = mapper.convertValue(qrObj.getRowValue().get(0), TransProfileBean.class);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
 //	// System.out.println(profilePojo.getWork_experience_position_type_present_kv());
 
 		Map<String, Object> mp = new HashMap<String, Object>();
@@ -543,8 +557,10 @@ TypeReference<List<TeacherProfileBean>> typeRef = new TypeReference<List<Teacher
 //		mp.put("awards", teacherAwardsRepository.findAllByTeacherId(data));
 //		mp.put("training", teacherTrainingRepository.findAllByTeacherId(data));
 //		mp.put("educationalQualification", teacherObj);
+		mp.put("schoolDetails",kvPojo);
 		mp.put("teacherTrainingProfile", teacherTransferProfileRepository.findByTeacherId(data));
 		mp.put("experience", wb);
+		mp.put("transDetails", transPojo);
 		return mp;
 
 	}

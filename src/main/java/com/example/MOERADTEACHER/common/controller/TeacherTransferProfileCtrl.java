@@ -45,6 +45,8 @@ public class TeacherTransferProfileCtrl {
 			ex.printStackTrace();
 //			LOGGER.warn("--message--",ex);
 		}
+		
+		System.out.println(tdata.getRelationWithEmplMdg());
 		return ResponseEntity.ok(new CustomResponse(1,"sucess",teacherTransferProfileImpl.saveTeacher(tdata),"200"));
 	}
 	
@@ -64,5 +66,26 @@ public class TeacherTransferProfileCtrl {
 		}
 		return ResponseEntity.ok(new CustomResponse(1,"sucess",teacherTransferProfileImpl.getTransProfile(tdata),"200"));
 	}
+	
+	
+	
+	@RequestMapping(value = "/saveStationChoice", method = RequestMethod.POST)
+//	@Transactional(rollbackFor = {Exception.class})
+	public ResponseEntity<CustomResponse> saveStationChoice(@RequestBody String data,@RequestHeader("username") String username) throws Exception {
+	System.out.println("Calleded");
+		ObjectMapper mapperObj = new ObjectMapper();
+		TeacherTransferProfile tdata=new TeacherTransferProfile();
+		TeacherFormStatus formData=new TeacherFormStatus();
+		try {
+			tdata = mapperObj.readValue(data, new TypeReference<TeacherTransferProfile>() {
+			});
+		}catch(Exception ex) {
+			ex.printStackTrace();
+//			LOGGER.warn("--message--",ex);
+		}
+		return ResponseEntity.ok(new CustomResponse(1,"sucess",teacherTransferProfileImpl.saveStationChoice(tdata),"200"));
+	}
+	
+	
 	
 }

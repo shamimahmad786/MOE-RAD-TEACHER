@@ -3,6 +3,8 @@ package com.example.MOERADTEACHER.security;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -55,4 +57,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //        		developer.getPassword(), 
 //        		Arrays.asList(new SimpleGrantedAuthority("USER")));
 //    }
+	
+	public Map<String,Object> checkPasswordChanged(String userId){
+		
+		User  usrObj=	userRepository.checkPasswordChanged(userId);
+		Map<String,Object> hs=new HashMap<String,Object>();
+		System.out.println("usrObj--->"+usrObj);
+		
+		
+		
+		if(usrObj !=null) {
+			hs.put("status", 1);
+		}else {
+			hs.put("status", 0);
+		}
+		
+		return hs;
+		
+	}
 }

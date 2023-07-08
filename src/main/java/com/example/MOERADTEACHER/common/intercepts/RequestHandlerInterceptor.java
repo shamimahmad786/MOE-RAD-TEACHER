@@ -3,7 +3,12 @@ package com.example.MOERADTEACHER.common.intercepts;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,6 +38,7 @@ public class RequestHandlerInterceptor extends HandlerInterceptorAdapter{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		ServletContext context = ((HttpServletRequest) request).getSession().getServletContext();
 ////		// System.out.println("preHandle() is invoked");
 //		String token= request.getHeader("Authorization");
 //		String username= request.getHeader("username");
@@ -100,6 +106,27 @@ public class RequestHandlerInterceptor extends HandlerInterceptorAdapter{
 		        return false;
 //			ex.printStackTrace();
 		}
+		
+		
+		try {
+			   if(context.getAttribute("_private_key") ==null) {
+				   KeyPairGenerator keyGen = null;
+				try {
+					keyGen = KeyPairGenerator.getInstance("RSA");
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}
+			        keyGen.initialize(1024);
+			        KeyPair pair = keyGen.generateKeyPair();
+			       context.setAttribute("_private_key",Base64.getEncoder().encodeToString(pair.getPrivate().getEncoded()));
+			       context.setAttribute("_public_key", Base64.getEncoder().encodeToString(pair.getPublic().getEncoded()));
+			   }
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		
+		
 		
 //		// System.out.println("data interceptor");
 		

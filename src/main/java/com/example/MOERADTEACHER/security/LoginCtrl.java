@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 
 import org.modelmapper.ModelMapper;
@@ -57,6 +59,9 @@ public class LoginCtrl {
 	@Autowired
 	private LoginNativeRepository loginNativeRepository;
 	
+	@Autowired
+	UserDetailsServiceImpl userDetailsServiceImpl;
+	
 	
 	
 //	@Bean("jdbc2")
@@ -95,7 +100,7 @@ public class LoginCtrl {
 		authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 		}catch(Exception ex) {
-			ex.printStackTrace();
+//			ex.printStackTrace();
 			 return ResponseEntity
 		            .status(HttpStatus.UNAUTHORIZED)
 		            .body("Invalid userId and password");
@@ -140,6 +145,31 @@ public class LoginCtrl {
 		}
 		return qrObj.getRowValue();
 	}
+	
+	  @RequestMapping(value = "/getKey", method = RequestMethod.POST)
+			public ResponseEntity<?> getKey(HttpServletRequest req)  {
+				Map<String,Object> mp=new HashMap<String,Object>();
+				ServletContext context = ((HttpServletRequest) req).getSession().getServletContext();
+				 System.out.println("req--->"+context.getAttribute("_public_key"));
+				mp.put("key",context.getAttribute("_public_key"));
+				return ResponseEntity.ok(mp);
+			}
+	  
+	  @RequestMapping(value = "/checkPasswordChanged", method = RequestMethod.POST)
+		public ResponseEntity<?> checkPasswordChanged(@RequestBody String userId)  {
+		  System.out.println("userId---->"+userId);
+		  Map<String,Object> mp=new HashMap<String,Object>();
+		  try {
+			  ObjectMapper mapperObj = new ObjectMapper();
+			  mp = mapperObj.readValue(userId, Map.class);
+			}catch(Exception ex) {
+//				LOGGER.warn("--message--",ex);
+			}
+		  
+			return ResponseEntity.ok(userDetailsServiceImpl.checkPasswordChanged(String.valueOf(mp.get("userId"))));
+		} 
+	  
+	
 	
 //	map.put("ApplicationDetails",getApplicationDetails(map.get("user_name").toString(),map));
 	

@@ -75,38 +75,38 @@ public class ExperienceImpl implements ExperienceInterface{
 				data.get(i).setWorkExperienceId(workExperienceId);
 			}
 			
-			List groundTransfer=data.get(i).getGroundForTransfer();
+//			List groundTransfer=data.get(i).getGroundForTransfer();
 			
-			System.out.println("groundTransfer--->"+groundTransfer+"----Experience Id--->"+data.get(i).getWorkExperienceId());
+//			System.out.println("groundTransfer--->"+groundTransfer+"----Experience Id--->"+data.get(i).getWorkExperienceId());
 			
-			try {
-				if(groundTransfer !=null) {
-				
-					for(int j=0;j<groundTransfer.size();j++) {
-					
-					TeacherTransferGround  tObj=new TeacherTransferGround();
-					tObj.setTeacherId(data.get(i).getTeacherId());
-					tObj.setTransferGroundId(Integer.parseInt(String.valueOf(groundTransfer.get(j))));
-					tObj.setWorkExperienceId(data.get(i).getWorkExperienceId());
-					teacherTransferGroundRepository.save(tObj);	
-				}
-				}else if(groundTransfer ==null){
-					TeacherTransferGround  tObj=new TeacherTransferGround();
-					tObj.setTeacherId(data.get(i).getTeacherId());
-					tObj.setTransferGroundId(0);
-					tObj.setWorkExperienceId(data.get(i).getWorkExperienceId());
-					teacherTransferGroundRepository.save(tObj);	
-				}
-				
-			}catch(Exception ex) {
-				ex.printStackTrace();
-			}
+//			try {
+//				if(groundTransfer !=null) {
+//				
+//					for(int j=0;j<groundTransfer.size();j++) {
+//					
+//					TeacherTransferGround  tObj=new TeacherTransferGround();
+//					tObj.setTeacherId(data.get(i).getTeacherId());
+//					tObj.setTransferGroundId(Integer.parseInt(String.valueOf(groundTransfer.get(j))));
+//					tObj.setWorkExperienceId(data.get(i).getWorkExperienceId());
+//					teacherTransferGroundRepository.save(tObj);	
+//				}
+//				}else if(groundTransfer ==null){
+//					TeacherTransferGround  tObj=new TeacherTransferGround();
+//					tObj.setTeacherId(data.get(i).getTeacherId());
+//					tObj.setTransferGroundId(0);
+//					tObj.setWorkExperienceId(data.get(i).getWorkExperienceId());
+//					teacherTransferGroundRepository.save(tObj);	
+//				}
+//				
+//			}catch(Exception ex) {
+//				ex.printStackTrace();
+//			}
 			
 			
 			TeacherExperience tObject =teacherExperienceRepository.save(data.get(i));
-			tObject.setGroundForTransfer(groundTransfer);
+//			tObject.setGroundForTransfer(groundTransfer);
 			
-			lt.add(tObject);
+//			lt.add(tObject);
 			
 		}
 		
@@ -128,24 +128,24 @@ public class ExperienceImpl implements ExperienceInterface{
 			workExperienceId  =workExperienceId+1;
 			data.setWorkExperienceId(workExperienceId);
 		}
-		List groundTransfer=data.getGroundForTransfer();
-		try {
-			if(groundTransfer !=null) {
-			for(int i=0;i<groundTransfer.size();i++) {
-				TeacherTransferGround  tObj=new TeacherTransferGround();
-				tObj.setTeacherId(data.getTeacherId());
-				tObj.setTransferGroundId(Integer.parseInt(String.valueOf(groundTransfer.get(i))));
-				tObj.setWorkExperienceId(data.getWorkExperienceId());
-				teacherTransferGroundRepository.save(tObj);	
-			}
-			}
-		}catch(Exception ex) {
-			ex.printStackTrace();
-		}
+//		List groundTransfer=data.getGroundForTransfer();
+//		try {
+//			if(groundTransfer !=null) {
+//			for(int i=0;i<groundTransfer.size();i++) {
+//				TeacherTransferGround  tObj=new TeacherTransferGround();
+//				tObj.setTeacherId(data.getTeacherId());
+//				tObj.setTransferGroundId(Integer.parseInt(String.valueOf(groundTransfer.get(i))));
+//				tObj.setWorkExperienceId(data.getWorkExperienceId());
+//				teacherTransferGroundRepository.save(tObj);	
+//			}
+//			}
+//		}catch(Exception ex) {
+//			ex.printStackTrace();
+//		}
 		
 		TeacherExperience tObject =teacherExperienceRepository.save(data);
 		
-		tObject.setGroundForTransfer(groundTransfer);
+//		tObject.setGroundForTransfer(groundTransfer);
 		return tObject;
 	}
 	
@@ -167,6 +167,7 @@ public class ExperienceImpl implements ExperienceInterface{
 				+ "twe.appointed_for_subject,\r\n"
 				+ "twe.shift_type,\r\n"
 				+ "twe.shift_yn,\r\n"
+				+" twe.kv_code, "
 				+ "twe.verify_flag,\r\n"
 				+ "twe.verified_type,\r\n"
 				+ "twe.created_by,\r\n"
@@ -174,7 +175,7 @@ public class ExperienceImpl implements ExperienceInterface{
 				+ "twe.modified_by,\r\n"
 				+ "twe.modified_time,\r\n"
 				+ "twe.experience_type,\r\n"
-//				+ "twe.ground_for_transfer,\r\n"
+				+ "twe.ground_for_transfer,\r\n"
 				+ "twe.currently_active_yn,\r\n"
 				+ "k.kv_name as udise_school_name\r\n"
 				+ "				 from public.teacher_work_experience twe , kv.kv_school_master k \r\n"
@@ -186,31 +187,35 @@ public class ExperienceImpl implements ExperienceInterface{
 		ObjectMapper mapperObj = new ObjectMapper();
 //		List<TeacherExperience> expObj=new ArrayList<TeacherExperience>();
 		
-		if(qrObj !=null) {
-			System.out.println("Experience Size--->"+qrObj.getRowValue().size());
+//		if(qrObj !=null) {
+		final ObjectMapper mapper = new ObjectMapper();
+//			System.out.println("Experience Size--->"+qrObj.getRowValue().size());
 		for(int i=0;i<qrObj.getRowValue().size();i++) {
-			final ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
-			
-			
-			// System.out.println(qrObj.getRowValue().get(i).get("work_experience_id"));
-			
-			QueryResult qrObj1=nativeRepository.executeQueries("select transfer_ground_id from public.teacher_transfer_ground where work_experienceid="+qrObj.getRowValue().get(i).get("work_experience_id"));
-			ArrayList groundArray=new ArrayList<Integer>();
-			List<ArrayList> lts=new ArrayList<ArrayList>();
-			// System.out.println("size--->"+qrObj1.getRowValue().size());
-			for(int j=0;j<qrObj1.getRowValue().size();j++) {
-				
-				// System.out.println(qrObj1.getRowValue().get(j).get("transfer_ground_id"));
-				
-				groundArray.add(Integer.parseInt(String.valueOf(qrObj1.getRowValue().get(j).get("transfer_ground_id"))));
-			}
-			
 			final ExperienceBean pojo = mapper.convertValue(qrObj.getRowValue().get(i), ExperienceBean.class);
-			lts.add(groundArray);
-			pojo.setGround_for_transfer(lts);
 			lt.add(pojo);
 		}
-		}
+//			final ObjectMapper mapper = new ObjectMapper(); // jackson's objectmapper
+//			
+//			
+//			// System.out.println(qrObj.getRowValue().get(i).get("work_experience_id"));
+//			
+//			QueryResult qrObj1=nativeRepository.executeQueries("select transfer_ground_id from public.teacher_transfer_ground where work_experienceid="+qrObj.getRowValue().get(i).get("work_experience_id"));
+//			ArrayList groundArray=new ArrayList<Integer>();
+//			List<ArrayList> lts=new ArrayList<ArrayList>();
+//			// System.out.println("size--->"+qrObj1.getRowValue().size());
+//			for(int j=0;j<qrObj1.getRowValue().size();j++) {
+//				
+//				// System.out.println(qrObj1.getRowValue().get(j).get("transfer_ground_id"));
+//				
+//				groundArray.add(Integer.parseInt(String.valueOf(qrObj1.getRowValue().get(j).get("transfer_ground_id"))));
+//			}
+//			
+//			final ExperienceBean pojo = mapper.convertValue(qrObj.getRowValue().get(i), ExperienceBean.class);
+//			lts.add(groundArray);
+//			pojo.setGround_for_transfer(lts);
+//			lt.add(pojo);
+//		}
+//		}
 		
 //		return teacherExperienceRepository.findByTeacherIdOrderByWorkStartDateDesc(data);
 		return lt;

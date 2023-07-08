@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.MOERADTEACHER.common.bean.ExperienceBean;
+import com.example.MOERADTEACHER.common.bean.TeacherProfileBeans;
 import com.example.MOERADTEACHER.common.masterservice.MasterImpl;
 import com.example.MOERADTEACHER.common.modal.KVTeacher;
 import com.example.MOERADTEACHER.common.modal.TeacherProfile;
@@ -21,6 +23,7 @@ import com.example.MOERADTEACHER.common.util.FixHashing;
 import com.example.MOERADTEACHER.common.util.NativeRepository;
 import com.example.MOERADTEACHER.common.util.QueryResult;
 import com.example.MOERADTEACHER.common.util.StaticReportBean;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class KVTeacherImpl {
@@ -56,24 +59,28 @@ public class KVTeacherImpl {
 		Map<Integer, String> post = masterImpl.getPostNameAndTeacherTypeId();
 		Map<Integer, String> subject = masterImpl.getSubjectName();
 
-		
+		System.out.println("data--->"+data);
 
 		StaticReportBean sObj = new StaticReportBean();
 		String query = "select tp.*, tfs.form1_status, tfs.form2_status , tfs.form3_status ,tfs.form4_status , tfs.form5_status ,\r\n"
 				+ "tfs.form6_status , tfs.form7_status , tfs.final_status ,tfs.id \r\n"
 				+ "from public.teacher_profile tp , public.teacher_form_status tfs \r\n"
 				+ "where tp.teacher_id = tfs.teacher_id and drop_box_flag=0 \r\n"
-//		    		+ "and tp.current_udise_sch_code ='"+data+"'  order by teacher_name";
 				+ "and tp.kv_code ='" + data + "'  order by teacher_name";
+		
+		
+		
+		
 		QueryResult qrObj = nativeRepository.executeQueries(query);
-//			sObj.setColumnName(qrObj.getColumnName());
 		sObj.setRowValue(qrObj.getRowValue());
-//			sObj.setColumnDataType(qrObj.getColumnDataType());
-//			sObj.setStatus("1");
-		System.out.println("value--->" + query.toString());
-//			 System.out.println("value--->"+qrObj.getRowValue());
 		List<TeacherProfile> tp = new ArrayList<TeacherProfile>();
-
+		
+//		final ObjectMapper mapper = new ObjectMapper();
+//	for(int i=0;i<qrObj.getRowValue().size();i++) {
+//		final TeacherProfileBeans pojo = mapper.convertValue(qrObj.getRowValue().get(i), TeacherProfileBeans.class);
+//		tp.add(pojo);
+//	}
+		
 		for (int i = 0; i < qrObj.getRowValue().size(); i++) {
 			TeacherProfile tps = new TeacherProfile();
 			try {

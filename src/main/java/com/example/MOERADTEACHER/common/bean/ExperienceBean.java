@@ -23,11 +23,12 @@ public class ExperienceBean implements Serializable{
 	public String created_time;
 	public String modified_by;
 	public String modified_time;
+	public String kv_code;
 	// Added By Bibek
 	public String shift_yn;
 //	public String ground_for_transfer;
 	
-	public List<ArrayList> ground_for_transfer;
+	public String ground_for_transfer;
 	
 	public String currently_active_yn;
 	public String kv_name;
@@ -197,12 +198,12 @@ public class ExperienceBean implements Serializable{
 	}
 	
 	@JsonProperty(value="groundForTransfer", access=JsonProperty.Access.READ_ONLY)
-	public List<ArrayList> getGround_for_transfer() {
+	public String getGround_for_transfer() {
 		return ground_for_transfer;
 	}
 	
 	@JsonProperty(value="ground_for_transfer", access=JsonProperty.Access.WRITE_ONLY)
-	public void setGround_for_transfer(List<ArrayList> ground_for_transfer) {
+	public void setGround_for_transfer(String ground_for_transfer) {
 		this.ground_for_transfer = ground_for_transfer;
 	}
 	
@@ -221,6 +222,15 @@ public class ExperienceBean implements Serializable{
 	@JsonProperty(value="experience_type", access=JsonProperty.Access.WRITE_ONLY)
 	public void setExperience_type(String experience_type) {
 		this.experience_type = experience_type;
+	}
+	
+	@JsonProperty(value="kvCode", access=JsonProperty.Access.READ_ONLY)
+	public String getKv_code() {
+		return kv_code;
+	}
+	@JsonProperty(value="kv_code", access=JsonProperty.Access.WRITE_ONLY)
+	public void setKv_code(String kv_code) {
+		this.kv_code = kv_code;
 	}
 	
 	

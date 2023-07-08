@@ -231,7 +231,7 @@ public class UneecopsMasterFetchServiceIMPL implements UneecopsMasterFetchServic
 	    	
 		if(reqVO.getRegionCode() !=null) {
 			
-			String query="select rsm.is_active, ms.shift,rsm.region_code , rsm.station_code, ms2.station_name  , ms.kv_code  , ms.school_name , ms.school_type \r\n"
+			String query="select ssm.is_active, ms.shift,rsm.region_code , rsm.station_code, ms2.station_name  , ms.kv_code  , ms.school_name , ms.school_type \r\n"
 					+ "from uneecops.region_station_mapping rsm , uneecops.school_station_mapping ssm , uneecops.m_schools ms , uneecops.m_station ms2 \r\n"
 					+ "where rsm.station_code = ssm.station_code \r\n"
 					+ "and ms.kv_code = ssm.kv_code \r\n"
@@ -484,6 +484,10 @@ public class UneecopsMasterFetchServiceIMPL implements UneecopsMasterFetchServic
 					 		+ "and spm.shift::varchar = ms.shift::varchar\r\n"
 					 		+ "and ms.kv_master_kv_code = ksm.kv_code and ksm.school_type in ('1','3') and ksm.school_status ='1' and ksm.region_code='"+data.get("regionCode")+"' order by ksm.station_name,ksm.kv_name";
 			 }
+			 
+			 System.out.println("query---->"+query);
+			 
+			 
 			 queryResult= nativeRepository.executeQueries(query);
 		 }catch(Exception ex) {
 			 ex.printStackTrace();

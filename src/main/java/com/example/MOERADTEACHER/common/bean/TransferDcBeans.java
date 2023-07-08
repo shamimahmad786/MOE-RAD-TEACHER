@@ -27,8 +27,8 @@ public class TransferDcBeans {
 
 	public Integer dcStayStationPoint;
 
-	public Integer dcTenureHardPoint;
-
+	public String dcTenureHardPoint;
+	
 	public Integer dcPhysicalChallengedPoint;
 
 	public Integer dcMdDfGroungPoint;
@@ -44,6 +44,31 @@ public class TransferDcBeans {
 	public Integer dcRjcmNjcmPoint;
 	
 	public Integer dcTotalPoint;
+	
+	public Integer tcStayAtStation;
+	public Integer tcPeriodAbsence;
+
+
+
+	public Integer tcStayStationPoint;
+
+	public Integer tcTenureHardPoint;
+
+	public Integer tcPhysicalChallengedPoint;
+
+	public Integer tcMdDfGroungPoint;
+
+	public Integer tcLtrPoint;
+
+	public Integer tcSpousePoint;
+
+	public Integer tcSinglePoint;
+
+	public Integer tcNonSopouseSinglePoint;
+
+	public Integer tcRjcmNjcmPoint;
+	
+	public Integer tcTotalPoint;
 
 	public String createdBy;
 

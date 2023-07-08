@@ -48,6 +48,9 @@ public class User implements Serializable {
   @Column(name = "mobile")
   private String mobile;
   
+  @Column(name = "text_password")
+  private String textPassword;
+  
   
   
   // End

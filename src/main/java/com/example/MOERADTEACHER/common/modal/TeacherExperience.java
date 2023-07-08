@@ -53,11 +53,11 @@ public class TeacherExperience implements Serializable{
 	@Column(name="kv_code")
 	private String kvCode ;
 	
-//	@Column(name="ground_for_transfer")
-//	private String groundForTransfer;
+	@Column(name="ground_for_transfer")
+	private String groundForTransfer;
 	
-	@Transient
-	private List groundForTransfer;
+//	@Transient
+//	private List groundForTransfer;
 	
 	
 	@Column(name="currently_active_yn")
@@ -187,12 +187,12 @@ public class TeacherExperience implements Serializable{
 	public void setModifiedTime(Date modifiedTime) {
 		this.modifiedTime = modifiedTime;
 	}
-	public List getGroundForTransfer() {
-		return groundForTransfer;
-	}
-	public void setGroundForTransfer(List groundForTransfer) {
-		this.groundForTransfer = groundForTransfer;
-	}
+//	public List getGroundForTransfer() {
+//		return groundForTransfer;
+//	}
+//	public void setGroundForTransfer(List groundForTransfer) {
+//		this.groundForTransfer = groundForTransfer;
+//	}
 	public Integer getShiftYn() {
 		return shiftYn;
 	}
@@ -222,6 +222,12 @@ public class TeacherExperience implements Serializable{
 	}
 	public void setExperienceType(String experienceType) {
 		this.experienceType = experienceType;
+	}
+	public String getGroundForTransfer() {
+		return groundForTransfer;
+	}
+	public void setGroundForTransfer(String groundForTransfer) {
+		this.groundForTransfer = groundForTransfer;
 	}
 	
 	

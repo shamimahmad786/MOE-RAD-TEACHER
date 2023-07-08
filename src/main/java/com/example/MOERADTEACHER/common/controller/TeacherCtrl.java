@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.MOERADTEACHER.common.bean.KVTeacherBean;
 import com.example.MOERADTEACHER.common.bean.SchoolFetchTeacherBean;
+import com.example.MOERADTEACHER.common.bean.TeacherProfileBeans;
 import com.example.MOERADTEACHER.common.bean.UpdateFlag;
 import com.example.MOERADTEACHER.common.interfaces.TeacherInterface;
 import com.example.MOERADTEACHER.common.modal.KVTeacher;
@@ -120,7 +121,7 @@ public class TeacherCtrl {
 			tdata.setCreatedBy(username);
 			tdata.setCreatedTime(date);
 			/* Added By Bibek*/
-			tdata.setKvCode(tdata.getCurrentUdiseSchCode());
+//			tdata.setKvCode(tdata.getCurrentUdiseSchCode());
 			statusFlag=1;
 		}
 		tdata.setModifiedBy(username);
