@@ -130,6 +130,7 @@ public class UneecopsMasterFetchController {
 	
 	@PostMapping("/list-of-all-station-by-region")
 	public ResponseEntity<?> fetchStationListByRegion(@RequestBody RegionStationMappingSearchResponseVO reqVO) {
+		System.out.println("called--->"+reqVO.getRegionCode());
 		log.debug("Request received in fetchStationListByRegion");
 		return new ResponseEntity<>(uneecopsMasterFetchService.fetchStationListByRegion(reqVO), HttpStatus.OK);
 	}

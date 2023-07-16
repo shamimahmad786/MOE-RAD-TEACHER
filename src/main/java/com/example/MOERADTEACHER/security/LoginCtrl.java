@@ -1,5 +1,7 @@
 package com.example.MOERADTEACHER.security;
 
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,13 +28,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.MOERADTEACHER.common.bean.TeacherProfileBean;
+import com.example.MOERADTEACHER.common.intercepts.RSAUtil;
 import com.example.MOERADTEACHER.common.modal.TeacherFormStatus;
 import com.example.MOERADTEACHER.common.modal.TeacherProfile;
 import com.example.MOERADTEACHER.common.util.FixHashing;
+import com.example.MOERADTEACHER.common.util.NativeRepository;
 import com.example.MOERADTEACHER.common.util.QueryResult;
 import com.example.MOERADTEACHER.common.util.StaticReportBean;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.me.user.UserService.user.modal.User;
+
 
 //import com.example.MOERADTEACHER.common.util.ApiPaths;
 
@@ -62,7 +69,8 @@ public class LoginCtrl {
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 	
-	
+	@Autowired
+	NativeRepository nativeRepository;
 	
 //	@Bean("jdbc2")
 //	public JdbcTemplate createJdbcTemplate2(@Autowired @Qualifier("loginDataSource") DataSource dataSource2){
@@ -79,43 +87,53 @@ public class LoginCtrl {
 	}
 
 	@RequestMapping(value = "/sign-in", method = RequestMethod.POST)
-	public ResponseEntity<?> login(@RequestBody String data,@RequestHeader("username") String username) throws Exception {
-// System.out.println("call  for sigin");@RequestBody LoginRequest request
+	public ResponseEntity<?> login(@RequestBody String data,@RequestHeader("username") String username,HttpServletRequest request) throws Exception {
+		String userId=null;
+		String password=null;
+		String newPassword=null;
 		ObjectMapper mapperObj = new ObjectMapper();
-		LoginRequest request=new LoginRequest();
-//		TeacherFormStatus formData=new TeacherFormStatus();
-//		TeacherProfile result = null;
+		LoginRequest requests=new LoginRequest();
 		try {
-			request = mapperObj.readValue(data, new TypeReference<LoginRequest>() {
+			requests = mapperObj.readValue(data, new TypeReference<LoginRequest>() {
 			});
 		}catch(Exception ex) {
 //			LOGGER.warn("--message--",ex);
 		}
 		
+		try {
+			ServletContext context = ((HttpServletRequest) request).getSession().getServletContext();		
+			String privateKeys =  (String) context.getAttribute("_private_key");			
+			userId=RSAUtil.decrypt(String.valueOf(requests.getUsername()), privateKeys);
+			password=RSAUtil.decrypt(String.valueOf(requests.getPassword()), privateKeys);
+			
+			System.out.println("userId--->"+userId);
+			System.out.println("password--->"+password);
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}		
 		Map<String, Object> map =new HashMap<String,Object>();
-		System.out.println("In login request--->"+request.getUsername());
-		System.out.println("Password--->"+request.getPassword());
-		
 		try {
 		authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+				.authenticate(new UsernamePasswordAuthenticationToken(userId, password));
 		}catch(Exception ex) {
-//			ex.printStackTrace();
+			
+			System.out.println("unauthorized");
+			
 			 return ResponseEntity
 		            .status(HttpStatus.UNAUTHORIZED)
 		            .body("Invalid userId and password");
 		}
- System.out.println("After authenticat--->");
-		final User user = userRepository.findByUsername(request.getUsername());
+
+		final User user = userRepository.findByUsername(userId);
 		final String token = jwtTokenUtil.generateToken(user);
-		  System.out.println("token--->"+token);
 		
-		  List<Map<String, Object>> appDetails=getApplicationDetails(user.getUsername(),map);
-		  
+		System.out.println("token--->"+user.getUsername());
+		
+		List<Map<String, Object>> appDetails=getApplicationDetails(user.getUsername(),map);
+		
+		System.out.println("appDetails---->"+appDetails);
 		return ResponseEntity.ok(new TokenResponse(user.getUsername(), token,appDetails,String.valueOf(map.get("firstname")),String.valueOf(map.get("lastname")),String.valueOf(map.get("mobile")),String.valueOf(map.get("email")),String.valueOf(map.get("hashId"))));
-		
-//		return ResponseEntity.ok(new TokenResponse(user.getUsername(), token, user.getParamName(), user.getParamValue(),
-//				user.getRoleId(),user.getSchema_name(),user.getStateId(),user.getStateName(),user.getDistrictName(),user.getGroupId()));
 	}
 	
 	
@@ -170,6 +188,220 @@ public class LoginCtrl {
 		} 
 	  
 	
+	  
+	  
+		@RequestMapping(value = "/createKvUser", method = RequestMethod.POST)
+		public User createUser(@RequestBody String data) throws Exception {
+			ObjectMapper mapperObj = new ObjectMapper();
+			
+			System.out.println("data--->"+data);
+			
+			User userdata=new User();
+			try {
+				userdata = mapperObj.readValue(data, new TypeReference<User>() {
+				});
+			}catch(Exception ex) {
+				ex.printStackTrace();
+			}
+	
+			return userDetailsServiceImpl.createKVUser(userdata);
+		}
+		
+		
+		  
+		  @RequestMapping(value = "/renamePassword", method = RequestMethod.POST)
+			public Map<String,Object> renamePassword(@RequestBody String data,HttpServletRequest request) throws Exception {
+			  
+			   System.out.println("data---->"+data);
+			  
+			  ServletContext context = ((HttpServletRequest) request).getSession().getServletContext();		
+				String privateKeys =  (String) context.getAttribute("_private_key");
+			 String userId = null;	
+			  String password = null;
+			  String newPassword = null;
+			  // System.out.println(data);
+			  ObjectMapper mapperObj = new ObjectMapper();
+				RenamePassword tdata=new RenamePassword();
+				try {
+					tdata = mapperObj.readValue(data, new TypeReference<RenamePassword>() {
+					});
+				}catch(Exception ex) {
+					ex.printStackTrace();
+//					LOGGER.warn("--message--",ex);
+				}
+				
+				 System.out.println("userId---->"+tdata.getUserId());
+				
+				try {
+					userId=RSAUtil.decrypt(String.valueOf(tdata.getUserId()), privateKeys);
+					password=RSAUtil.decrypt(String.valueOf(tdata.getOldPassword()), privateKeys);
+					newPassword=RSAUtil.decrypt(String.valueOf(tdata.getNewPassword()), privateKeys);
+					
+					System.out.println("userId--->"+userId);
+					 System.out.println("password--->"+password);
+					 System.out.println("newPassword--->"+newPassword);
+//					 System.out.println("matched1--->"+matched1);
+					
+				}catch(Exception ex) {
+					ex.printStackTrace();
+				}
+				
+//				return null;
+			  return userDetailsServiceImpl.renamePassword(userId,password,newPassword);
+//				// System.out.println("userId---->"+userId);
+//				return userService.resetPassword(userId);
+			}
+		  
+		  
+		  @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+			public Map<String,Object> resetPassword(@RequestBody String userId) throws Exception {
+				 System.out.println("userId---->"+userId);
+				return userDetailsServiceImpl.resetPassword(userId);
+			}
+		
+		  
+		  @RequestMapping(value = "/correctPassword", method = RequestMethod.POST)
+		  public Map<String,Object> correctPassword(@RequestBody String empcode) {
+//			  System.out.println("data--->"+data);
+////			  System.out.println(empcode);
+			  Map<String,Object>  mp=new HashMap<String,Object>();
+//			  
+//			  
+//			  try {
+//				  QueryResult qruser=  loginNativeRepository.executeQueries("select teacher_employee_code,teacher_id from public.userlist3");
+//				 
+//				  for(int i=0;i<qruser.getRowValue().size();i++) {
+//			
+//					  
+//					  QueryResult qr1=  loginNativeRepository.executeQueries("select id,username from public.user_details where username='"+qruser.getRowValue().get(i).get("teacher_employee_code")+"'");
+//					  
+//					  ObjectMapper mapperObj = new ObjectMapper();
+//					  try {
+//						  
+//						  
+//							 System.out.println(qr1.getRowValue().size());
+//							 Logis mp1=new Logis();
+//							 if(qr1.getRowValue().size()>0) {
+//								 
+//								 
+//								 mp1 = mapperObj.convertValue(qr1.getRowValue().get(0), Logis.class);
+//								 String query1="update public.teacher_profile set teacher_account_id='"+mp1.getId()+"' , teacher_system_generated_code='"+qruser.getRowValue().get(i).get("teacher_employee_code")+"', verify_flag='SI' where teacher_employee_code='"+qruser.getRowValue().get(i).get("teacher_employee_code")+"'";
+////									
+//									  nativeRepository.updateQueries(query1);
+//									  nativeRepository.updateQueries("update public.teacher_form_status set final_status='SI', form5_status='EC'  where teacher_id='"+qruser.getRowValue().get(i).get("teacher_employee_code")+"'"); 
+//									  System.out.println(qruser.getRowValue().get(i).get("teacher_employee_code"));
+//							 }
+//							 
+////							 System.out.println("aaa->"+qr1.getRowValue().get(i));
+//			
+//							}catch(Exception ex) {
+//								ex.printStackTrace();
+////								LOGGER.warn("--message--",ex);
+//							}
+//					  
+//					  
+//					  
+//					  
+//					  
+//				  }
+////				  System.out.println(qr.getRowValue().get(0).get("teacher_employee_code"));
+//				  
+////				  System.out.println();
+//				  
+////	  for(int i=0;i<qr.getRowValue().size();i++) {
+////		  QueryResult qr1=  loginNativeRepository.executeQueries("select id,username from public.user_details where username='"+qr.getRowValue().get(i).get("teacher_employee_code")+"'");  
+////		 System.out.println(qr1.getRowValue().size());
+////		 System.out.println(qr1.getRowValue());
+////			ObjectMapper mapperObj = new ObjectMapper();
+////			ArrayList<Map<String,Integer>> mp=new ArrayList<Map<String,Integer>>();
+//			Logis mp1=new Logis();
+////			for()
+////		 try {
+////			 System.out.println(qr1.getRowValue());
+////			 System.out.println("aaa->"+qr1.getRowValue().get(i));
+////			 mp1 = mapperObj.convertValue(qr1.getRowValue().get(i), Logis.class);
+////			}catch(Exception ex) {
+////				ex.printStackTrace();
+//////				LOGGER.warn("--message--",ex);
+////			}
+////		 System.out.println(mp1.getTeacher_employee_code());
+////		  if(qr1.getRowValue().size()>0) {
+////		  String query1="update public.teacher_profile set teacher_account_id='"+mp1.getTeacher_id()+"' , teacher_system_generated_code='"+mp1.getTeacher_employee_code()+"', verify_flag='SI' where teacher_employee_code='"+mp1.getTeacher_employee_code()+"'";
+////		
+////		  nativeRepository.updateQueries(query1);
+////		  nativeRepository.updateQueries("update public.teacher_form_status set final_status='SI', form5_status='EC'  where teacher_id='"+String.valueOf(qr.getRowValue().get(0).get("teacher_id"))+"'");
+////		  }
+//	  }
+//			  catch(Exception ex) {
+//				  ex.printStackTrace();
+//			  }
+			  
+			  
+			  try {
+//			  String query="select id from public.user_details where username='"+empcode+"'";
+//			
+//			  QueryResult qr=  loginNativeRepository.executeQueries(query);
+			Integer ids=0;
+			
+//			if(qr !=null) {
+//			 ids=Integer.parseInt(String.valueOf(qr.getRowValue().get(0).get("id")));
+//			}
+			
+//			if(ids !=0) {
+				
+				QueryResult q2=nativeRepository.executeQueries("select teacher_id from teacher_profile where teacher_employee_code='"+empcode+"'");
+				
+				String query1="update public.teacher_profile set  verify_flag='TA' where teacher_employee_code='"+empcode+"'";
+		
+				nativeRepository.updateQueries(query1);
+				nativeRepository.updateQueries("update public.teacher_form_status set final_status='TA', form5_status='EC'  where teacher_id='"+String.valueOf(q2.getRowValue().get(0).get("teacher_id"))+"'");
+				
+//			}
+			mp.put("status", 1);
+			
+			  }catch(Exception ex) {
+				  mp.put("status", 0);
+				  ex.printStackTrace();
+			  }
+//			return mp;
+			  
+			  
+			  
+			  
+//			  try {
+//					FileWriter writer = new FileWriter("E:/input.txt");
+//					QueryResult rs=loginNativeRepository.executeQueries("select id,username from public.user_details limit 300");
+//					
+//					QueryResult rs1=nativeRepository.executeQueries("select teacher_employee_code,teacher_system_generated_code,teacher_account_id from public.teacher_profile limit 3000");
+//					
+//					ArrayList<HashMap<String,String>> lt=new ArrayList<HashMap<String,String>>();
+//					
+//					for(int i=0;i<rs.getRowValue().size();i++) {
+//						HashMap<String,String> hs=new HashMap<String,String>();
+//						for(int j=0;j<rs1.getRowValue().size();j++) {
+//						if(String.valueOf(rs.getRowValue().get(i).get("username")).equalsIgnoreCase(String.valueOf(rs1.getRowValue().get(i).get("teacher_employee_code"))) && ((rs1.getRowValue().get(i).get("teacher_system_generated_code") ==null || String.valueOf(rs1.getRowValue().get(i).get("teacher_system_generated_code")).equalsIgnoreCase("") || rs1.getRowValue().get(i).get("teacher_account_id")==null ||  String.valueOf(rs1.getRowValue().get(i).get("teacher_account_id")).equalsIgnoreCase("")   ))){
+//							hs.put(String.valueOf(rs1.getRowValue().get(i).get("teacher_employee_code")), String.valueOf(rs.getRowValue().get(i).get("id")));
+////							lt.add(hs);
+//							System.out.println(hs);
+//							 writer.write(hs + "\n"+ "");
+//				
+//						}
+//								
+//						}
+//					}
+//					
+//					writer.close();
+//					
+//				}catch(Exception ex) {
+//					ex.printStackTrace();
+//				}
+//			  
+			  
+			  
+			return mp;	
+		  }
+	
+	  
 	
 //	map.put("ApplicationDetails",getApplicationDetails(map.get("user_name").toString(),map));
 	

@@ -3,6 +3,8 @@ package com.example.MOERADTEACHER.common.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WorkExperienceBean implements Serializable{
@@ -11,7 +13,9 @@ public class WorkExperienceBean implements Serializable{
 	private Integer teacher_id;
 	private String udise_sch_code;
 	private String school_id;
+//	@DateTimeFormat(pattern="yyyy-mm-dd")
 	private String work_start_date;
+//	@DateTimeFormat(pattern="yyyy-mm-dd")
 	private String work_end_date;
 	private String position_type;
 	private String nature_of_appointment;

@@ -51,52 +51,38 @@ public class ExperienceImpl implements ExperienceInterface{
 		teacherTransferGroundRepository.deleteAllByTeacherId(Integer.parseInt(String.valueOf(data.get(0).getTeacherId())));
 		}
 		for(int i=0;i<data.size();i++) {
-			
-			if(data.get(i).getCurrentlyActiveYn().equalsIgnoreCase("1")) {
+			try {
+			if(data.get(i).getCurrentlyActiveYn() !=null && data.get(i).getCurrentlyActiveYn().equalsIgnoreCase("1")) {
 				
 				try {
-					
-					// System.out.println("Exp date-->"+data.get(i).getWorkStartDate());
-					// System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(data.get(i).getWorkStartDate()));
+			
 					nativeRepository.updateQueries("update teacher_profile set  work_experience_work_start_date_present_kv='"+new SimpleDateFormat("yyyy-MM-dd").format(data.get(i).getWorkStartDate())+"',last_promotion_position_type='"+data.get(i).getPositionType()+"',work_experience_appointed_for_subject='"+data.get(i).getAppointedForSubject()+"',nature_of_appointment='"+data.get(i).getNatureOfAppointment()+"' where teacher_id="+data.get(i).getTeacherId());
 					}catch(Exception ex) {
 						ex.printStackTrace();
 					}
 			}
+			}catch(Exception ex) {
+				ex.printStackTrace();
+			}
 			
 			Integer workExperienceId=0;
+			System.out.println("work exprience id--->"+data.get(i).getWorkExperienceId());
 			if(data.get(i).getWorkExperienceId()==null  || !(data.get(i).getWorkExperienceId()>0)) {
-				QueryResult qrObj=nativeRepository.executeQueries("select  max(work_experience_id)  from public.teacher_work_experience");
-				// System.out.println(qrObj);
+				System.out.println("work exprience id in if");
+				
+				QueryResult qrObj=nativeRepository.executeQueries("select nextval('teacher_work_experience_id3_seq')");
+//				QueryResult qrObj=nativeRepository.executeQueries("select  max(work_experience_id)  from public.teacher_work_experience");
+				
 				if(qrObj.getRowValue().size()>0) {
-				workExperienceId=Integer.parseInt(String.valueOf(qrObj.getRowValue().get(0).get("max")));
+//				workExperienceId=Integer.parseInt(String.valueOf(qrObj.getRowValue().get(0).get("max")));
+				workExperienceId=Integer.parseInt(String.valueOf(qrObj.getRowValue().get(0).get("nextval")));
+					
 				}
-				workExperienceId  =workExperienceId+1;
+				workExperienceId  =workExperienceId;
 				data.get(i).setWorkExperienceId(workExperienceId);
 			}
 			
-//			List groundTransfer=data.get(i).getGroundForTransfer();
-			
-//			System.out.println("groundTransfer--->"+groundTransfer+"----Experience Id--->"+data.get(i).getWorkExperienceId());
-			
-//			try {
-//				if(groundTransfer !=null) {
-//				
-//					for(int j=0;j<groundTransfer.size();j++) {
-//					
-//					TeacherTransferGround  tObj=new TeacherTransferGround();
-//					tObj.setTeacherId(data.get(i).getTeacherId());
-//					tObj.setTransferGroundId(Integer.parseInt(String.valueOf(groundTransfer.get(j))));
-//					tObj.setWorkExperienceId(data.get(i).getWorkExperienceId());
-//					teacherTransferGroundRepository.save(tObj);	
-//				}
-//				}else if(groundTransfer ==null){
-//					TeacherTransferGround  tObj=new TeacherTransferGround();
-//					tObj.setTeacherId(data.get(i).getTeacherId());
-//					tObj.setTransferGroundId(0);
-//					tObj.setWorkExperienceId(data.get(i).getWorkExperienceId());
-//					teacherTransferGroundRepository.save(tObj);	
-//				}
+
 //				
 //			}catch(Exception ex) {
 //				ex.printStackTrace();
@@ -106,7 +92,7 @@ public class ExperienceImpl implements ExperienceInterface{
 			TeacherExperience tObject =teacherExperienceRepository.save(data.get(i));
 //			tObject.setGroundForTransfer(groundTransfer);
 			
-//			lt.add(tObject);
+			lt.add(tObject);
 			
 		}
 		

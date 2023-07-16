@@ -52,18 +52,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			authToken = header.replace(TOKEN_PREFIX, "");
 			try {
 				// System.out.println("ready to get user");
-				UserDetails userDetails = userDetailsService.loadUserByUsername(req.getHeader("userName"));
+//				UserDetails userDetails = userDetailsService.loadUserByUsername(req.getHeader("userName"));
 				// System.out.println("user name--->" + userDetails);
 				// // System.out.println("validate
 				// ---->"+jwtTokenUtil.validateToken(authToken,userDetails));
 				// System.out.println("request url--->"+req.getRequestURI());
-				if (req.getRequestURI().contains("/school/") && !req.getRequestURI().contains("school/downloadDocument")) {
-					if (!jwtTokenUtil.validateToken(authToken, userDetails)
-							|| jwtTokenUtil.validateToken(authToken, userDetails) == null) {
-						res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-					}
-				}
-				username = jwtTokenUtil.getUsernameFromToken(authToken);
+//				if (req.getRequestURI().contains("/school/") && !req.getRequestURI().contains("school/downloadDocument")) {
+//					if (!jwtTokenUtil.validateToken(authToken, userDetails)
+//							|| jwtTokenUtil.validateToken(authToken, userDetails) == null) {
+//						res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+//					}
+//				}
+//				username = jwtTokenUtil.getUsernameFromToken(authToken);
 			} catch (IllegalArgumentException e) {
 				// log.error("an error occured during getting username from token", e);
 				// System.out.println("an error occured during getting username from token");

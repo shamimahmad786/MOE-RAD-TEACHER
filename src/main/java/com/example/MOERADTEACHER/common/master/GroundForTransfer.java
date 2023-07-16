@@ -6,7 +6,7 @@ public  class GroundForTransfer {
  public static HashMap<Object,Object> mp=new HashMap<Object,Object>();
  
 	public static HashMap<Object,Object> getGroundTransfer() {
-		mp.put("G1",  "Request Transfer General");
+		mp.put("G1",  "Request Transfer");
 		mp.put("G2",  "Request On LTR");
 		mp.put("G3", "Request On MDG");
 		mp.put("G4",  "Request On DFP");
@@ -24,6 +24,7 @@ public  class GroundForTransfer {
 		mp.put("G16", "Request On Any Other Ground");
 		mp.put("G17", "No Taker Vacancy Availed");
 		mp.put("G18", "Any Other Administrative Ground");
+		mp.put("G19", "Transfer Modification");
 		return mp;
  }
 }

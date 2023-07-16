@@ -1,10 +1,12 @@
 package com.example.MOERADTEACHER.common.controller;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.modelmapper.ModelMapper;
@@ -100,7 +102,7 @@ public class TeacherCtrl {
 	@Transactional(rollbackFor = {Exception.class})
 	public ResponseEntity<CustomResponse> saveTeacher(@RequestBody String data,@RequestHeader("username") String username) throws Exception {
 		
-		System.out.println(data);
+		System.out.println("profile save-->"+data);
 		
 		Integer statusFlag=0;
 		ObjectMapper mapperObj = new ObjectMapper();
@@ -113,9 +115,21 @@ public class TeacherCtrl {
 		}catch(Exception ex) {
 			LOGGER.warn("--message--",ex);
 		}
+		
+		
+		System.out.println("tdata--->"+tdata.getTeacherDob());
+		
 	    Date date = new Date(); 
 	    
-
+//	    String formattedDate = tdata.getTeacherDob();
+//	    tdata.setTeacherDob(tdata.getTeacherDob());
+//	    tdata.setWorkExperienceWorkStartDatePresentKv(tdata.getWorkExperienceWorkStartDatePresentKv());
+//	    tdata.setWorkExperiencePositionTypePresentStationStartDate(convertToDate(tdata.getWorkExperiencePositionTypePresentStationStartDate()));
+//	    tdata.setLastPromotionPositionDate(tdata.getLastPromotionPositionDate());
+	    
+	    
+	    
+//	   ;
 	    
 		if(tdata.getTeacherId() ==null) {
 			tdata.setCreatedBy(username);
@@ -127,20 +141,55 @@ public class TeacherCtrl {
 		tdata.setModifiedBy(username);
 		tdata.setModifiedTime(date);
 		tdata.setDropBoxFlag(0);
+		
+		try {
+			
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		
+//		try {
+////			workExperienceWorkStartDatePresentKv
+//			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+//			Date workExperienceWorkStartDatePresentKv = formatter.parse(tdata.getWorkExperienceWorkStartDatePresentKv());
+//			Date workExperiencePositionTypePresentStationStartDate = formatter.parse(tdata.getWorkExperienceWorkStartDatePresentKv());
+//			Date lastPromotionPositionDate = formatter.parse(tdata.getWorkExperienceWorkStartDatePresentKv());
+//			if((lastPromotionPositionDate.getDate()<=workExperiencePositionTypePresentStationStartDate.getDate())  && (workExperiencePositionTypePresentStationStartDate.getDate()<=workExperienceWorkStartDatePresentKv.getDate())) {
+//				
+//			}else {
+//				return ResponseEntity.ok(new CustomResponse(0,"error","","500"));	
+//			}
+//			
+//		}catch(Exception ex) {
+//			ex.printStackTrace();
+//		}
+		
+		
+		
 		try {
 			
 			 System.out.println("spouse status--->"+tdata.getSpouseStatus());
+//			 System.out.println(tdata.getId());
 			
 		result=teacherInterface.saveTeacher(tdata);
+		
+		System.out.println("result");
 		tdata.setTeacherId(result.getTeacherId());
+		System.out.println("experience");
 //		TeacherPromotion proObj=promotionCtrl.savePromotion(tdata);
 		TeacherExperience expObj= experienceCtrl.saveExperience(tdata);
 //		result.setWorkExperienceIdPresentKv(expObj.getWorkExperienceId());
 //		result.setLastPromotionId(String.valueOf(proObj.getPromotionId()));
+		
+		System.out.println("dasdasd--->"+expObj.getWorkExperienceId());
+		
 		result.setWorkExperienceIdPresentKv(expObj.getWorkExperienceId());
 		result=teacherInterface.saveTeacher(result);
 		
+		System.out.println("result-->"+result);
 		}catch(Exception ex){
+			ex.printStackTrace();
 			LOGGER.warn("--message--",ex);
 		}
 		if(statusFlag==1) {
@@ -436,10 +485,24 @@ public class TeacherCtrl {
 	}
 	
 	
+	public static String convertToDate(String dateString) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date date = inputFormat.parse(dateString.split("\\+")[0]);
+            return outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
+	
 	
 	
 	
 	
 	
 
-}
+

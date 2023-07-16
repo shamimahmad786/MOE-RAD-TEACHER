@@ -65,7 +65,7 @@ public class KVTeacherImpl {
 		String query = "select tp.*, tfs.form1_status, tfs.form2_status , tfs.form3_status ,tfs.form4_status , tfs.form5_status ,\r\n"
 				+ "tfs.form6_status , tfs.form7_status , tfs.final_status ,tfs.id \r\n"
 				+ "from public.teacher_profile tp , public.teacher_form_status tfs \r\n"
-				+ "where tp.teacher_id = tfs.teacher_id and drop_box_flag=0 \r\n"
+				+ "where tp.teacher_id = tfs.teacher_id  \r\n"
 				+ "and tp.kv_code ='" + data + "'  order by teacher_name";
 		
 		

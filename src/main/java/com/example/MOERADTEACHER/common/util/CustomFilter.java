@@ -92,12 +92,15 @@ public class CustomFilter implements Filter {
 		}
 		
 		
+	
+		
+		
 		if(req.getHeader("access-control-request-headers")==null || true) {
 			
 			System.out.println(req.getRequestURI());
 			
 		
-		if(!req.getRequestURI().contains("getMaster") &&  !req.getRequestURI().contains("uploadDocument") && !req.getRequestURI().contains("uploadProfileImage") && !req.getRequestURI().contains("getProfileImage")) {
+		if( !req.getRequestURI().contains("createKvUser") && !req.getRequestURI().contains("getMaster") &&  !req.getRequestURI().contains("uploadDocument") && !req.getRequestURI().contains("uploadProfileImage") && !req.getRequestURI().contains("getProfileImage")) {
 //		// System.out.println("in if--->"+req.getRequestURI());
 		XSSRequestWrapper wrappedRequest1 = new XSSRequestWrapper(req);
 		String body = wrappedRequest1.getBody();
@@ -165,8 +168,8 @@ public class CustomFilter implements Filter {
 					&& !req.getRequestURI().contains("deleteDocumentByTeacherIdAndName")
 					&& !req.getRequestURI().contains("getDocumentByTeacherId")
 					&& !req.getRequestURI().contains("uploadDocument")
-					&& !req.getRequestURI().contains("resetPassword")
-					&& !req.getRequestURI().contains("create-kvuser")
+					
+					&& !req.getRequestURI().contains("createKvUser")
 					&& !req.getRequestURI().contains("get-usercradential") && !req.getRequestURI().contains("downloadDocument")) {
 				if (token != null) {
 //					// System.out.println("in if condition--->"+restService.getPostsPlainJSON(token));

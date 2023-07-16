@@ -333,8 +333,10 @@ public class TransferController {
 			// Get the file and save it somewhere
 			String[] arrOfStr = file.getOriginalFilename().split("\\.");
 			byte[] bytes = file.getBytes();
-			Path path = Paths.get(teacherFolder + File.separator + filename + "." + arrOfStr[1]);
+			Path path = Paths.get(teacherFolder + File.separator + filename + ".pdf" );
 			Files.write(path, bytes);
+			
+			
 			// System.out.println("Upload Sucessfully");
 //			custRes.setStatus(1);
 			mp.put("docName", filename);

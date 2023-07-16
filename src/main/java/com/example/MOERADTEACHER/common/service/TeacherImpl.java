@@ -512,7 +512,7 @@ TypeReference<List<TeacherProfileBean>> typeRef = new TypeReference<List<Teacher
 
 		try {
 			QueryResult qrObj = nativeRepository.executeQueries(
-					"select  work_experience_id,teacher_id,udise_sch_code,school_id,work_start_date,work_end_date,mtpt.organization_teacher_type_name as position_type,nature_of_appointment,udise_school_name,shift_type,verify_flag,verified_type\r\n"
+					"select  work_experience_id,teacher_id,udise_sch_code,school_id,TO_CHAR(work_start_date,'DD-MM-YYYY') as work_start_date,TO_CHAR(work_end_date,'DD-MM-YYYY') as work_end_date ,mtpt.organization_teacher_type_name as position_type,nature_of_appointment,udise_school_name,shift_type,verify_flag,verified_type\r\n"
 							+ ",created_by,created_time,modified_by,modified_time,ground_for_transfer,currently_active_yn,mts.subject_name as appointed_for_subject from teacher_work_experience tws,master.mst_teacher_subject mts, master.mst_teacher_position_type mtpt where tws.teacher_id ="
 							+ data
 							+ " and tws.appointed_for_subject::numeric =mts.subject_id and mtpt.teacher_type_id::varchar=tws.position_type  order by work_start_date desc \r\n"
@@ -522,6 +522,8 @@ TypeReference<List<TeacherProfileBean>> typeRef = new TypeReference<List<Teacher
 			wb = mapper.convertValue(qrObj.getRowValue(), typeRef);
 			
 			for(int i=0;i<wb.size();i++) {
+				
+				System.out.println(wb.get(i).getWork_start_date());
 			String groundForTransfer="";
 //				QueryResult qrObj1 = nativeRepository.executeQueries("select * from public.teacher_transfer_ground where work_experienceid="+wb.get(i).getWork_experience_id());
 //				for(int j=0;j<qrObj1.getRowValue().size();j++) {

@@ -80,7 +80,7 @@ public class ExperienceCtrl {
 		
 		System.out.println("data.getCurrentUdiseSchCode()---->"+data.getCurrentUdiseSchCode());
 		System.out.println("data.getSchoolId()-->"+data.getSchoolId());
-		
+		try {
 		TeacherExperience expObj=new TeacherExperience();
 		expObj.setTeacherId((data.getTeacherId()));
 		expObj.setSchoolId(data.getSchoolId());
@@ -115,8 +115,18 @@ public class ExperienceCtrl {
 		}
 //		expObj.set
 		
-		return experienceInterface.saveExperience(expObj);	
+		List<TeacherExperience> lt=new ArrayList<TeacherExperience>();
+		lt.add(expObj);
 		
+				
+		List<TeacherExperience>	expList=	experienceInterface.saveExperience(lt);	
+		return expList.get(0);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		
+		return null;
 	}
 	
 	
