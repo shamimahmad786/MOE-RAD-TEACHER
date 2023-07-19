@@ -1355,5 +1355,52 @@ public class TransferImpl {
 		return mObj;
 	}
 	
+	public QueryResult getTransferRegionByEmployee(Integer teacherId){
+		QueryResult finalrs=null;
+		QueryResult rs=null;
+	rs	=nativeRepository.executeQueries("select tp.special_recruitment_yn, tp.teaching_nonteaching  ,  ttp.personal_status_dfpd , ttp.personal_status_mdgd ,ttp.absence_days_one , tp.teacher_id \r\n"
+				+ "from public.teacher_profile tp , public.teacher_transfer_profile ttp \r\n"
+				+ "where tp.teacher_id = ttp.teacher_id \r\n"
+				+ "and tp.teacher_id = '"+teacherId+"'");
+	
+	if(String.valueOf(rs.getRowValue().get(0).get("special_recruitment_yn")).equalsIgnoreCase("13") && String.valueOf(rs.getRowValue().get(0).get("personal_status_dfpd")).equalsIgnoreCase("0") && String.valueOf(rs.getRowValue().get(0).get("personal_status_mdgd")).equalsIgnoreCase("0")) {
+		finalrs=nativeRepository.executeQueries("select distinct ksm.region_code ,ksm.region_name from kv.kv_school_master ksm where ksm.is_ner ='1'");
+	}else {
+		finalrs=nativeRepository.executeQueries("select distinct ksm.region_code ,ksm.region_name from kv.kv_school_master ksm");
+	}
+		
+		return  finalrs;
+	}
+	
+	
+	public QueryResult getTransferStationByEmployee(Integer teacherId,String regionCode) {
+		
+		
+		QueryResult finalrs=null;
+		QueryResult rs=null;
+	rs	=nativeRepository.executeQueries("select tp.special_recruitment_yn, tp.teaching_nonteaching  ,  ttp.personal_status_dfpd , ttp.personal_status_mdgd ,ttp.absence_days_one , tp.teacher_id \r\n"
+				+ "from public.teacher_profile tp , public.teacher_transfer_profile ttp \r\n"
+				+ "where tp.teacher_id = ttp.teacher_id \r\n"
+				+ "and tp.teacher_id = '"+teacherId+"'");
+	
+	if(String.valueOf(rs.getRowValue().get(0).get("special_recruitment_yn")).equalsIgnoreCase("13") && String.valueOf(rs.getRowValue().get(0).get("personal_status_dfpd")).equalsIgnoreCase("0") && String.valueOf(rs.getRowValue().get(0).get("personal_status_mdgd")).equalsIgnoreCase("0")) {
+		finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
+				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"' and ksm.is_ner='1'\r\n"
+				+ "		and station_code not in (select ksm2.station_code  from public.teacher_profile tp ,kv.kv_school_master ksm2 \r\n"
+				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") ");
+	}else {
+		finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
+				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'"
+				+ "		and station_code not in (select ksm2.station_code  from public.teacher_profile tp ,kv.kv_school_master ksm2 \r\n"
+				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") ");
+	}
+		
+		return  finalrs;
+		
+		
+		
+
+	}
+	
 
 }

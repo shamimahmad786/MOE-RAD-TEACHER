@@ -526,5 +526,39 @@ public class TransferController {
 	}
 	
 	
+	@RequestMapping(value = "/getTransferRegionByEmployee", method = RequestMethod.POST)
+	public ResponseEntity<?> getTransferRegionByEmployee(@RequestBody String data) throws Exception {		
+		ObjectMapper mapperObj = new ObjectMapper();
+		HashMap<String,String> mp=new HashMap<String,String>();
+		try {
+			mp = mapperObj.readValue(data, new TypeReference<HashMap<String,String>>() {
+			});
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			LOGGER.warn("message",ex);
+		}
+		return ResponseEntity.ok(transferImpl.getTransferRegionByEmployee(Integer.parseInt(mp.get("teacherId"))));
+	}
+	
+	@RequestMapping(value = "/getTransferStationByEmployee", method = RequestMethod.POST)
+	public ResponseEntity<?> getTransferStationByEmployee(@RequestBody String data) throws Exception {	
+		ObjectMapper mapperObj = new ObjectMapper();
+		HashMap<String,String> mp=new HashMap<String,String>();
+		try {
+			mp = mapperObj.readValue(data, new TypeReference<HashMap<String,String>>() {
+			});
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			LOGGER.warn("message",ex);
+		}
+		
+		System.out.println(mp.get("teacherId"));
+		System.out.println(mp.get("regionCode"));
+		
+		return ResponseEntity.ok(transferImpl.getTransferStationByEmployee(Integer.parseInt(mp.get("teacherId")),mp.get("regionCode")));
+	}
+	
+	
+	
 
 }

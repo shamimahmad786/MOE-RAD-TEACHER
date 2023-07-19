@@ -312,15 +312,47 @@ public class TeacherTransferController {
 						dcObj.setDcTenureHardPoint("Y");
 					}
 				}
+				
+				String dc_spouse_station_code = String
+						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("spouse_station_code").toString()));
+
+				String employee_own_station_code = String
+						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("station_code").toString()));
+				
+				// TC Hard Point
+				
+				
+				String querytc="select tp.work_experience_position_type_present_station_start_date, scm.from_date , scm.todate , scm.is_active \r\n"
+						+ ",ksm.station_code , tp.teacher_id , scm.category_id \r\n"
+						+ "from public.teacher_profile tp , kv.kv_school_master ksm , master.station_category_mapping scm\r\n"
+						+ "where tp.kv_code = ksm.kv_code --and ksm.station_code = '"+employee_own_station_code+"'\r\n"
+						+ "and scm.station_code::varchar = ksm.station_code::varchar \r\n"
+						+ "and tp.teacher_id = '"+teacherId.toString()+"'\r\n"
+						+ "and tp.work_experience_position_type_present_station_start_date::date between scm.from_date and scm.todate";
+				
+				QueryResult tchard = nativeRepository.executeQueries(querytc);
+				String categoryId=null;
+				if(tchard.getRowValue().size()>0) {
+					categoryId=String.valueOf(tchard.getRowValue().get(0).get("category_id"));
+					if((categoryId.equalsIgnoreCase("3") || categoryId.equalsIgnoreCase("1")) && (tcStayAtStationYears >=3)) {
+						dcObj.setTcTenureHardPoint(30);	
+					}else if((categoryId.equalsIgnoreCase("4")) && (tcStayAtStationYears >=2)) {
+						dcObj.setTcTenureHardPoint(35);	
+					}
+				}else {
+					dcObj.setTcTenureHardPoint(0);
+				}
+				
 
 				// Initilize with 0
-				dcObj.setTcTenureHardPoint(0);
+				
+				
 
-				if (tc_current_station_hard_yn == 1) {// Employee Present Station Is Hard
-					if (tcStayAtStationYears >= 3) { // He is Completed More Than 3 Year
-						dcObj.setTcTenureHardPoint(30);
-					}
-				}
+//				if (tc_current_station_hard_yn == 1) {// Employee Present Station Is Hard
+//					if (tcStayAtStationYears >= 3) { // He is Completed More Than 3 Year
+//						dcObj.setTcTenureHardPoint(30);
+//					}
+//				}
 
 				// Disability
 				if (teacher_disability_yn == 1) {
@@ -375,11 +407,7 @@ public class TeacherTransferController {
 				Boolean spouseAtSameStation = false;
 				Boolean spouseChoiceSameStation = false;
 
-				String dc_spouse_station_code = String
-						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("spouse_station_code").toString()));
-
-				String employee_own_station_code = String
-						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("station_code").toString()));
+			
 
 				
 				System.out.println(rs.getRowValue().get(0).get("choice_kv1_station_code"));
@@ -458,9 +486,10 @@ public class TeacherTransferController {
 				}
 				dcObj.setDcSpousePoint(minValue);
 
+				
 				if (maxValue == 8) {
 					dcObj.setTcNonSopouseSinglePoint(maxValue);
-				} else if (minValue == 20) {
+				} else if (maxValue == 20) {
 					dcObj.setTcSinglePoint(maxValue);
 				}
 				dcObj.setTcSpousePoint(maxValue);
@@ -478,13 +507,35 @@ public class TeacherTransferController {
 					memberjcm = 0;
 				}
 
-				if ((schoolType == 2 || schoolType == 3) && (memberjcm == 1 || memberjcm == 2)) {
+				if (memberjcm == 2 &&  employee_own_station_code.equalsIgnoreCase("239")) {
 					dcObj.setDcRjcmNjcmPoint(-6);
 					//dcObj.setTcRjcmNjcmPoint(6);
-				} else {
+				} else if(memberjcm == 1 && schoolType==3){
+					dcObj.setDcRjcmNjcmPoint(-6);
+				}else {
 					dcObj.setDcRjcmNjcmPoint(0);
-					dcObj.setTcRjcmNjcmPoint(0);
+//					dcObj.setTcRjcmNjcmPoint(0);
 				}
+				
+				
+				
+				QueryResult tcRjcm = nativeRepository.executeQueries("select choice_kv1_station_code , ksm.school_type , ttp.teacher_id from public.teacher_transfer_profile ttp ,kv.kv_school_master ksm where  ttp.choice_kv1_station_code = ksm.station_code and ttp.teacher_id ="+teacherId);
+				Integer tcRjcmSchoolType=0;
+				
+				if(tcRjcm.getRowValue().size()>0) {
+					tcRjcmSchoolType=Integer.parseInt(String.valueOf(tcRjcm.getRowValue().get(0).get("school_type")));
+				}
+				
+				if (memberjcm == 2 &&  tc_spouse_station_choice1_code.equalsIgnoreCase("239")) {
+					dcObj.setTcRjcmNjcmPoint(6);
+				} else if(memberjcm == 1 && tcRjcmSchoolType==3){
+					dcObj.setTcRjcmNjcmPoint(6);
+				}else {
+					dcObj.setTcRjcmNjcmPoint(0);
+//					dcObj.setTcRjcmNjcmPoint(0);
+				}
+				
+				
 
 				dcObj.setKvCode(String.valueOf(rs.getRowValue().get(0).get("kv_code")));
 				dcObj.setTeacherId(Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("teacher_id"))));
@@ -511,6 +562,7 @@ public class TeacherTransferController {
 				tcFindMax.add(dcObj.getTcLtrPoint());
 				tcFindMax.add(dcObj.getTcSpousePoint());
 				tcFindMax.add(dcObj.getTcRjcmNjcmPoint());
+				tcFindMax.add(dcObj.getTcTenureHardPoint());
 				tcMaxAmoungFive = tcFindMax.stream().max(Comparator.naturalOrder()).get();
 
 

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -179,6 +180,15 @@ public class TeacherTransferProfile {
 	
 	@Column(name = "relation_with_empl_mdg")
 	private String relationWithEmplMdg;
+	
+	@Column(name = "trans_emp_is_declaration")
+	private Integer transEmpIsDeclaration;
+	
+	@Column(name = "trans_emp_declaraion_date")
+	private Date transEmpDeclaraionDate;
+	
+	@Column(name = "trans_emp_declaration_ip")
+	private String transEmpDeclarationIp;
 	
 	public Integer getId() {
 		return id;
@@ -594,8 +604,35 @@ public class TeacherTransferProfile {
 	public void setRelationWithEmplMdg(String relationWithEmplMdg) {
 		this.relationWithEmplMdg = relationWithEmplMdg;
 	}
+	public Integer getTransEmpIsDeclaaration() {
+		return transEmpIsDeclaration;
+	}
+	public void setTransEmpIsDeclaaration(Integer transEmpIsDeclaaration) {
+		this.transEmpIsDeclaration = transEmpIsDeclaaration;
+	}
+	public Integer getTransEmpIsDeclaration() {
+		return transEmpIsDeclaration;
+	}
+	public void setTransEmpIsDeclaration(Integer transEmpIsDeclaration) {
+		this.transEmpIsDeclaration = transEmpIsDeclaration;
+	}
+	public Date getTransEmpDeclaraionDate() {
+		return transEmpDeclaraionDate;
+	}
+	public void setTransEmpDeclaraionDate(Date transEmpDeclaraionDate) {
+		this.transEmpDeclaraionDate = transEmpDeclaraionDate;
+	}
+	public String getTransEmpDeclarationIp() {
+		return transEmpDeclarationIp;
+	}
+	public void setTransEmpDeclarationIp(String transEmpDeclarationIp) {
+		this.transEmpDeclarationIp = transEmpDeclarationIp;
+	}
 	
-	
+	@PrePersist
+	protected void onCreate() {
+	    if (transEmpDeclaraionDate == null) { transEmpDeclaraionDate = new Date(); }
+	}
 	
 
 }

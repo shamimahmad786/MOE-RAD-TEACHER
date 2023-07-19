@@ -73,11 +73,15 @@ public class CustomFilter implements Filter {
 		String userName;
 		
 		System.out.println("called");
-		res.setHeader("Access-Control-Allow-Origin",req.getHeader("Origin"));
-//        response.setHeader("Access-Control-Allow-Origin", "*");
+//		res.setHeader("Access-Control-Allow-Origin",req.getHeader("Origin"));
+		res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
 	res.setHeader("Access-Control-Allow-Headers", "*");
 	res.setHeader("Access-Control-Max-Age", "180");
+
+	if("OPTIONS".equalsIgnoreCase(req.getMethod())) {
+		res.setStatus(HttpServletResponse.SC_OK);
+	}
 
 		// System.out.println("request url--->"+req.getRemoteHost());
 		

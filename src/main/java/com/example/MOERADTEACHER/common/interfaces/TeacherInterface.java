@@ -11,6 +11,7 @@ import com.example.MOERADTEACHER.common.modal.Teacher;
 import com.example.MOERADTEACHER.common.modal.TeacherFormStatus;
 //import com.example.MOERADTEACHER.common.modal.TeacherProfessionalQualification;
 import com.example.MOERADTEACHER.common.modal.TeacherProfile;
+import com.example.MOERADTEACHER.common.util.QueryResult;
 //import com.example.MOERADTEACHER.modal.TeacherProfileCurrectionInitiate;
 import com.example.MOERADTEACHER.common.util.StaticReportBean;
 
@@ -35,4 +36,6 @@ public interface TeacherInterface    {
 //	TeacherEducationalQualification mapSubject(TeacherEducationalQualification data,List<Map<String,Object>> sub,List<Map<String,Object>> degree);
 //	TeacherProfessionalQualification mapProSubject(TeacherProfessionalQualification data,List<Map<String,Object>> sub,List<Map<String,Object>> degree);
 //	TeacherProfileCurrectionInitiate teacherProfileQueryInitiate(TeacherProfileCurrectionInitiate data); 
+	
+	QueryResult getEmployeeStatus(Integer teacherId);
 }

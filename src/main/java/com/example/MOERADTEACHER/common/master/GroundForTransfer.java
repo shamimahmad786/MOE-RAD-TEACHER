@@ -10,7 +10,7 @@ public  class GroundForTransfer {
 		mp.put("G2",  "Request On LTR");
 		mp.put("G3", "Request On MDG");
 		mp.put("G4",  "Request On DFP");
-		mp.put("G5", "Request On PH");
+		mp.put("G5", "Request On PwD");
 		mp.put("G6", "Request On Spouse Ground");
 		mp.put("G7", "Surplus");
 		mp.put("G8", "Displacement");
@@ -25,6 +25,7 @@ public  class GroundForTransfer {
 		mp.put("G17", "No Taker Vacancy Availed");
 		mp.put("G18", "Any Other Administrative Ground");
 		mp.put("G19", "Transfer Modification");
+		mp.put("G20", "Public Interest");
 		return mp;
  }
 }

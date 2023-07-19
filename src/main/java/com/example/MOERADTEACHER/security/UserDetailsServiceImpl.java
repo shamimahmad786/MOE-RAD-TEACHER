@@ -270,22 +270,55 @@ public Map<String, Object> resetPassword(String userName) {
 				findUserObj.setPassword("{bcrypt}$2a$10$xRoEcGw9rTUrhvC7EDsVS.Hu1df3mfW.mMkeJ03AlCFvX5goIj9R6");
 				findUserObj.setTextPassword("system123#");
 				userRepository.save(findUserObj);
-				MailBean obj = new MailBean();
-				obj.setApplicationName("Kvs Teacher");
-				obj.setApplicationId("1");
-				obj.setEmailTemplateId("MSG-5836");
-				obj.setEmailTo(findUserObj.getEmail());
-				obj.setSubject("Teacher Module Credential");
-				obj.setSignature("Dear " + findUserObj.getFirstname());
-				obj.setContent(
-						"Your Password has been reset successfully. You are requested to update your update on the portal https://kvsoninetransfer.kvs.gov.in by using the UID: "
-								+ findUserObj.getUsername()
-								+ " and Password: system123# - Team NIC -Ministry of Education, Government of India");
-				obj.setClosing("KVS Headquarter");
-				obj.setMobile(findUserObj.getMobile());
-				obj.setUserid(findUserObj.getUsername());
-				obj.setName(findUserObj.getFirstname());
-				restMailService.getPostsPlainJSON(obj);
+//				MailBean obj = new MailBean();
+//				obj.setApplicationName("Kvs Teacher");
+//				obj.setApplicationId("1");
+//				obj.setEmailTemplateId("MSG-5836");
+//				obj.setEmailTo(findUserObj.getEmail());
+//				obj.setSubject("Teacher Module Credential");
+//				obj.setSignature("Dear " + findUserObj.getFirstname());
+//				obj.setContent(
+//						"Your Password has been reset successfully. You are requested to update your update on the portal https://kvsoninetransfer.kvs.gov.in by using the UID: "
+//								+ findUserObj.getUsername()
+//								+ " and Password: system123# - Team NIC -Ministry of Education, Government of India");
+//				obj.setClosing("KVS Headquarter");
+//				obj.setMobile(findUserObj.getMobile());
+//				obj.setUserid(findUserObj.getUsername());
+//				obj.setName(findUserObj.getFirstname());
+//				restMailService.getPostsPlainJSON(obj);
+				mp.put("status", 1);
+				mp.put("message", "Passowrd reset successfully");
+			} catch (Exception ex) {
+				mp.put("status", 0);
+				mp.put("message", "Error in password reset or message delivery");
+				ex.printStackTrace();
+			}
+		} else {
+			mp.put("status", 0);
+			mp.put("message", "User Don't Exist");
+		}
+	} catch (Exception ex) {
+		ex.printStackTrace();
+	}
+	return mp;
+}
+
+
+
+
+public Map<String, Object> schoolResetPassword(String userName) {
+	User findUserObj = userRepository.findByUsername(userName);
+	Map<String, Object> mp = new HashMap<String, Object>();
+
+	 System.out.println("findUserObj--->"+findUserObj);
+
+	try {
+		if (findUserObj != null) {
+
+			try {
+				findUserObj.setPassword("{bcrypt}$2a$10$xRoEcGw9rTUrhvC7EDsVS.Hu1df3mfW.mMkeJ03AlCFvX5goIj9R6");
+				findUserObj.setTextPassword("system123#");
+				userRepository.save(findUserObj);
 				mp.put("status", 1);
 				mp.put("message", "Passowrd reset successfully");
 			} catch (Exception ex) {

@@ -260,6 +260,13 @@ public class LoginCtrl {
 			}
 		
 		  
+		  @RequestMapping(value = "/schoolResetPassword", method = RequestMethod.POST)
+			public Map<String,Object> schoolResetPassword(@RequestBody String userId) throws Exception {
+				 System.out.println("userId---->"+userId);
+				return userDetailsServiceImpl.resetPassword(userId);
+			}
+		  
+		  
 		  @RequestMapping(value = "/correctPassword", method = RequestMethod.POST)
 		  public Map<String,Object> correctPassword(@RequestBody String empcode) {
 //			  System.out.println("data--->"+data);

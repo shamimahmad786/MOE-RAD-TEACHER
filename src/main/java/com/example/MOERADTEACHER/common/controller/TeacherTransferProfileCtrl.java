@@ -1,6 +1,10 @@
 package com.example.MOERADTEACHER.common.controller;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -87,5 +91,35 @@ public class TeacherTransferProfileCtrl {
 	}
 	
 	
+	@RequestMapping(value = "/getEmployeeStatus", method = RequestMethod.POST)
+	public ResponseEntity<CustomResponse> getEmployeeStatus(@RequestBody String data) throws Exception {
+		ObjectMapper mapperObj = new ObjectMapper();
+		Map<String,String> mp=new HashMap<String,String>();
+		try {
+			mp = mapperObj.readValue(data, new TypeReference<HashMap<String,String>>() {
+			});
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return ResponseEntity.ok(new CustomResponse(1,"sucess",teacherTransferProfileImpl.getEmployeeStatus(Integer.parseInt(mp.get("teacher_id"))),"200"));
+	}
+	
+	
+	@RequestMapping(value = "/saveEmployeeTransferDeclaration", method = RequestMethod.POST)
+	public ResponseEntity<CustomResponse> saveEmployeeTransferDeclaration(@RequestBody String data,HttpServletRequest rq) throws Exception {
+		ObjectMapper mapperObj = new ObjectMapper();
+		Map<String,String> mp=new HashMap<String,String>();
+		try {
+			mp = mapperObj.readValue(data, new TypeReference<HashMap<String,String>>() {
+			});
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println(mp.get("transEmpIsDeclaration"));
+		System.out.println("Ip----->"+rq.getRemoteHost());
+		mp.put("ip", rq.getRemoteAddr());
+//		return null;
+		return ResponseEntity.ok(new CustomResponse(1,"sucess",teacherTransferProfileImpl.saveEmployeeTransferDeclaration(mp),"200"));
+	}
 	
 }

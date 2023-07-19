@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -515,11 +516,13 @@ TypeReference<List<TeacherProfileBean>> typeRef = new TypeReference<List<Teacher
 					"select  work_experience_id,teacher_id,udise_sch_code,school_id,TO_CHAR(work_start_date,'DD-MM-YYYY') as work_start_date,TO_CHAR(work_end_date,'DD-MM-YYYY') as work_end_date ,mtpt.organization_teacher_type_name as position_type,nature_of_appointment,udise_school_name,shift_type,verify_flag,verified_type\r\n"
 							+ ",created_by,created_time,modified_by,modified_time,ground_for_transfer,currently_active_yn,mts.subject_name as appointed_for_subject from teacher_work_experience tws,master.mst_teacher_subject mts, master.mst_teacher_position_type mtpt where tws.teacher_id ="
 							+ data
-							+ " and tws.appointed_for_subject::numeric =mts.subject_id and mtpt.teacher_type_id::varchar=tws.position_type  order by work_start_date desc \r\n"
+							+ " and tws.appointed_for_subject::numeric =mts.subject_id and mtpt.teacher_type_id::varchar=tws.position_type  order by work_start_date::date desc \r\n"
 							+ "");
-			TypeReference<List<WorkExperienceBean>> typeRef = new TypeReference<List<WorkExperienceBean>>() {
+			TypeReference<LinkedList<WorkExperienceBean>> typeRef = new TypeReference<LinkedList<WorkExperienceBean>>() {
 			};
 			wb = mapper.convertValue(qrObj.getRowValue(), typeRef);
+			
+			
 			
 			for(int i=0;i<wb.size();i++) {
 				
@@ -530,6 +533,7 @@ TypeReference<List<TeacherProfileBean>> typeRef = new TypeReference<List<Teacher
 //					groundForTransfer += GroundForTransfer.getGroundTransfer().get("G"+qrObj1.getRowValue().get(j).get("transfer_ground_id"))+",";
 //				}
 			groundForTransfer += GroundForTransfer.getGroundTransfer().get("G"+wb.get(i).getGround_for_transfer());
+			System.out.println("groundForTransfer--->"+groundForTransfer);
 				wb.get(i).setGround_for_transfer(groundForTransfer.replaceAll(",$", "") !=null?groundForTransfer.replaceAll(",$", ""):"");
 			}
 			
@@ -565,6 +569,14 @@ TypeReference<List<TeacherProfileBean>> typeRef = new TypeReference<List<Teacher
 		mp.put("transDetails", transPojo);
 		return mp;
 
+	}
+
+	@Override
+	public QueryResult getEmployeeStatus(Integer teacherId) {
+		// TODO Auto-generated method stub
+		QueryResult qrObj = nativeRepository.executeQueries("select spouse_kvs_ynd,personal_status_mdgd,personal_status_spd,personal_status_dfpd,care_giver_faimly_ynd,memberjcm,absence_days_one,disciplinary_yn,surve_hard_yn from teacher_transfer_profile where teacher_id="+teacherId);
+//		transPojo = mapper.convertValue(qrObj.getRowValue().get(0), TransProfileBean.class);
+		return null;
 	}
 
 //	@Override

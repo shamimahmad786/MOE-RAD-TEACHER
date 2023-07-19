@@ -3,6 +3,8 @@ package com.example.MOERADTEACHER.common.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import com.example.MOERADTEACHER.common.modal.TeacherTransferProfile;
 import com.example.MOERADTEACHER.common.repository.TeacherTransferProfileRepository;
 import com.example.MOERADTEACHER.common.util.CustomResponse;
 import com.example.MOERADTEACHER.common.util.NativeRepository;
+import com.example.MOERADTEACHER.common.util.QueryResult;
 
 @Service
 public class TeacherTransferProfileImpl {
@@ -52,4 +55,38 @@ public class TeacherTransferProfileImpl {
 	}
 	
 	
+public QueryResult	getEmployeeStatus(Integer teacherId){
+	
+	try {
+		QueryResult qs=nativeRepository.executeQueries("select tp.verify_flag as final_status,tp.spouse_station_code,tp.spouse_status,ttp.trans_emp_is_declaration from public.teacher_profile tp, public.teacher_transfer_profile ttp where tp.teacher_id=ttp.teacher_id and ttp.teacher_id="+teacherId);		
+		return qs;
+	}catch(Exception ex) {
+		ex.printStackTrace();
+	}
+	return null;
+	}
+	
+
+
+
+public HashMap<String,String> saveEmployeeTransferDeclaration(Map<String,String> empMap){
+	HashMap<String,String> mp=new HashMap<String,String>();
+	try {
+		LocalDateTime time = LocalDateTime.now();
+		String query="update public.teacher_transfer_profile set trans_emp_declaraion_date='"+time+"'  ,trans_emp_is_declaration="+empMap.get("transEmpIsDeclaration")+",trans_emp_declaration_ip='"+empMap.get("ip")+"' where teacher_id="+empMap.get("teacherId");
+		nativeRepository.updateQueries(query);
+		
+		nativeRepository.updateQueries("update public.teacher_transfer set verify_status='TTD' where teacher_id="+empMap.get("teacherId"));
+		nativeRepository.updateQueries("update public.teacher_form_status set final_status='TTD' where teacher_id="+empMap.get("teacherId"));
+		
+		mp.put("status", "1");
+	}catch(Exception ex) {
+		mp.put("status", "0");
+		ex.printStackTrace();
+		}
+	return mp;
+	
+	}
 }
+
+
