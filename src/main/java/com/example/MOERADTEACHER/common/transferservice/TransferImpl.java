@@ -1364,6 +1364,7 @@ public class TransferImpl {
 				+ "and tp.teacher_id = '"+teacherId+"'");
 	
 	if(String.valueOf(rs.getRowValue().get(0).get("special_recruitment_yn")).equalsIgnoreCase("13") && String.valueOf(rs.getRowValue().get(0).get("personal_status_dfpd")).equalsIgnoreCase("0") && String.valueOf(rs.getRowValue().get(0).get("personal_status_mdgd")).equalsIgnoreCase("0")) {
+		
 		finalrs=nativeRepository.executeQueries("select distinct ksm.region_code ,ksm.region_name from kv.kv_school_master ksm where ksm.is_ner ='1'");
 	}else {
 		finalrs=nativeRepository.executeQueries("select distinct ksm.region_code ,ksm.region_name from kv.kv_school_master ksm");

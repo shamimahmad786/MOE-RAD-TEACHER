@@ -40,7 +40,7 @@ public class MoeRadTeacherApplication {
 	}
 	
 	
-	 @Scheduled(fixedDelay = 7000)
+//	 @Scheduled(fixedDelay = 7000)
 	  public void update() throws InterruptedException {
 		 nativeRepository.updateQueries("update public.teacher_work_experience twe set udise_school_name= ksm.kv_name  from kv.kv_school_master ksm where ksm.kv_code = twe.kv_code  and (udise_school_name is null or udise_school_name='') ");
 		 nativeRepository.updateQueries("update public.teacher_work_experience set kv_code = udise_sch_code where kv_code is null");
