@@ -117,7 +117,12 @@ public class TeacherTransferProfileCtrl {
 		}
 		System.out.println(mp.get("transEmpIsDeclaration"));
 		System.out.println("Ip----->"+rq.getRemoteHost());
-		mp.put("ip", rq.getRemoteAddr());
+		try {
+			System.out.println(rq.getHeader("X-Forwarded-For"));
+		mp.put("ip", rq.getHeader("X-Forwarded-For"));
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
 //		return null;
 		return ResponseEntity.ok(new CustomResponse(1,"sucess",teacherTransferProfileImpl.saveEmployeeTransferDeclaration(mp),"200"));
 	}

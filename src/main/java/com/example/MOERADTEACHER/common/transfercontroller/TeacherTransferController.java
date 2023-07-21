@@ -55,9 +55,11 @@ public class TeacherTransferController {
 		try {
 		 trsBean = mapperObj.readValue(data, new TypeReference<TeacherTransferDetails>() {
 			});
+		 
+		 if(trsBean.getTcSaveYn() !=null && trsBean.getTcSaveYn()==1) {
 		 String transfer_id="KVS"+(100000+trsBean.getTeacherId());
 		 trsBean.setTransferId(transfer_id);
-		 
+		 }
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -89,12 +91,12 @@ public class TeacherTransferController {
 				.getTcDcPointByTeacherId(Integer.parseInt(teacherId));
 
 		if (savedTeacherTransObj != null) {
-			System.out.println("in if condition");// IE TC and DC Point is Saved.
+//			System.out.println("in if condition");// IE TC and DC Point is Saved.
 			return ResponseEntity.ok(savedTeacherTransObj);
 		} else {
-			System.out.println("in else condition");
+//			System.out.println("in else condition");
 
-			System.out.println("data: " + data);
+//			System.out.println("data: " + data);
 			 String QUERY =  "select tp.teacher_id ,ksm.school_type,ksm.current_hard_flag_yn ,"
 			+ "public.datediff(tp.work_experience_position_type_present_station_start_date::date,'2023-06-30'::date ) as continuous_stay, "
 			+ "tp.work_experience_position_type_present_station_start_date , ttp.choice_kv1_station_code ,tp.teacher_employee_code,tp.teacher_id ,tp.teacher_dob, ttp.absence_days_one, teacher_disability_yn,ksm.station_code ,tp.spouse_station_code  , ttp.personal_status_mdgd , ttp.personal_status_dfpd , tp.marital_status ,tp.spouse_status , ttp.personal_status_spd ,   tp.teacher_gender , ttp.memberjcm , ttp.surve_hard_yn from public.teacher_transfer_profile ttp , public.teacher_profile tp , kv.kv_school_master ksm \r\n"
@@ -102,8 +104,8 @@ public class TeacherTransferController {
 			+ "and ksm.kv_code = tp.kv_code and ksm.kv_code = '"+kvCode.toString() +"'";
 
 			
-			System.out.println(QUERY.toString());
-			System.out.println("getTeacherTransferDetails data  " + data);
+//			System.out.println(QUERY.toString());
+//			System.out.println("getTeacherTransferDetails data  " + data);
 
 			String QUERYstation = " select *, DATE_PART('day', work_end_date::timestamp - work_start_date::timestamp) as no_of_days from (\r\n"
 					+ "				 	select ksm.station_code , work_start_date , coalesce(work_end_date,'2023-06-30') as work_end_date, \r\n"
@@ -112,7 +114,7 @@ public class TeacherTransferController {
 					+ "				 	where teacher_id = '" + teacherId.toString() + "'"
 					+ "				 	and ksm.kv_code = twe.udise_sch_code \r\n"
 					+ "				 	order by work_start_date \r\n"
-					+ "				 	) aa order by work_start_date ";
+					+ "				 	) aa order by work_start_date desc ";
 
 			List<Transfer> transfers = new ArrayList<>();
 			TransferDcBeans dcObj = new TransferDcBeans();
@@ -148,27 +150,27 @@ public class TeacherTransferController {
 					System.out.println(QUERYstation);
 
 					QueryResult qr = nativeRepository.executeQueries(QUERYstation);
-					System.out.println("size--->" + qr.getRowValue().size());
+//					System.out.println("size--->" + qr.getRowValue().size());
 
-					for (int j = 0; j < qr.getRowValue().size(); j++) {
-
-						SimpleDateFormat sObj = new SimpleDateFormat("yyyy-MM-dd");
-
-						Date date1 = sObj
-								.parse(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString()));
-
-						try {
-							transfers.add(new Transfer(String.valueOf(qr.getRowValue().get(j).get("station_code")),
-									sObj.parse(
-											String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString())),
-									sObj.parse(String.valueOf(qr.getRowValue().get(j).get("work_end_date").toString())),
-									(int) Double
-											.parseDouble((String.valueOf(qr.getRowValue().get(j).get("no_of_days"))))));
-
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					}
+//					for (int j = 0; j < qr.getRowValue().size(); j++) {
+//
+//						SimpleDateFormat sObj = new SimpleDateFormat("yyyy-MM-dd");
+//
+//						Date date1 = sObj
+//								.parse(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString()));
+//
+//						try {
+//							transfers.add(new Transfer(String.valueOf(qr.getRowValue().get(j).get("station_code")),
+//									sObj.parse(
+//											String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString())),
+//									sObj.parse(String.valueOf(qr.getRowValue().get(j).get("work_end_date").toString())),
+//									(int) Double
+//											.parseDouble((String.valueOf(qr.getRowValue().get(j).get("no_of_days"))))));
+//
+//						} catch (Exception ex) {
+//							ex.printStackTrace();
+//						}
+//					}
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -182,9 +184,16 @@ public class TeacherTransferController {
 
 				//int continuousStay = calculateContinuousStay(transfers);
 				
-				List<Transfer> highestThreeRows = getHighestThreeRows(transfers);
-
-				int returnStay = calculateReturnStay(highestThreeRows);
+//				List<Transfer> highestThreeRows = getHighestThreeRows(transfers);
+				
+               QueryResult retObj=nativeRepository.executeQueries("select * from transfer.transfer_teacher_check  where teacher_id="+teacherId);
+				
+               int returnStay=0;
+               
+               if(retObj.getRowValue().size()>0 && retObj.getRowValue().get(0).get("returnstay") !=null) {
+            	  returnStay =Integer.parseInt(String.valueOf(retObj.getRowValue().get(0).get("returnstay")));   
+               }
+				
 				
 							
 
@@ -332,6 +341,9 @@ public class TeacherTransferController {
 						+ "and tp.teacher_id = '"+teacherId.toString()+"'\r\n"
 						+ "and tp.work_experience_position_type_present_station_start_date::date between scm.from_date and scm.todate";
 				
+				
+				System.out.println("querytc---->"+querytc);
+				
 				QueryResult tchard = nativeRepository.executeQueries(querytc);
 				String categoryId=null;
 				if(tchard.getRowValue().size()>0) {
@@ -339,7 +351,7 @@ public class TeacherTransferController {
 					if((categoryId.equalsIgnoreCase("3") || categoryId.equalsIgnoreCase("1")) && (tcStayAtStationYears >=3)) {
 						dcObj.setTcTenureHardPoint(30);	
 					}else if((categoryId.equalsIgnoreCase("4")) && (tcStayAtStationYears >=2)) {
-						dcObj.setTcTenureHardPoint(35);	
+						dcObj.setTcTenureHardPoint(30);	
 					}
 				}else {
 					dcObj.setTcTenureHardPoint(0);
@@ -409,10 +421,10 @@ public class TeacherTransferController {
 				Boolean spouseAtSameStation = false;
 				Boolean spouseChoiceSameStation = false;
 
-			System.out.println("Called");
+//			System.out.println("Called");
 
 				
-				System.out.println(rs.getRowValue().get(0).get("choice_kv1_station_code"));
+//				System.out.println(rs.getRowValue().get(0).get("choice_kv1_station_code"));
 				String tc_spouse_station_choice1_code =null;
 				if(rs.getRowValue().get(0).get("choice_kv1_station_code") !=null) {
 				 tc_spouse_station_choice1_code = String.valueOf(
@@ -425,7 +437,7 @@ public class TeacherTransferController {
 
 					spouseJobType = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("spouse_status"))); // 1  KV  2  Central  3  State  5  None
 
-					System.out.println("spouseJobType--->"+spouseJobType);
+//					System.out.println("spouseJobType--->"+spouseJobType);
 					
 					if (spouseJobType != null && spouseJobType != 5) {
 						// KV , Central , State Employee
@@ -433,8 +445,8 @@ public class TeacherTransferController {
 							spouseAtSameStation = true;
 						}
 						
-						System.out.println("tc_spouse_station_code--->"+tc_spouse_station_code);
-						System.out.println("tc_spouse_station_choice1_code--->"+tc_spouse_station_choice1_code);
+//						System.out.println("tc_spouse_station_code--->"+tc_spouse_station_code);
+//						System.out.println("tc_spouse_station_choice1_code--->"+tc_spouse_station_choice1_code);
 						
 						if (tc_spouse_station_code !=null && tc_spouse_station_choice1_code !=null && tc_spouse_station_code.equalsIgnoreCase(tc_spouse_station_choice1_code.toString())) { // Choice Station  For  TC
 							spouseChoiceSameStation = true;
@@ -502,11 +514,11 @@ public class TeacherTransferController {
 				}
 				dcObj.setTcSpousePoint(maxValue);
 
-				System.out.println("min Value---->" + minValue);
+//				System.out.println("min Value---->" + minValue);
 
 				Integer schoolType = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("school_type")));
 
-				System.out.println("schoolType---->" + schoolType);
+//				System.out.println("schoolType---->" + schoolType);
 				
 			String	queryToCkeckSameROandZIET=" select distinct ksm.station_code  from kv.kv_school_master ksm where ksm.region_code in (\r\n"
 					+ "	 select region_code  from kv.kv_school_master ksm , public.teacher_profile tp \r\n"
@@ -525,7 +537,7 @@ public class TeacherTransferController {
 
 				try {
 					memberjcm = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("memberjcm")));
-					System.out.println("memberjcm---->" + memberjcm);
+//					System.out.println("memberjcm---->" + memberjcm);
 				} catch (Exception e) {
 					memberjcm = 0;
 				}
@@ -558,14 +570,9 @@ public class TeacherTransferController {
 //					dcObj.setTcRjcmNjcmPoint(0);
 				}
 				
-				
-
 				dcObj.setKvCode(String.valueOf(rs.getRowValue().get(0).get("kv_code")));
 				dcObj.setTeacherId(Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("teacher_id"))));
 				dcObj.setTeacherEmployeeCode(String.valueOf(rs.getRowValue().get(0).get("teacher_employee_code")));
-
-				System.out.println("Employee code--->" + String.valueOf(rs.getRowValue().get(0).get("teacher_employee_code")));
-
 				dcObj.setCreatedDateTime(new Date());
 				dcObj.setUpdateDateTime(new Date());
 
@@ -589,7 +596,7 @@ public class TeacherTransferController {
 				tcMaxAmoungFive = tcFindMax.stream().max(Comparator.naturalOrder()).get();
 
 
-				System.out.println("maxAmoungFive--->" + maxAmoungFive);
+//				System.out.println("maxAmoungFive--->" + maxAmoungFive);
 				Integer dc_total = dcObj.getDcStayStationPoint() + maxAmoungFive;
 				Integer tc_total = dcObj.getTcStayStationPoint() + tcMaxAmoungFive;
 
@@ -599,6 +606,7 @@ public class TeacherTransferController {
 
 
 			} catch (Exception ex) {
+				System.out.println("Exception------>"+teacherId);
 				ex.printStackTrace();
 			}
 

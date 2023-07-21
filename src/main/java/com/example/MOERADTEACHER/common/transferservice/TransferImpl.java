@@ -1391,24 +1391,24 @@ public class TransferImpl {
 			finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
 					+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'  and school_type ='3' and school_status ='1'"
 					+ "		and station_code not in (select ksm2.station_code  from public.teacher_profile tp ,kv.kv_school_master ksm2 \r\n"
-					+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") order by station_name ");
+					+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+")   and station_code not in ('548','544','543','550','480') order by station_name ");
 		}else {
 	if(String.valueOf(chckNull(rs.getRowValue().get(0).get("special_recruitment_yn"))).equalsIgnoreCase("13") && String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_dfpd"))).equalsIgnoreCase("0") && String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_mdgd"))).equalsIgnoreCase("0")) {   // For NER
 		finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
 				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"' and ksm.is_ner='1' and school_status ='1'  \r\n"
 				+ "		and station_code not in (select ksm2.station_code  from public.teacher_profile tp ,kv.kv_school_master ksm2 \r\n"
-				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") order by station_name");
+				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+")  and station_code not in ('548','544','543','550','480') order by station_name");
 	}
 	else if(String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_dfpd"))).equalsIgnoreCase("1") || String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_mdgd"))).equalsIgnoreCase("1")){
 		finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
-				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'  and school_status ='1' order by station_name ");
+				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'  and school_status ='1'  and station_code not in ('548','544','543','550','480') order by station_name ");
 				
 	}
 	else {
 		finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
 				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'  and school_status ='1' "
 				+ "		and station_code not in (select ksm2.station_code  from public.teacher_profile tp ,kv.kv_school_master ksm2 \r\n"
-				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") order by station_name ");
+				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+")   and station_code not in ('548','544','543','550','480') order by station_name ");
 	}
 		}
 	}

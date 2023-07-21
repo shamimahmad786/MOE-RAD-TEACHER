@@ -54,6 +54,10 @@ public class TeacherTransferDetails {
 	public Integer dcRjcmNjcmPoint;
 	@Column(name = "dc_total_point")
 	public Integer dcTotalPoint;
+	@Column(name = "dc_save_yn")
+	public Integer dcSaveYn;
+	@Column(name = "tc_save_yn")
+	public Integer tcSaveYn;
 	
 	
 	@Column(name = "tc_stay_at_station")
@@ -94,6 +98,28 @@ public class TeacherTransferDetails {
 	public Date updateDateTime;
 	
 	
+	
+	
+	public Integer getDcSaveYn() {
+		return dcSaveYn;
+	}
+
+
+	public void setDcSaveYn(Integer dcSaveYn) {
+		this.dcSaveYn = dcSaveYn;
+	}
+
+
+	public Integer getTcSaveYn() {
+		return tcSaveYn;
+	}
+
+
+	public void setTcSaveYn(Integer tcSaveYn) {
+		this.tcSaveYn = tcSaveYn;
+	}
+
+
 	@PrePersist
 	protected void onCreate() {
 		createdDateTime =  new Timestamp(new Date().getTime());

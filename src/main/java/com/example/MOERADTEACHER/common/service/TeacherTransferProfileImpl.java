@@ -60,6 +60,7 @@ public QueryResult	getEmployeeStatus(Integer teacherId){
 	try {
 		QueryResult qs=nativeRepository.executeQueries("select tp.verify_flag as final_status,tp.spouse_station_code,tp.spouse_status,"
 				+ "ttc.valid_post_for_transfer, ttc.valid_location_for_transfer , ttc.court_case_flag,ttc.disciplinary_yn,"
+				+" ttc.dctenure_year, ttc.activestay,ttc.nature_of_stn_at_join ,"
 				+ "ttp.trans_emp_is_declaration from public.teacher_profile tp, public.teacher_transfer_profile ttp,transfer.transfer_teacher_check ttc  where tp.teacher_id=ttp.teacher_id and ttc.teacher_id=tp.teacher_id and ttp.teacher_id="+teacherId);		
 		return qs;
 	}catch(Exception ex) {
@@ -78,7 +79,7 @@ public HashMap<String,String> saveEmployeeTransferDeclaration(Map<String,String>
 		String query="update public.teacher_transfer_profile set trans_emp_declaraion_date='"+time+"'  ,trans_emp_is_declaration="+empMap.get("transEmpIsDeclaration")+",trans_emp_declaration_ip='"+empMap.get("ip")+"' where teacher_id="+empMap.get("teacherId");
 		nativeRepository.updateQueries(query);
 		
-		nativeRepository.updateQueries("update public.teacher_transfer set verify_status='TTD' where teacher_id="+empMap.get("teacherId"));
+		nativeRepository.updateQueries("update public.teacher_profile set verify_flag='TTD' where teacher_id="+empMap.get("teacherId"));
 		nativeRepository.updateQueries("update public.teacher_form_status set final_status='TTD' where teacher_id="+empMap.get("teacherId"));
 		
 		mp.put("status", "1");
