@@ -315,6 +315,8 @@ public class TeacherTransferController {
 				
 				String dc_spouse_station_code = String
 						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("spouse_station_code").toString()));
+				String tc_spouse_station_code = String
+						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("spouse_station_code").toString()));
 
 				String employee_own_station_code = String
 						.valueOf(isNullOrEmptyString(rs.getRowValue().get(0).get("station_code").toString()));
@@ -388,18 +390,18 @@ public class TeacherTransferController {
 				List<Integer> applicatblePoint = new ArrayList<Integer>();
 //  List<Integer> tcApplicatblePoint=new ArrayList<Integer>();
 
-				spousePointObj.put(1, -10); // same station
-				spousePointObj.put(2, -8); // same station
-				spousePointObj.put(3, -6); // same station
+				spousePointObj.put(1, -10); // same station spouse at kv
+				spousePointObj.put(2, -8); // same station central Govt
+				spousePointObj.put(3, -6); // same station state govt 
 				spousePointObj.put(4, -4); // Gender Female
 				spousePointObj.put(6, -12); // Single Parent
 
 				Map<Integer, Object> tcSpousePointObj = new HashMap<Integer, Object>();
 				List<Integer> tcApplicatblePoint = new ArrayList<Integer>();
 
-				tcSpousePointObj.put(1, 15); // Spouse KVS Employee
-				tcSpousePointObj.put(2, 12); // Central
-				tcSpousePointObj.put(3, 10); // State Govt
+				tcSpousePointObj.put(1, 15); // Spouse KVS Employee at choice
+				tcSpousePointObj.put(2, 12); // Central at choice
+				tcSpousePointObj.put(3, 10); // State Govt choice
 				tcSpousePointObj.put(4, 8); // Gender Female
 				tcSpousePointObj.put(6, 20); // Single Parent
 
@@ -407,7 +409,7 @@ public class TeacherTransferController {
 				Boolean spouseAtSameStation = false;
 				Boolean spouseChoiceSameStation = false;
 
-			
+			System.out.println("Called");
 
 				
 				System.out.println(rs.getRowValue().get(0).get("choice_kv1_station_code"));
@@ -423,12 +425,18 @@ public class TeacherTransferController {
 
 					spouseJobType = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("spouse_status"))); // 1  KV  2  Central  3  State  5  None
 
+					System.out.println("spouseJobType--->"+spouseJobType);
+					
 					if (spouseJobType != null && spouseJobType != 5) {
 						// KV , Central , State Employee
 						if (employee_own_station_code !=null && dc_spouse_station_code !=null && employee_own_station_code.equalsIgnoreCase(dc_spouse_station_code.toString())) { // Same  For DC
 							spouseAtSameStation = true;
 						}
-						if (employee_own_station_code !=null && tc_spouse_station_choice1_code !=null && employee_own_station_code.equalsIgnoreCase(tc_spouse_station_choice1_code.toString())) { // Choice Station  For  TC
+						
+						System.out.println("tc_spouse_station_code--->"+tc_spouse_station_code);
+						System.out.println("tc_spouse_station_choice1_code--->"+tc_spouse_station_choice1_code);
+						
+						if (tc_spouse_station_code !=null && tc_spouse_station_choice1_code !=null && tc_spouse_station_code.equalsIgnoreCase(tc_spouse_station_choice1_code.toString())) { // Choice Station  For  TC
 							spouseChoiceSameStation = true;
 						}
 					}
@@ -499,6 +507,21 @@ public class TeacherTransferController {
 				Integer schoolType = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("school_type")));
 
 				System.out.println("schoolType---->" + schoolType);
+				
+			String	queryToCkeckSameROandZIET=" select distinct ksm.station_code  from kv.kv_school_master ksm where ksm.region_code in (\r\n"
+					+ "	 select region_code  from kv.kv_school_master ksm , public.teacher_profile tp \r\n"
+					+ "	 where tp.kv_code = ksm.kv_code and tp.teacher_id = '"+teacherId+"') and ksm.school_type ='3'\r\n"
+					+ "	 ";
+			
+			
+		QueryResult	rjcmnjcmRs=nativeRepository.executeQueries(queryToCkeckSameROandZIET);
+		String rjcmChoiceStationCode="";
+		if(rjcmnjcmRs.getRowValue().size()>0 && rjcmnjcmRs.getRowValue().get(0).get("station_code") !=null) {
+			rjcmChoiceStationCode=String.valueOf(rjcmnjcmRs.getRowValue().get(0).get("station_code"));
+		}
+		
+		
+			
 
 				try {
 					memberjcm = Integer.parseInt(String.valueOf(rs.getRowValue().get(0).get("memberjcm")));
@@ -507,10 +530,10 @@ public class TeacherTransferController {
 					memberjcm = 0;
 				}
 
-				if (memberjcm == 2 &&  employee_own_station_code.equalsIgnoreCase("239")) {
+				if (memberjcm == 2 &&  employee_own_station_code.equalsIgnoreCase("239")) {   // 239 for delhi station
 					dcObj.setDcRjcmNjcmPoint(-6);
 					//dcObj.setTcRjcmNjcmPoint(6);
-				} else if(memberjcm == 1 && schoolType==3){
+				} else if(memberjcm == 1  &&  employee_own_station_code.equalsIgnoreCase(rjcmChoiceStationCode)){
 					dcObj.setDcRjcmNjcmPoint(-6);
 				}else {
 					dcObj.setDcRjcmNjcmPoint(0);
@@ -528,7 +551,7 @@ public class TeacherTransferController {
 				
 				if (memberjcm == 2 &&  tc_spouse_station_choice1_code.equalsIgnoreCase("239")) {
 					dcObj.setTcRjcmNjcmPoint(6);
-				} else if(memberjcm == 1 && tcRjcmSchoolType==3){
+				} else if(memberjcm == 1 && tc_spouse_station_choice1_code.equalsIgnoreCase(rjcmChoiceStationCode)){
 					dcObj.setTcRjcmNjcmPoint(6);
 				}else {
 					dcObj.setTcRjcmNjcmPoint(0);
@@ -548,21 +571,21 @@ public class TeacherTransferController {
 
 				Integer maxAmoungFive = 0;
 				List<Integer> findMax = new ArrayList<Integer>();
-				findMax.add(dcObj.getDcPhysicalChallengedPoint());  // pwd
-				findMax.add(dcObj.getDcMdDfGroungPoint());  // MDG DFP
-				findMax.add(dcObj.getDcLtrPoint());        // LTR
-				findMax.add(dcObj.getDcSpousePoint());    // Spouse
-				findMax.add(dcObj.getDcRjcmNjcmPoint());
+				findMax.add(checkIntegerNull(dcObj.getDcPhysicalChallengedPoint()));  // pwd
+				findMax.add(checkIntegerNull(dcObj.getDcMdDfGroungPoint()));  // MDG DFP
+				findMax.add(checkIntegerNull(dcObj.getDcLtrPoint()));        // LTR
+				findMax.add(checkIntegerNull(dcObj.getDcSpousePoint()));    // Spouse
+				findMax.add(checkIntegerNull(dcObj.getDcRjcmNjcmPoint()));
 				maxAmoungFive = findMax.stream().min(Comparator.naturalOrder()).get();
 
 				Integer tcMaxAmoungFive = 0;
 				List<Integer> tcFindMax = new ArrayList<Integer>();
-				tcFindMax.add(dcObj.getTcPhysicalChallengedPoint());
-				tcFindMax.add(dcObj.getTcMdDfGroungPoint());
-				tcFindMax.add(dcObj.getTcLtrPoint());
-				tcFindMax.add(dcObj.getTcSpousePoint());
-				tcFindMax.add(dcObj.getTcRjcmNjcmPoint());
-				tcFindMax.add(dcObj.getTcTenureHardPoint());
+				tcFindMax.add(checkIntegerNull(dcObj.getTcPhysicalChallengedPoint()));
+				tcFindMax.add(checkIntegerNull(dcObj.getTcMdDfGroungPoint()));
+				tcFindMax.add(checkIntegerNull(dcObj.getTcLtrPoint()));
+				tcFindMax.add(checkIntegerNull(dcObj.getTcSpousePoint()));
+				tcFindMax.add(checkIntegerNull(dcObj.getTcRjcmNjcmPoint()));
+				tcFindMax.add(checkIntegerNull(dcObj.getTcTenureHardPoint()));
 				tcMaxAmoungFive = tcFindMax.stream().max(Comparator.naturalOrder()).get();
 
 
@@ -732,7 +755,16 @@ public class TeacherTransferController {
 	    public boolean checkSpouseAtSameStation(Integer teacherId) {
 	    	
 	    return true;
-	    }  			
+	    }  	
+	    
+	    
+	    public Integer checkIntegerNull(Integer val) {
+	    if(val ==null) {
+	    	return 0;
+	    }else {
+	    	return val;
+	    }	
+	    }
 	    
 	
 }

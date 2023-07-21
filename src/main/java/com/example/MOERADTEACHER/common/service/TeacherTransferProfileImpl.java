@@ -58,7 +58,9 @@ public class TeacherTransferProfileImpl {
 public QueryResult	getEmployeeStatus(Integer teacherId){
 	
 	try {
-		QueryResult qs=nativeRepository.executeQueries("select tp.verify_flag as final_status,tp.spouse_station_code,tp.spouse_status,ttp.trans_emp_is_declaration from public.teacher_profile tp, public.teacher_transfer_profile ttp where tp.teacher_id=ttp.teacher_id and ttp.teacher_id="+teacherId);		
+		QueryResult qs=nativeRepository.executeQueries("select tp.verify_flag as final_status,tp.spouse_station_code,tp.spouse_status,"
+				+ "ttc.valid_post_for_transfer, ttc.valid_location_for_transfer , ttc.court_case_flag,ttc.disciplinary_yn,"
+				+ "ttp.trans_emp_is_declaration from public.teacher_profile tp, public.teacher_transfer_profile ttp,transfer.transfer_teacher_check ttc  where tp.teacher_id=ttp.teacher_id and ttc.teacher_id=tp.teacher_id and ttp.teacher_id="+teacherId);		
 		return qs;
 	}catch(Exception ex) {
 		ex.printStackTrace();

@@ -49,6 +49,8 @@ public class MoeRadTeacherApplication {
 //		 nativeRepository.updateQueries("update public.teacher_profile set work_experience_position_type_present_station_start_date  = TO_CHAR(work_experience_position_type_present_station_start_date::timestamptz, 'YYYY-MM-DD') where length(work_experience_position_type_present_station_start_date) = 24 ");
 //		 nativeRepository.updateQueries("update public.teacher_profile set last_promotion_position_date  = TO_CHAR(last_promotion_position_date::timestamptz, 'YYYY-MM-DD') where length(last_promotion_position_date) = 24");
 //	  }
+
+	
 	
 	
 	

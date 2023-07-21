@@ -1358,12 +1358,14 @@ public class TransferImpl {
 	public QueryResult getTransferRegionByEmployee(Integer teacherId){
 		QueryResult finalrs=null;
 		QueryResult rs=null;
-	rs	=nativeRepository.executeQueries("select tp.special_recruitment_yn, tp.teaching_nonteaching  ,  ttp.personal_status_dfpd , ttp.personal_status_mdgd ,ttp.absence_days_one , tp.teacher_id \r\n"
-				+ "from public.teacher_profile tp , public.teacher_transfer_profile ttp \r\n"
-				+ "where tp.teacher_id = ttp.teacher_id \r\n"
+	rs	=nativeRepository.executeQueries("select tp.special_recruitment_yn,ksm.school_type, tp.teaching_nonteaching  ,  ttp.personal_status_dfpd , ttp.personal_status_mdgd ,ttp.absence_days_one , tp.teacher_id \r\n"
+				+ "from public.teacher_profile tp , public.teacher_transfer_profile ttp , kv.kv_school_master ksm  \r\n"
+				+ " where tp.teacher_id = ttp.teacher_id \r\n"
+				+" and tp.kv_code = ksm.kv_code  "
 				+ "and tp.teacher_id = '"+teacherId+"'");
 	
-	if(String.valueOf(rs.getRowValue().get(0).get("special_recruitment_yn")).equalsIgnoreCase("13") && String.valueOf(rs.getRowValue().get(0).get("personal_status_dfpd")).equalsIgnoreCase("0") && String.valueOf(rs.getRowValue().get(0).get("personal_status_mdgd")).equalsIgnoreCase("0")) {
+	if(String.valueOf(chckNull(rs.getRowValue().get(0).get("special_recruitment_yn"))).equalsIgnoreCase("13") && String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_dfpd"))).equalsIgnoreCase("0") && String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_mdgd"))).equalsIgnoreCase("0")) {
+		
 		finalrs=nativeRepository.executeQueries("select distinct ksm.region_code ,ksm.region_name from kv.kv_school_master ksm where ksm.is_ner ='1'");
 	}else {
 		finalrs=nativeRepository.executeQueries("select distinct ksm.region_code ,ksm.region_name from kv.kv_school_master ksm");
@@ -1378,29 +1380,53 @@ public class TransferImpl {
 		
 		QueryResult finalrs=null;
 		QueryResult rs=null;
-	rs	=nativeRepository.executeQueries("select tp.special_recruitment_yn, tp.teaching_nonteaching  ,  ttp.personal_status_dfpd , ttp.personal_status_mdgd ,ttp.absence_days_one , tp.teacher_id \r\n"
-				+ "from public.teacher_profile tp , public.teacher_transfer_profile ttp \r\n"
-				+ "where tp.teacher_id = ttp.teacher_id \r\n"
+	rs	=nativeRepository.executeQueries("select tp.special_recruitment_yn,ksm.school_type, tp.teaching_nonteaching  ,  ttp.personal_status_dfpd , ttp.personal_status_mdgd ,ttp.absence_days_one , tp.teacher_id \r\n"
+				+ " from public.teacher_profile tp , public.teacher_transfer_profile ttp , kv.kv_school_master ksm  \r\n"
+				+ " where tp.teacher_id = ttp.teacher_id \r\n"
+				+" and tp.kv_code = ksm.kv_code  "
 				+ "and tp.teacher_id = '"+teacherId+"'");
 	
-	if(String.valueOf(rs.getRowValue().get(0).get("special_recruitment_yn")).equalsIgnoreCase("13") && String.valueOf(rs.getRowValue().get(0).get("personal_status_dfpd")).equalsIgnoreCase("0") && String.valueOf(rs.getRowValue().get(0).get("personal_status_mdgd")).equalsIgnoreCase("0")) {
+	if(rs.getRowValue().size()>0) {
+		if(String.valueOf(chckNull(rs.getRowValue().get(0).get("school_type"))).equalsIgnoreCase("3")) {  //if RO EMPLOYEE
+			finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
+					+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'  and school_type ='3' and school_status ='1'"
+					+ "		and station_code not in (select ksm2.station_code  from public.teacher_profile tp ,kv.kv_school_master ksm2 \r\n"
+					+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") order by station_name ");
+		}else {
+	if(String.valueOf(chckNull(rs.getRowValue().get(0).get("special_recruitment_yn"))).equalsIgnoreCase("13") && String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_dfpd"))).equalsIgnoreCase("0") && String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_mdgd"))).equalsIgnoreCase("0")) {   // For NER
 		finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
-				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"' and ksm.is_ner='1'\r\n"
+				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"' and ksm.is_ner='1' and school_status ='1'  \r\n"
 				+ "		and station_code not in (select ksm2.station_code  from public.teacher_profile tp ,kv.kv_school_master ksm2 \r\n"
-				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") ");
-	}else {
+				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") order by station_name");
+	}
+	else if(String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_dfpd"))).equalsIgnoreCase("1") || String.valueOf(chckNull(rs.getRowValue().get(0).get("personal_status_mdgd"))).equalsIgnoreCase("1")){
 		finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
-				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'"
+				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'  and school_status ='1' order by station_name ");
+				
+	}
+	else {
+		finalrs=nativeRepository.executeQueries("select distinct station_code  ,station_name  \r\n"
+				+ "		from kv.kv_school_master  ksm where ksm.region_code  = '"+regionCode+"'  and school_status ='1' "
 				+ "		and station_code not in (select ksm2.station_code  from public.teacher_profile tp ,kv.kv_school_master ksm2 \r\n"
-				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") ");
+				+ "		where ksm2.kv_code = tp.kv_code and  tp.teacher_id= "+teacherId+") order by station_name ");
+	}
+		}
 	}
 		
 		return  finalrs;
 		
-		
-		
-
 	}
+	
+	
+public Object	chckNull(Object value){
+		if(value==null) {
+			return "";
+		}else {
+			return value;
+		}
+	}
+	
+	
 	
 
 }
