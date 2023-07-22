@@ -1307,9 +1307,11 @@ public class TransferImpl {
 	public QueryResult getInitiatedTransferByKvCode(String kvcode) {
 		QueryResult qrObj = null;
 		try {
-			qrObj = nativeRepository.executeQueries(
-					"select tp.teacher_id,tp.teacher_employee_code,tp.teacher_name,tp.teacher_gender,tp.teacher_dob,tp.teacher_employee_code,tp.teacher_email,tp.teacher_mobile,ttp.transfer_id ,ttp.transfer_status  from teacher_profile tp, teacher_transfer_profile ttp where tp.teacher_id =ttp.teacher_id and tp.kv_code = '"
-							+ kvcode + "'");
+			qrObj = nativeRepository.executeQueries("select tp.kv_code ,tp.teacher_id,tp.teacher_employee_code,tp.teacher_name,tp.teacher_gender,tp.teacher_dob,tp.teacher_employee_code,tp.teacher_email,tp.teacher_mobile,  \r\n"
+					+ "ttd.tc_save_yn,ttd.dc_save_yn\r\n"
+					+ "from public.teacher_profile tp left join transfer.teacher_transfer_details ttd  \r\n"
+					+ "on tp.teacher_id =ttd.teacher_id\r\n"
+					+ " where tp.kv_code = '"+kvcode+"'");
 			System.out.println(qrObj.toString());
 		} catch (Exception ex) {
 			ex.printStackTrace();
