@@ -74,6 +74,7 @@ public class TeacherTransferController {
 
 		String kvCode = "";
 		String teacherId = "";
+		Integer teacherTransferSaveYn=0;
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(data);
@@ -92,8 +93,11 @@ public class TeacherTransferController {
 
 		if (savedTeacherTransObj != null) {
 //			System.out.println("in if condition");// IE TC and DC Point is Saved.
-			return ResponseEntity.ok(savedTeacherTransObj);
-		} else {
+			teacherTransferSaveYn=1;
+//			return ResponseEntity.ok(savedTeacherTransObj);
+		} 
+		
+//		else {
 //			System.out.println("in else condition");
 
 //			System.out.println("data: " + data);
@@ -609,9 +613,25 @@ public class TeacherTransferController {
 				System.out.println("Exception------>"+teacherId);
 				ex.printStackTrace();
 			}
+			
+			
+			if(teacherTransferSaveYn==1) {
+				if(savedTeacherTransObj.getTcSpousePoint() !=dcObj.getTcSpousePoint())
+				savedTeacherTransObj.setTcSpousePoint(dcObj.getTcSpousePoint());
+//				savedTeacherTransObj.setDcSpousePoint(dcObj.getDcSpousePoint());
+//				savedTeacherTransObj.setDcTotalPoint(dcObj.getDcTotalPoint());
+				savedTeacherTransObj.setTcTotalPoint(dcObj.getTcTotalPoint());
+				
+				nativeRepository.updateQueries("update transfer.teacher_transfer_details set tc_spouse_point="+savedTeacherTransObj.getTcSpousePoint()+" , tc_total_point="+savedTeacherTransObj.getTcTotalPoint()+"  where teacher_id="+Integer.parseInt(teacherId));
+				
+				return ResponseEntity.ok(savedTeacherTransObj);
+			}else {
+				return ResponseEntity.ok(dcObj);				
+			}
+			
 
-			return ResponseEntity.ok(dcObj);
-		}
+	
+//		}
 	}
 	
 	

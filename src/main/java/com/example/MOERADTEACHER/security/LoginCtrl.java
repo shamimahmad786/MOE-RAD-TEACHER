@@ -362,6 +362,7 @@ public class LoginCtrl {
 		
 				nativeRepository.updateQueries(query1);
 				nativeRepository.updateQueries("update public.teacher_form_status set final_status='TA', form5_status='EC'  where teacher_id='"+String.valueOf(q2.getRowValue().get(0).get("teacher_id"))+"'");
+				nativeRepository.updateQueries("update transfer.transfer_teacher_check set unfrez_flag='Y'  where teacher_id='"+String.valueOf(q2.getRowValue().get(0).get("teacher_id"))+"'");
 				
 //			}
 			mp.put("status", 1);
