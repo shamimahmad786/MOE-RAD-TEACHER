@@ -56,7 +56,7 @@ public class TeacherTransferController {
 		 trsBean = mapperObj.readValue(data, new TypeReference<TeacherTransferDetails>() {
 			});
 		 
-		 if(trsBean.getTcSaveYn() !=null && trsBean.getTcSaveYn()==1) {
+		 if(trsBean.getTcSaveYn() !=null && (trsBean.getTcSaveYn()==1 || trsBean.getDcSaveYn()==1)) {
 		 String transfer_id="KVS"+(100000+trsBean.getTeacherId());
 		 trsBean.setTransferId(transfer_id);
 		 }

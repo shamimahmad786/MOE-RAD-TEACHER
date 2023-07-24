@@ -84,6 +84,8 @@ public class TeacherTransferDetails {
 	public Integer tcRjcmNjcmPoint;
 	@Column(name = "tc_total_point")
 	public Integer tcTotalPoint;
+	@Column(name = "final_status")
+	public Integer finalStatus;
 	
 	
 	
@@ -464,6 +466,16 @@ public class TeacherTransferDetails {
 
 	public void setTcTotalPoint(Integer tcTotalPoint) {
 		this.tcTotalPoint = tcTotalPoint;
+	}
+
+
+	public Integer getFinalStatus() {
+		return finalStatus;
+	}
+
+
+	public void setFinalStatus(Integer finalStatus) {
+		this.finalStatus = finalStatus;
 	}
 	
 	

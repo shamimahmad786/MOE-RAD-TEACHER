@@ -24,9 +24,11 @@ public class TeacherTransferImpl {
 	
 	public TeacherTransferDetails saveTransferDCTCPoints(TeacherTransferDetails data) throws Exception {
 		try {
-			if(data.getTcSaveYn() !=null && data.getTcSaveYn()==1) {
+			if(data.getTcSaveYn() !=null && (data.getTcSaveYn()==1 || data.getDcSaveYn()==1)) {
 		     System.out.println("TC save--->"+data.getTcSaveYn());
-				nativeRepository.updateQueries(" update teacher_transfer_profile set transfer_status=1 , transfer_id='"+data.getTransferId()+"' where teacher_id="+data.getTeacherId());	
+				nativeRepository.updateQueries(" update teacher_transfer_profile set transfer_status=1 , transfer_id='"+data.getTransferId()+"' where teacher_id="+data.getTeacherId());
+				nativeRepository.updateQueries(" update public.teacher_profile set verify_flag='TTS'  where teacher_id="+data.getTeacherId());
+				nativeRepository.updateQueries(" update public.teacher_form_status set final_status='TTS'  where teacher_id="+data.getTeacherId());
 			}
 		      	return teacherTransferRepository.saveAndFlush(data);
 		}catch(Exception ex) {
