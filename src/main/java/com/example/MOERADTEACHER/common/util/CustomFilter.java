@@ -38,6 +38,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import com.example.MOERADTEACHER.common.exceptions.UserNotAuthorizedException;
+import com.example.MOERADTEACHER.common.modal.TeacherFormStatus;
+import com.example.MOERADTEACHER.common.modal.TeacherProfile;
+import com.example.MOERADTEACHER.common.repository.TeacherFormStatusRepository;
+import com.example.MOERADTEACHER.common.repository.TeacherProfileRepository;
 
 //@Configuration
 //@Service
@@ -51,6 +55,11 @@ public class CustomFilter implements Filter {
 
 	@Autowired
 	RestService restService;
+	
+	@Autowired
+	TeacherProfileRepository  teacherProfileRepository;
+	@Autowired
+	TeacherFormStatusRepository teacherFormStatusRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomFilter.class);
 
@@ -71,6 +80,7 @@ public class CustomFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		 HttpServletResponse res = (HttpServletResponse) response;
 		String userName;
+		username =req.getHeader("username");
 		
 		System.out.println("called");
 //		res.setHeader("Access-Control-Allow-Origin",req.getHeader("Origin"));
@@ -94,9 +104,38 @@ public class CustomFilter implements Filter {
 		}finally {
 //			throw new UserNotAuthorizedException("Data Tempered");
 		}
-		
-		
+		System.out.println("username--->"+req.getHeader("username"));
+		System.out.println("loginType--->"+req.getHeader("loginType"));
+		String loginType=req.getHeader("loginType");
+		String systemTeacherCode=req.getHeader("Systemteachercode");
+		System.out.println("systemTeacherCode---->"+systemTeacherCode);
 	
+		if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&(req.getRequestURI().contains("correctPassword") || req.getRequestURI().contains("uploadDocument") || req.getRequestURI().contains("deleteDocumentByTeacherIdAndName") || req.getRequestURI().contains("updateFlagByTeachId") || req.getRequestURI().contains("saveTeacher") || req.getRequestURI().contains("saveExperience") || req.getRequestURI().contains("updatdFlag")  || req.getRequestURI().contains("saveTransProfile")  || req.getRequestURI().contains("updateFlagByTeachId"))) {
+			if(!username.contains("kv_") && !req.getRequestURI().contains("national_")) {
+			TeacherProfile tp=teacherProfileRepository.findAllByTeacherEmployeeCode(username);
+			TeacherFormStatus tfs=teacherFormStatusRepository.findAllByTeacherId(tp.getTeacherId());
+			System.out.println(tfs.getFinalStatus());
+		
+			if(loginType !=null && loginType.equalsIgnoreCase("t") && (tfs.getFinalStatus().equalsIgnoreCase("TTD") || tfs.getFinalStatus().equalsIgnoreCase("TTS") || tfs.getFinalStatus().equalsIgnoreCase("SA") ||  tfs.getFinalStatus().equalsIgnoreCase("TA") || tfs.getFinalStatus().equalsIgnoreCase("SE") || tfs.getFinalStatus().equalsIgnoreCase("SES"))) {
+				throw new UserNotAuthorizedException("Data Tempered");
+			}
+//			else if(loginType !=null && loginType.equalsIgnoreCase("s") && (tfs.getFinalStatus().equalsIgnoreCase("TTD") || tfs.getFinalStatus().equalsIgnoreCase("TTS") || tfs.getFinalStatus().equalsIgnoreCase("SA") || tfs.getFinalStatus().equalsIgnoreCase("TI"))){
+//				System.out.println("tempered");
+//				throw new UserNotAuthorizedException("Data Tempered");
+//			}
+			}else {
+//				System.out.println(systemTeacherCode+"----"+req.getRequestURI());
+				if(!req.getRequestURI().contains("correctPassword")) {
+				TeacherProfile tp=teacherProfileRepository.findAllByTeacherEmployeeCode(systemTeacherCode);
+				TeacherFormStatus tfs=teacherFormStatusRepository.findAllByTeacherId(tp.getTeacherId());
+				System.out.println(tfs.getFinalStatus());
+				if(loginType !=null && loginType.equalsIgnoreCase("s") && (tfs.getFinalStatus().equalsIgnoreCase("TTD") || tfs.getFinalStatus().equalsIgnoreCase("TTS") || tfs.getFinalStatus().equalsIgnoreCase("SA") || tfs.getFinalStatus().equalsIgnoreCase("TI"))){
+					System.out.println("tempered");
+					throw new UserNotAuthorizedException("Data Tempered");
+				}
+				}
+			}
+		}
 		
 		
 		if(req.getHeader("access-control-request-headers")==null || true) {
@@ -158,7 +197,7 @@ public class CustomFilter implements Filter {
 		
 //		LOGGER.info("::::::::::::::::::::::::::::" + req.getRequestURI() + ":::::::::::::::::::::::::::::::::::");
 		token = req.getHeader("authorization");
-		username =req.getHeader("username");
+		
 		
 //		System.out.println("username--->"+username);
 		

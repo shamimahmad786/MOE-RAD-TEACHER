@@ -25,5 +25,5 @@ Map<String,Object> getSpouseByEmpCode(String empCode);
 
 List<TeacherProfile> findByCurrentUdiseSchCodeAndDropBoxFlag(String udisecode,Integer dropBoxid);
 List<TeacherProfile> findByDropBoxFlag(Integer dropBoxid);
-
+TeacherProfile findAllByTeacherEmployeeCode(String teacherEmployeeCode);
 }

@@ -350,8 +350,11 @@ public class TeacherTransferController {
 				
 				QueryResult tchard = nativeRepository.executeQueries(querytc);
 				String categoryId=null;
+				System.out.println("tcStayAtStationYears---->"+tcStayAtStationYears);
+				System.out.println(tchard.getRowValue().size());
 				if(tchard.getRowValue().size()>0) {
 					categoryId=String.valueOf(tchard.getRowValue().get(0).get("category_id"));
+					System.out.println(categoryId);
 					if((categoryId.equalsIgnoreCase("3") || categoryId.equalsIgnoreCase("1")) && (tcStayAtStationYears >=3)) {
 						dcObj.setTcTenureHardPoint(30);	
 					}else if((categoryId.equalsIgnoreCase("4")) && (tcStayAtStationYears >=2)) {
@@ -638,7 +641,8 @@ public class TeacherTransferController {
 	   public static int calculateAge(DateTime birthDate) {
 		   
 		    DateTimeFormatter formatter1 = DateTimeFormat.forPattern("dd/MM/yyyy");
-		    DateTime Configuredt = formatter1.parseDateTime("30/06/2023");
+		   // DateTime Configuredt = formatter1.parseDateTime("30/06/2023");
+		    DateTime Configuredt = formatter1.parseDateTime("01/07/2023");
 			Years teacherAge = Years.yearsBetween(birthDate,Configuredt);
 	        return teacherAge.getYears();
 	    }
