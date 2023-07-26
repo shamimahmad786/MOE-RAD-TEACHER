@@ -28,6 +28,7 @@ import com.example.MOERADTEACHER.common.bean.TransferDcBeans;
 import com.example.MOERADTEACHER.common.transferbean.Transfer;
 import com.example.MOERADTEACHER.common.transfermodel.TeacherTransferDetails;
 import com.example.MOERADTEACHER.common.transfermodel.TransferKVTeacherDetails;
+import com.example.MOERADTEACHER.common.transferrepository.TeacherTransferRepository;
 import com.example.MOERADTEACHER.common.transferservice.TeacherTransferImpl;
 import com.example.MOERADTEACHER.common.util.ApiPaths;
 import com.example.MOERADTEACHER.common.util.CustomResponse;
@@ -46,6 +47,8 @@ public class TeacherTransferController {
 	
 	@Autowired
 	TeacherTransferImpl teacherTransferImpl;
+	@Autowired
+	TeacherTransferRepository teacherTransferRepository;
 	
 	@RequestMapping(value = "/saveTransferDCTCPoints", method = RequestMethod.POST)
 	public ResponseEntity<TeacherTransferDetails> saveTransferDCTCPoints(@RequestBody String data) throws Exception {
@@ -75,6 +78,7 @@ public class TeacherTransferController {
 		String kvCode = "";
 		String teacherId = "";
 		Integer teacherTransferSaveYn=0;
+		int dcNoofYears=0;
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(data);
@@ -82,8 +86,8 @@ public class TeacherTransferController {
 			kvCode = jsonNode.get("kvCode").asText();
 			teacherId = jsonNode.get("teacherId").asText();
 
-			System.out.println("kv_code: " + kvCode);
-			System.out.println("teacherId: " + teacherId);
+			//System.out.println("kv_code: " + kvCode);
+			//System.out.println("teacherId: " + teacherId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -91,6 +95,8 @@ public class TeacherTransferController {
 		TeacherTransferDetails savedTeacherTransObj = teacherTransferImpl
 				.getTcDcPointByTeacherId(Integer.parseInt(teacherId));
 
+		//System.out.println("Teacher Id--->"+savedTeacherTransObj.getTeacherId());
+		
 		if (savedTeacherTransObj != null) {
 //			System.out.println("in if condition");// IE TC and DC Point is Saved.
 			teacherTransferSaveYn=1;
@@ -147,11 +153,12 @@ public class TeacherTransferController {
 				int memberjcm = 0;
 				String idsStartWith = "(0";
 				String idsEndsWith = ")";
+				
 
 				// Current Station Staying Period
 
 				try {
-					System.out.println(QUERYstation);
+					//System.out.println(QUERYstation);
 
 					QueryResult qr = nativeRepository.executeQueries(QUERYstation);
 //					System.out.println("size--->" + qr.getRowValue().size());
@@ -192,6 +199,8 @@ public class TeacherTransferController {
 				
                QueryResult retObj=nativeRepository.executeQueries("select * from transfer.transfer_teacher_check  where teacher_id="+teacherId);
 				
+               
+               System.out.println("return stay from db---->"+retObj.getRowValue().get(0).get("returnstay"));
                int returnStay=0;
                
                if(retObj.getRowValue().size()>0 && retObj.getRowValue().get(0).get("returnstay") !=null) {
@@ -199,7 +208,7 @@ public class TeacherTransferController {
                }
 				
 				
-							
+				System.out.println("after set return stay--"+returnStay);			
 
 				for (int k = 0; k < rs.getRowValue().size(); k++) {
 					++i;
@@ -304,8 +313,8 @@ public class TeacherTransferController {
 				
 				int dcNoofDays = continuousStay + returnStay;
 				double result = dcNoofDays / 365;
-				int dcNoofYears = (int) result;
-				
+				 dcNoofYears = (int) result;
+				System.out.print("dcNoofYears  "+dcNoofYears);
 				// Absence Stay at Station
 
 				dcObj.setDcStayAtStation(dcNoofYears);
@@ -619,13 +628,51 @@ public class TeacherTransferController {
 			
 			
 			if(teacherTransferSaveYn==1) {
-				if(savedTeacherTransObj.getTcSpousePoint() !=dcObj.getTcSpousePoint())
-				savedTeacherTransObj.setTcSpousePoint(dcObj.getTcSpousePoint());
+//				if(savedTeacherTransObj.getTcSpousePoint() !=dcObj.getTcSpousePoint())
+				
 //				savedTeacherTransObj.setDcSpousePoint(dcObj.getDcSpousePoint());
 //				savedTeacherTransObj.setDcTotalPoint(dcObj.getDcTotalPoint());
-				savedTeacherTransObj.setTcTotalPoint(dcObj.getTcTotalPoint());
+				savedTeacherTransObj.setDcLtrPoint(dcObj.getDcLtrPoint());
+				savedTeacherTransObj.setDcMdDfGroungPoint(dcObj.getDcMdDfGroungPoint());
+				savedTeacherTransObj.setDcNonSopouseSinglePoint(dcObj.getDcNonSopouseSinglePoint());
+				savedTeacherTransObj.setDcPeriodAbsence(dcObj.getDcPeriodAbsence());
+				savedTeacherTransObj.setDcPhysicalChallengedPoint(dcObj.getDcPhysicalChallengedPoint());
+				savedTeacherTransObj.setDcReturnStation(dcObj.getDcReturnStation());
+				savedTeacherTransObj.setDcRjcmNjcmPoint(dcObj.getDcRjcmNjcmPoint());
+				savedTeacherTransObj.setDcSinglePoint(dcObj.getDcSinglePoint());
+				savedTeacherTransObj.setDcSpousePoint(dcObj.getDcSpousePoint());	
+				savedTeacherTransObj.setDcStayAtStation(dcObj.getDcStayAtStation());
+				savedTeacherTransObj.setDcTenureHardPoint(dcObj.getDcTenureHardPoint());
+				savedTeacherTransObj.setDcTotalPoint(dcObj.getDcTotalPoint());
+				savedTeacherTransObj.setDcStayStationPoint(dcObj.getDcStayStationPoint());
 				
-				nativeRepository.updateQueries("update transfer.teacher_transfer_details set tc_spouse_point="+savedTeacherTransObj.getTcSpousePoint()+" , tc_total_point="+savedTeacherTransObj.getTcTotalPoint()+"  where teacher_id="+Integer.parseInt(teacherId));
+				savedTeacherTransObj.setTcLtrPoint(dcObj.getTcLtrPoint());
+				savedTeacherTransObj.setTcMdDfGroungPoint(dcObj.getTcMdDfGroungPoint());
+				savedTeacherTransObj.setTcNonSopouseSinglePoint(dcObj.getTcNonSopouseSinglePoint());
+				savedTeacherTransObj.setTcPeriodAbsence(dcObj.getTcPeriodAbsence());
+				savedTeacherTransObj.setTcPhysicalChallengedPoint(dcObj.getTcPhysicalChallengedPoint());
+				savedTeacherTransObj.setTcRjcmNjcmPoint(dcObj.getTcRjcmNjcmPoint());
+				savedTeacherTransObj.setTcSinglePoint(dcObj.getTcSinglePoint());
+				savedTeacherTransObj.setTcSpousePoint(dcObj.getTcSpousePoint());
+				savedTeacherTransObj.setTcStayAtStation(dcObj.getTcStayAtStation());
+				savedTeacherTransObj.setTcTenureHardPoint(dcObj.getTcTenureHardPoint());
+				savedTeacherTransObj.setTcStayStationPoint(dcObj.getTcStayStationPoint());
+				savedTeacherTransObj.setTcTotalPoint(dcObj.getTcTotalPoint());
+				teacherTransferRepository.saveAndFlush(savedTeacherTransObj);
+//				teacherTransferImpl.saveTransferDCTCPoints(savedTeacherTransObj);
+				System.out.println("on fly dc no of year000>"+dcNoofYears);
+				System.out.println("on fly--->"+dcObj.getDcStayStationPoint());
+				System.out.println("db save--->"+savedTeacherTransObj.getDcStayStationPoint());
+				
+				
+//				System.out.println("db savedb saves--->"+dcObj.getDcReturnStation());
+				
+//				DcStayStationPoint
+				
+//				savedTeacherTransObj.setTcSpousePoint(dcObj.getTcSpousePoint());
+//				savedTeacherTransObj.setTcTotalPoint(dcObj.getTcTotalPoint());
+				
+//				nativeRepository.updateQueries("update transfer.teacher_transfer_details set tc_spouse_point="+savedTeacherTransObj.getTcSpousePoint()+" , tc_total_point="+savedTeacherTransObj.getTcTotalPoint()+"  where teacher_id="+Integer.parseInt(teacherId));
 				
 				return ResponseEntity.ok(savedTeacherTransObj);
 			}else {

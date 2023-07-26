@@ -104,13 +104,13 @@ public class CustomFilter implements Filter {
 		}finally {
 //			throw new UserNotAuthorizedException("Data Tempered");
 		}
-		System.out.println("username--->"+req.getHeader("username"));
-		System.out.println("loginType--->"+req.getHeader("loginType"));
+//		System.out.println("username--->"+req.getHeader("username"));
+//		System.out.println("loginType--->"+req.getHeader("loginType"));
 		String loginType=req.getHeader("loginType");
 		String systemTeacherCode=req.getHeader("Systemteachercode");
-		System.out.println("systemTeacherCode---->"+systemTeacherCode);
+//		System.out.println("systemTeacherCode---->"+systemTeacherCode);
 	
-		if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&(req.getRequestURI().contains("correctPassword") || req.getRequestURI().contains("uploadDocument") || req.getRequestURI().contains("deleteDocumentByTeacherIdAndName") || req.getRequestURI().contains("updateFlagByTeachId") || req.getRequestURI().contains("saveTeacher") || req.getRequestURI().contains("saveExperience") || req.getRequestURI().contains("updatdFlag")  || req.getRequestURI().contains("saveTransProfile")  || req.getRequestURI().contains("updateFlagByTeachId"))) {
+		if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&(req.getRequestURI().contains("correctPassword") || req.getRequestURI().contains("uploadDocument") || req.getRequestURI().contains("deleteDocumentByTeacherIdAndName")  || req.getRequestURI().contains("saveTeacher") || req.getRequestURI().contains("saveExperience") || req.getRequestURI().contains("updatdFlag")  || req.getRequestURI().contains("saveTransProfile") )) {
 			if(!username.contains("kv_") && !req.getRequestURI().contains("national_")) {
 			TeacherProfile tp=teacherProfileRepository.findAllByTeacherEmployeeCode(username);
 			TeacherFormStatus tfs=teacherFormStatusRepository.findAllByTeacherId(tp.getTeacherId());
@@ -127,11 +127,13 @@ public class CustomFilter implements Filter {
 //				System.out.println(systemTeacherCode+"----"+req.getRequestURI());
 				if(!req.getRequestURI().contains("correctPassword")) {
 				TeacherProfile tp=teacherProfileRepository.findAllByTeacherEmployeeCode(systemTeacherCode);
+				if(tp !=null) {
 				TeacherFormStatus tfs=teacherFormStatusRepository.findAllByTeacherId(tp.getTeacherId());
 				System.out.println(tfs.getFinalStatus());
 				if(loginType !=null && loginType.equalsIgnoreCase("s") && (tfs.getFinalStatus().equalsIgnoreCase("TTD") || tfs.getFinalStatus().equalsIgnoreCase("TTS") || tfs.getFinalStatus().equalsIgnoreCase("SA") || tfs.getFinalStatus().equalsIgnoreCase("TI"))){
 					System.out.println("tempered");
 					throw new UserNotAuthorizedException("Data Tempered");
+				}
 				}
 				}
 			}
@@ -140,7 +142,7 @@ public class CustomFilter implements Filter {
 		
 		if(req.getHeader("access-control-request-headers")==null || true) {
 			
-			System.out.println(req.getRequestURI());
+//			System.out.println(req.getRequestURI());
 			
 		
 		if( !req.getRequestURI().contains("createKvUser") && !req.getRequestURI().contains("getMaster") &&  !req.getRequestURI().contains("uploadDocument") && !req.getRequestURI().contains("uploadProfileImage") && !req.getRequestURI().contains("getProfileImage")) {

@@ -343,99 +343,36 @@ public class LoginCtrl {
 //				  ex.printStackTrace();
 //			  }
 			  
-//			  ArrayList<String>  ar =new ArrayList<String>();
-//			  ar.add("59493");
-//			  ar.add("21545");
-//			  ar.add("26195");
-//			  ar.add("49067");
-//			  ar.add("7179") ;
-//			  ar.add("56757");
-//			  ar.add("30989");
-//			  ar.add("48991");
-//			  ar.add("51583");
-//			  ar.add("40396");
-//			  ar.add("6890") ;
-//			  ar.add("51576");
-//			  ar.add("18460");
-//			  ar.add("40420");
-//			  ar.add("23886");
-//			  ar.add("55510");
-//			  ar.add("27581");
-//			  ar.add("40877");
-//			  ar.add("45026");
-//			  ar.add("19428");
-//			  ar.add("59710");
-//			  ar.add("44053");
-//			  ar.add("45565");
-//			  ar.add("6497") ;
-//			  ar.add("9929") ;
-//			  ar.add("6739") ;
-//			  ar.add("32325");
-//			  ar.add("30698");
-//			  ar.add("83131");
-//			  ar.add("54849");
-//			  ar.add("5292") ;
-//			  ar.add("9861") ;
-//			  ar.add("49653");
-//			  ar.add("47910");
-//			  ar.add("6369") ;
-//			  ar.add("14100");
-//			  ar.add("19371");
-//			  ar.add("80534");
-//			  ar.add("43414");
-//			  ar.add("30279");
-//			  ar.add("2915") ;
-//			  ar.add("8476") ;
-//			  ar.add("81761");
-//			  ar.add("75951");
-//			  ar.add("50605");
-//			  ar.add("81481");
-//			  ar.add("81478");
-//			  ar.add("83869");
-//			  ar.add("53308");
-//			  ar.add("44085");
-//			  ar.add("13637");
-//			  ar.add("45236");
-//			  ar.add("75304");
-//			  ar.add("75710");
-//			  ar.add("75977");
-//			  ar.add("82736");
-//			  ar.add("75102");
-//			  ar.add("75604");
-//			  ar.add("75625");
-//			  ar.add("75008");
-//			  ar.add("82512");
-//			  ar.add("77080");
-//			  ar.add("75708");
-//			  ar.add("34331");
-//			  ar.add("2132") ;
-//			  ar.add("82409");
-//			  ar.add("6309") ;
-//			  ar.add("73783");
-//			  ar.add("41453");
-//			  ar.add("55018");
+			  ArrayList<String>  ar =new ArrayList<String>();
+			  ar.add("53877");
 
-//			  ar.add(empcode);
+
+
+
+
+
 //			  
-//			  for(int i=0;i<ar.size();i++) {
+			  for(int i=0;i<ar.size();i++) {
 			  
 			  try {
 //System.out.println(ar.get(i));
-				QueryResult q2=nativeRepository.executeQueries("select teacher_id from teacher_profile where teacher_employee_code='"+empcode+"'");
+				QueryResult q2=nativeRepository.executeQueries("select teacher_id from teacher_profile where teacher_employee_code='"+ar.get(i)+"'");
 				
-				String query1="update public.teacher_profile set  verify_flag='TA' where teacher_employee_code='"+empcode+"'";
+				String query1="update public.teacher_profile set  verify_flag='TA' where teacher_employee_code='"+ar.get(i)+"'";
 		
 				nativeRepository.updateQueries(query1);
 				nativeRepository.updateQueries("update public.teacher_form_status set final_status='TA', form5_status='EC'  where teacher_id='"+String.valueOf(q2.getRowValue().get(0).get("teacher_id"))+"'");
 				nativeRepository.updateQueries("update transfer.transfer_teacher_check set unfrez_flag='Y'  where teacher_id='"+String.valueOf(q2.getRowValue().get(0).get("teacher_id"))+"'");
 //				
+				System.out.println("teacherId--->"+String.valueOf(q2.getRowValue().get(0).get("teacher_id")));
 			mp.put("status", 1);
 			
 			  }catch(Exception ex) {
+				  System.out.println(ar.get(i));
 				  mp.put("status", 0);
 				  ex.printStackTrace();
 			  }
-//			  }
+			  }
 //			return mp;
 			  
 			  
