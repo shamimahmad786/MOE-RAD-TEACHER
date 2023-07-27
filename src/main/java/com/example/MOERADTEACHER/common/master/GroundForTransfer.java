@@ -13,7 +13,7 @@ public  class GroundForTransfer {
 		mp.put("G5", "Request On PwD");
 		mp.put("G6", "Request On Spouse Ground");
 		mp.put("G7", "Surplus");
-		mp.put("G8", "Displacement");
+		mp.put("G8", "Displ acement");
 		mp.put("G9", "ADMN Ground Under PARA7(E)");
 		mp.put("G10", "ADMN Ground Under 40 Years Of Age");
 		mp.put("G11", "Direct Recruitment");

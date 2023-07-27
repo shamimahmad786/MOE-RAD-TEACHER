@@ -66,56 +66,56 @@ public class MoeRadTeacherApplication {
 		Integer returnStayCount=0;
 		Integer count=0;
 //		 @Scheduled(fixedDelay = 12000000)
-		  public  void updates() throws InterruptedException, ParseException {
-			  System.out.println("called Schedular");
-			  ++count;
-			  if(count==1) {
-			  String query="select * from public.teacher_profile";
-			  QueryResult qs=nativeRepository.executeQueries(query);
-			  for(int i=0;i<qs.getRowValue().size();i++) {
-			  LinkedList<Transfer> transfers = new LinkedList<>();
-				String QUERYstation = " select *, DATE_PART('day', work_end_date::timestamp - work_start_date::timestamp) as no_of_days from (\r\n"
-						+ "				 	select ksm.station_code , work_start_date , coalesce(work_end_date,'2023-06-30') as work_end_date, \r\n"
-						+ "				 	teacher_id   \r\n"
-						+ "				 	from 	public.teacher_work_experience twe , kv.kv_school_master ksm \r\n"
-						+ "				 	where teacher_id = '" + qs.getRowValue().get(i).get("teacher_id") + "'"
-						+ "				 	and ksm.kv_code = twe.udise_sch_code \r\n"
-						+ "				 	order by work_start_date \r\n"
-						+ "				 	) aa order by work_start_date desc ";
-				
-				QueryResult qr = nativeRepository.executeQueries(QUERYstation);
-				
-				for (int j = 0; j < qr.getRowValue().size(); j++) {
-					SimpleDateFormat sObj = new SimpleDateFormat("yyyy-MM-dd");
-
-					Date date1 = sObj
-							.parse(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString()));
-
-					try {
-						transfers.add(new Transfer(String.valueOf(qr.getRowValue().get(j).get("station_code")),
-								sObj.parse(
-										String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString())),
-								sObj.parse(String.valueOf(qr.getRowValue().get(j).get("work_end_date").toString())),
-								(int) Double
-										.parseDouble((String.valueOf(qr.getRowValue().get(j).get("no_of_days"))))));
-
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-
-				int returnStay = calculateReturnStay(transfers);
-				
-				if(returnStay>0) {
-					++returnStayCount;
-				System.out.println("returnStay--->"+returnStay+"----returnStayCount--->"+returnStayCount);
-		
-				}
-				nativeRepository.updateQueries("update transfer.transfer_teacher_check set returnstay2='"+returnStay+"' where teacher_id="+qs.getRowValue().get(i).get("teacher_id"));
-				
-			  }
-			  }
-		  }
+//		  public  void updates() throws InterruptedException, ParseException {
+//			  System.out.println("called Schedular");
+//			  ++count;
+//			  if(count==1) {
+//			  String query="select * from public.teacher_profile";
+//			  QueryResult qs=nativeRepository.executeQueries(query);
+//			  for(int i=0;i<qs.getRowValue().size();i++) {
+//			  LinkedList<Transfer> transfers = new LinkedList<>();
+//				String QUERYstation = " select *, DATE_PART('day', work_end_date::timestamp - work_start_date::timestamp) as no_of_days from (\r\n"
+//						+ "				 	select ksm.station_code , work_start_date , coalesce(work_end_date,'2023-06-30') as work_end_date, \r\n"
+//						+ "				 	teacher_id   \r\n"
+//						+ "				 	from 	public.teacher_work_experience twe , kv.kv_school_master ksm \r\n"
+//						+ "				 	where teacher_id = '" + qs.getRowValue().get(i).get("teacher_id") + "'"
+//						+ "				 	and ksm.kv_code = twe.udise_sch_code \r\n"
+//						+ "				 	order by work_start_date \r\n"
+//						+ "				 	) aa order by work_start_date desc ";
+//				
+//				QueryResult qr = nativeRepository.executeQueries(QUERYstation);
+//				
+//				for (int j = 0; j < qr.getRowValue().size(); j++) {
+//					SimpleDateFormat sObj = new SimpleDateFormat("yyyy-MM-dd");
+//
+//					Date date1 = sObj
+//							.parse(String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString()));
+//
+//					try {
+//						transfers.add(new Transfer(String.valueOf(qr.getRowValue().get(j).get("station_code")),
+//								sObj.parse(
+//										String.valueOf(qr.getRowValue().get(j).get("work_start_date").toString())),
+//								sObj.parse(String.valueOf(qr.getRowValue().get(j).get("work_end_date").toString())),
+//								(int) Double
+//										.parseDouble((String.valueOf(qr.getRowValue().get(j).get("no_of_days"))))));
+//
+//					} catch (Exception ex) {
+//						ex.printStackTrace();
+//					}
+//				}
+//
+//				int returnStay = calculateReturnStay(transfers);
+//				
+//				if(returnStay>0) {
+//					++returnStayCount;
+//				System.out.println("returnStay--->"+returnStay+"----returnStayCount--->"+returnStayCount);
+//		
+//				}
+//				nativeRepository.updateQueries("update transfer.transfer_teacher_check set returnstay2='"+returnStay+"' where teacher_id="+qs.getRowValue().get(i).get("teacher_id"));
+//				
+//			  }
+//			  }
+//		  }
 		  
 		  
 		    public static List<Transfer> getHighestThreeRows(List<Transfer> transfers) {
