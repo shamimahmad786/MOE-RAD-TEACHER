@@ -100,7 +100,7 @@ public class TeacherTransferController {
 		if (savedTeacherTransObj != null) {
 //			System.out.println("in if condition");// IE TC and DC Point is Saved.
 			teacherTransferSaveYn=1;
-//			return ResponseEntity.ok(savedTeacherTransObj);
+			return ResponseEntity.ok(savedTeacherTransObj);
 		} 
 		
 //		else {
@@ -627,57 +627,37 @@ public class TeacherTransferController {
 			}
 			
 			
-			if(teacherTransferSaveYn==1) {
-//				if(savedTeacherTransObj.getTcSpousePoint() !=dcObj.getTcSpousePoint())
-				
-//				savedTeacherTransObj.setDcSpousePoint(dcObj.getDcSpousePoint());
+//			if(teacherTransferSaveYn==1) {
+//				savedTeacherTransObj.setDcLtrPoint(dcObj.getDcLtrPoint());
+//				savedTeacherTransObj.setDcMdDfGroungPoint(dcObj.getDcMdDfGroungPoint());
+//				savedTeacherTransObj.setDcNonSopouseSinglePoint(dcObj.getDcNonSopouseSinglePoint());
+//				savedTeacherTransObj.setDcPeriodAbsence(dcObj.getDcPeriodAbsence());
+//				savedTeacherTransObj.setDcPhysicalChallengedPoint(dcObj.getDcPhysicalChallengedPoint());
+//				savedTeacherTransObj.setDcReturnStation(dcObj.getDcReturnStation());
+//				savedTeacherTransObj.setDcRjcmNjcmPoint(dcObj.getDcRjcmNjcmPoint());
+//				savedTeacherTransObj.setDcSinglePoint(dcObj.getDcSinglePoint());
+//				savedTeacherTransObj.setDcSpousePoint(dcObj.getDcSpousePoint());	
+//				savedTeacherTransObj.setDcStayAtStation(dcObj.getDcStayAtStation());
+//				savedTeacherTransObj.setDcTenureHardPoint(dcObj.getDcTenureHardPoint());
 //				savedTeacherTransObj.setDcTotalPoint(dcObj.getDcTotalPoint());
-				savedTeacherTransObj.setDcLtrPoint(dcObj.getDcLtrPoint());
-				savedTeacherTransObj.setDcMdDfGroungPoint(dcObj.getDcMdDfGroungPoint());
-				savedTeacherTransObj.setDcNonSopouseSinglePoint(dcObj.getDcNonSopouseSinglePoint());
-				savedTeacherTransObj.setDcPeriodAbsence(dcObj.getDcPeriodAbsence());
-				savedTeacherTransObj.setDcPhysicalChallengedPoint(dcObj.getDcPhysicalChallengedPoint());
-				savedTeacherTransObj.setDcReturnStation(dcObj.getDcReturnStation());
-				savedTeacherTransObj.setDcRjcmNjcmPoint(dcObj.getDcRjcmNjcmPoint());
-				savedTeacherTransObj.setDcSinglePoint(dcObj.getDcSinglePoint());
-				savedTeacherTransObj.setDcSpousePoint(dcObj.getDcSpousePoint());	
-				savedTeacherTransObj.setDcStayAtStation(dcObj.getDcStayAtStation());
-				savedTeacherTransObj.setDcTenureHardPoint(dcObj.getDcTenureHardPoint());
-				savedTeacherTransObj.setDcTotalPoint(dcObj.getDcTotalPoint());
-				savedTeacherTransObj.setDcStayStationPoint(dcObj.getDcStayStationPoint());
-				
-				savedTeacherTransObj.setTcLtrPoint(dcObj.getTcLtrPoint());
-				savedTeacherTransObj.setTcMdDfGroungPoint(dcObj.getTcMdDfGroungPoint());
-				savedTeacherTransObj.setTcNonSopouseSinglePoint(dcObj.getTcNonSopouseSinglePoint());
-				savedTeacherTransObj.setTcPeriodAbsence(dcObj.getTcPeriodAbsence());
-				savedTeacherTransObj.setTcPhysicalChallengedPoint(dcObj.getTcPhysicalChallengedPoint());
-				savedTeacherTransObj.setTcRjcmNjcmPoint(dcObj.getTcRjcmNjcmPoint());
-				savedTeacherTransObj.setTcSinglePoint(dcObj.getTcSinglePoint());
-				savedTeacherTransObj.setTcSpousePoint(dcObj.getTcSpousePoint());
-				savedTeacherTransObj.setTcStayAtStation(dcObj.getTcStayAtStation());
-				savedTeacherTransObj.setTcTenureHardPoint(dcObj.getTcTenureHardPoint());
-				savedTeacherTransObj.setTcStayStationPoint(dcObj.getTcStayStationPoint());
-				savedTeacherTransObj.setTcTotalPoint(dcObj.getTcTotalPoint());
-				teacherTransferRepository.saveAndFlush(savedTeacherTransObj);
-//				teacherTransferImpl.saveTransferDCTCPoints(savedTeacherTransObj);
-				System.out.println("on fly dc no of year000>"+dcNoofYears);
-				System.out.println("on fly--->"+dcObj.getDcStayStationPoint());
-				System.out.println("db save--->"+savedTeacherTransObj.getDcStayStationPoint());
-				
-				
-//				System.out.println("db savedb saves--->"+dcObj.getDcReturnStation());
-				
-//				DcStayStationPoint
-				
+//				savedTeacherTransObj.setDcStayStationPoint(dcObj.getDcStayStationPoint());				
+//				savedTeacherTransObj.setTcLtrPoint(dcObj.getTcLtrPoint());
+//				savedTeacherTransObj.setTcMdDfGroungPoint(dcObj.getTcMdDfGroungPoint());
+//				savedTeacherTransObj.setTcNonSopouseSinglePoint(dcObj.getTcNonSopouseSinglePoint());
+//				savedTeacherTransObj.setTcPeriodAbsence(dcObj.getTcPeriodAbsence());
+//				savedTeacherTransObj.setTcPhysicalChallengedPoint(dcObj.getTcPhysicalChallengedPoint());
+//				savedTeacherTransObj.setTcRjcmNjcmPoint(dcObj.getTcRjcmNjcmPoint());
+//				savedTeacherTransObj.setTcSinglePoint(dcObj.getTcSinglePoint());
 //				savedTeacherTransObj.setTcSpousePoint(dcObj.getTcSpousePoint());
+//				savedTeacherTransObj.setTcStayAtStation(dcObj.getTcStayAtStation());
+//				savedTeacherTransObj.setTcTenureHardPoint(dcObj.getTcTenureHardPoint());
+//				savedTeacherTransObj.setTcStayStationPoint(dcObj.getTcStayStationPoint());
 //				savedTeacherTransObj.setTcTotalPoint(dcObj.getTcTotalPoint());
-				
-//				nativeRepository.updateQueries("update transfer.teacher_transfer_details set tc_spouse_point="+savedTeacherTransObj.getTcSpousePoint()+" , tc_total_point="+savedTeacherTransObj.getTcTotalPoint()+"  where teacher_id="+Integer.parseInt(teacherId));
-				
-				return ResponseEntity.ok(savedTeacherTransObj);
-			}else {
+//				teacherTransferRepository.saveAndFlush(savedTeacherTransObj);				
+//				return ResponseEntity.ok(savedTeacherTransObj);
+//			}else {
 				return ResponseEntity.ok(dcObj);				
-			}
+//			}
 			
 
 	

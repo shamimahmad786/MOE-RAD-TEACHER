@@ -343,153 +343,19 @@ public class LoginCtrl {
 //				  ex.printStackTrace();
 //			  }
 			  
-			  ArrayList<String>  ar =new ArrayList<String>();
-			  ar.add("53921");
-			  ar.add("2647");
-			  ar.add("2508");
-			  ar.add("31780");
-			  ar.add("33657");
-			  ar.add("22561");
-			  ar.add("1370");
-			  ar.add("40316");
-			  ar.add("27469");
-			  ar.add("1480");
-			  ar.add("2243");
-			  ar.add("1454");
-			  ar.add("27372");
-			  ar.add("79634");
-			  ar.add("30042");
-			  ar.add("2132");
-			  ar.add("1697");
-			  ar.add("40353");
-			  ar.add("42381");
-			  ar.add("1496");
-			  ar.add("1171");
-			  ar.add("1582");
-			  ar.add("2237");
-			  ar.add("7165");
-			  ar.add("83683");
-			  ar.add("1607");
-			  ar.add("2571");
-			  ar.add("26147");
-			  ar.add("2573");
-			  ar.add("2381");
-			  ar.add("46159");
-			  ar.add("70622");
-			  ar.add("55018");
-			  ar.add("68787");
-			  ar.add("76804");
-			  ar.add("55452");
-			  ar.add("45811");
-			  ar.add("7509");
-			  ar.add("62782");
-			  ar.add("18659");
-			  ar.add("44494");
-			  ar.add("13637");
-			  ar.add("47810");
-			  ar.add("51743");
-			  ar.add("43414");
-			  ar.add("30279");
-			  ar.add("2915");
-			  ar.add("59710");
-			  ar.add("48238");
-			  ar.add("33616");
-			  ar.add("25868");
-			  ar.add("2388");
-			  ar.add("56641");
-			  ar.add("52868");
-			  ar.add("44088");
-			  ar.add("8537");
-			  ar.add("44148");
-			  ar.add("55326");
-			  ar.add("27602");
-			  ar.add("22534");
-			  ar.add("7184");
-			  ar.add("56450");
-			  ar.add("3335");
-			  ar.add("22260");
-			  ar.add("51879");
-			  ar.add("3698");
-			  ar.add("1186");
-			  ar.add("49864");
-			  ar.add("3047");
-			  ar.add("2461");
-			  ar.add("3068");
-			  ar.add("3583");
-			  ar.add("10187");
-			  ar.add("2044");
-			  ar.add("56413");
-			  ar.add("47907");
-			  ar.add("2806");
-			  ar.add("35913");
-			  ar.add("3128");
-			  ar.add("56416");
-			  ar.add("45108");
-			  ar.add("35117");
-			  ar.add("54647");
-			  ar.add("60487");
-			  ar.add("47430");
-			  ar.add("2884");
-			  ar.add("81854");
-			  ar.add("73654");
-			  ar.add("5926");
-			  ar.add("69287");
-			  ar.add("81077");
-			  ar.add("78092");
-			  ar.add("83272");
-			  ar.add("44772");
-			  ar.add("55674");
-			  ar.add("21531");
-			  ar.add("52930");
-			  ar.add("22753");
-			  ar.add("52821");
-			  ar.add("69606");
-			  ar.add("5267");
-			  ar.add("45931");
-			  ar.add("47891");
-			  ar.add("5292");
-			  ar.add("15521");
-			  ar.add("21432");
-			  ar.add("21544");
-			  ar.add("21475");
-			  ar.add("21637");
-			  ar.add("22558");
-			  ar.add("42068");
-			  ar.add("7907");
-			  ar.add("8716");
-			  ar.add("44207");
-			  ar.add("46101");
-			  ar.add("43426");
-			  ar.add("69159");
-			  ar.add("27329");
-			  ar.add("48451");
-			  ar.add("3373");
-			  ar.add("73302");
-			  ar.add("49547");
-			  ar.add("59903");
-			  ar.add("74895");
-			  ar.add("7872");
-			  ar.add("61785");
-			  ar.add("48572");
-
-		
-
-		
-
-
-
-
-
+//			  ArrayList<String>  ar =new ArrayList<String>();
+//			  ar.add("53921");
+//			  ar.add("2647");
 
 
 //			  
-			  for(int i=0;i<ar.size();i++) {
+//			  for(int i=0;i<ar.size();i++) {
 			  
 			  try {
 //System.out.println(ar.get(i));
-				QueryResult q2=nativeRepository.executeQueries("select teacher_id from teacher_profile where teacher_employee_code='"+ar.get(i)+"'");
+				QueryResult q2=nativeRepository.executeQueries("select teacher_id from teacher_profile where teacher_employee_code='"+empcode+"'");
 				
-				String query1="update public.teacher_profile set  verify_flag='TA' where teacher_employee_code='"+ar.get(i)+"'";
+				String query1="update public.teacher_profile set  verify_flag='TA' where teacher_employee_code='"+empcode+"'";
 		
 				nativeRepository.updateQueries(query1);
 				nativeRepository.updateQueries("update public.teacher_form_status set final_status='TA', form5_status='EC'  where teacher_id='"+String.valueOf(q2.getRowValue().get(0).get("teacher_id"))+"'");
@@ -499,11 +365,11 @@ public class LoginCtrl {
 			mp.put("status", 1);
 			
 			  }catch(Exception ex) {
-				  System.out.println(ar.get(i));
+				//  System.out.println(ar.get(i));
 				  mp.put("status", 0);
 				  ex.printStackTrace();
 			  }
-			  }
+//			  }
 //			return mp;
 			  
 			  

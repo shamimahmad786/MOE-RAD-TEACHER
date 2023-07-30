@@ -42,6 +42,8 @@ import com.example.MOERADTEACHER.common.modal.TeacherFormStatus;
 import com.example.MOERADTEACHER.common.modal.TeacherProfile;
 import com.example.MOERADTEACHER.common.repository.TeacherFormStatusRepository;
 import com.example.MOERADTEACHER.common.repository.TeacherProfileRepository;
+import com.example.MOERADTEACHER.security.LoginPermision;
+import com.example.MOERADTEACHER.security.LoginPermisionRepository;
 
 //@Configuration
 //@Service
@@ -60,6 +62,9 @@ public class CustomFilter implements Filter {
 	TeacherProfileRepository  teacherProfileRepository;
 	@Autowired
 	TeacherFormStatusRepository teacherFormStatusRepository;
+	
+	@Autowired
+	LoginPermisionRepository loginPermisionRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomFilter.class);
 
@@ -83,6 +88,9 @@ public class CustomFilter implements Filter {
 		username =req.getHeader("username");
 		
 		System.out.println("called");
+		
+		System.out.println("Request header---->"+req.getRequestURI());
+		
 //		res.setHeader("Access-Control-Allow-Origin",req.getHeader("Origin"));
 		res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PUT,OPTIONS");
@@ -109,6 +117,23 @@ public class CustomFilter implements Filter {
 		String loginType=req.getHeader("loginType");
 		String systemTeacherCode=req.getHeader("Systemteachercode");
 //		System.out.println("systemTeacherCode---->"+systemTeacherCode);
+		
+
+		if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&  req.getRequestURI().contains("sign-in")) {
+			System.out.println("usernameForLogin-->"+username);
+			LoginPermision	loginObj= loginPermisionRepository.findAllByTeacherEmployeeCode(username);
+			System.out.println(loginObj.getStatus());
+			if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&  !req.getRequestURI().contains("getkvsDashboardReport") &&  !req.getRequestURI().contains("getKey") &&  (loginObj ==null || loginObj.getStatus()==null || loginObj.getStatus().equalsIgnoreCase("0"))) {
+				throw new UserNotAuthorizedException("Unauthorized to login");	
+			}else {
+				System.out.println("in else condition");
+			}
+		}
+		
+		System.out.println("pass----->");
+		
+		
+		
 	
 		if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&(req.getRequestURI().contains("correctPassword") || req.getRequestURI().contains("uploadDocument") || req.getRequestURI().contains("deleteDocumentByTeacherIdAndName")  || req.getRequestURI().contains("saveTeacher") || req.getRequestURI().contains("saveExperience") || req.getRequestURI().contains("updatdFlag")  || req.getRequestURI().contains("saveTransProfile") )) {
 			if(!username.contains("kv_") && !req.getRequestURI().contains("national_")) {

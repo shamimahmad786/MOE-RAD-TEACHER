@@ -1364,7 +1364,7 @@ public class TransferImpl {
 				+ "from public.teacher_profile tp , public.teacher_transfer_profile ttp \r\n"
 				+ "where tp.teacher_id = ttp.teacher_id \r\n"
 				+ "and tp.teacher_id = '"+teacherId+"'");
-	System.out.println("1");
+	System.out.println("1---?"+rs.getRowValue().get(0).get("teaching_nonteaching"));
 	
 	if(String.valueOf(rs.getRowValue().get(0).get("teaching_nonteaching")).equalsIgnoreCase("1")) {
 		System.out.println("2");	

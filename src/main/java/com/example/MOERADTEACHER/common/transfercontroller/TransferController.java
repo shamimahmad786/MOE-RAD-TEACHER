@@ -530,6 +530,7 @@ public class TransferController {
 	public ResponseEntity<?> getTransferRegionByEmployee(@RequestBody String data) throws Exception {		
 		ObjectMapper mapperObj = new ObjectMapper();
 		HashMap<String,String> mp=new HashMap<String,String>();
+		System.out.println("data--->"+data);
 		try {
 			mp = mapperObj.readValue(data, new TypeReference<HashMap<String,String>>() {
 			});
