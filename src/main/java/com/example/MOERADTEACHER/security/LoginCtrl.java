@@ -343,33 +343,250 @@ public class LoginCtrl {
 //				  ex.printStackTrace();
 //			  }
 			  
-//			  ArrayList<String>  ar =new ArrayList<String>();
-//			  ar.add("53921");
-//			  ar.add("2647");
+			  ArrayList<String>  ar =new ArrayList<String>();
+			  ar.add("71145");
+			  ar.add("13334");
+			  ar.add("13911");
+			  ar.add("14754");
+			  ar.add("15038");
+			  ar.add("17803");
+			  ar.add("38048");
+			  ar.add("38418");
+			  ar.add("39404");
+			  ar.add("39541");
+			  ar.add("40096");
+			  ar.add("43071");
+			  ar.add("45792");
+			  ar.add("47922");
+			  ar.add("49478");
+			  ar.add("53672");
+			  ar.add("68574");
+			  ar.add("69845");
+			  ar.add("70198");
+			  ar.add("73412");
+			  ar.add("80826");
+			  ar.add("80901");
+			  ar.add("80902");
+			  ar.add("82476");
+			  ar.add("17778");
+			  ar.add("18322");
+			  ar.add("19416");
+			  ar.add("24646");
+			  ar.add("45047");
+			  ar.add("19620");
+			  ar.add("33312");
+			  ar.add("8486");
+			  ar.add("19293");
+			  ar.add("33956");
+			  ar.add("52504");
+			  ar.add("68607");
+			  ar.add("34799");
+			  ar.add("18403");
+			  ar.add("18613");
+			  ar.add("20121");
+			  ar.add("53519");
+			  ar.add("4209");
+			  ar.add("5076");
+			  ar.add("20893");
+			  ar.add("21019");
+			  ar.add("21034");
+			  ar.add("29181");
+			  ar.add("43330");
+			  ar.add("76469");
+			  ar.add("10013");
+			  ar.add("22635");
+			  ar.add("47141");
+			  ar.add("57436");
+			  ar.add("62066");
+			  ar.add("8465");
+			  ar.add("5806");
+			  ar.add("73082");
+			  ar.add("42366");
+			  ar.add("26367");
+			  ar.add("55336");
+			  ar.add("54867");
+			  ar.add("43292");
+			  ar.add("43292");
+			  ar.add("14735");
+			  ar.add("14735");
+			  ar.add("15218");
+			  ar.add("21157");
+			  ar.add("45252");
+			  ar.add("45252");
+			  ar.add("5172");
+			  ar.add("5203");
+			  ar.add("5207");
+			  ar.add("5208");
+			  ar.add("20690");
+			  ar.add("38481");
+			  ar.add("70218");
+			  ar.add("70218");
+			  ar.add("44168");
+			  ar.add("8901");
+			  ar.add("48952");
+			  ar.add("48952");
+			  ar.add("51328");
+			  ar.add("80961");
+			  ar.add("55117");
+			  ar.add("8516");
+			  ar.add("7963");
+			  ar.add("51344");
+			  ar.add("19397");
+			  ar.add("53921");
+			  ar.add("27956");
+			  ar.add("29576");
+			  ar.add("61131");
+			  ar.add("29087");
+			  ar.add("29095");
+			  ar.add("27458");
+			  ar.add("29166");
+			  ar.add("29179");
+			  ar.add("29180");
+			  ar.add("14909");
+			  ar.add("45377");
+			  ar.add("27747");
+			  ar.add("29559");
+			  ar.add("29610");
+			  ar.add("29477");
+			  ar.add("29544");
+			  ar.add("29821");
+			  ar.add("29698");
+			  ar.add("2983");
+			  ar.add("22471");
+			  ar.add("30229");
+			  ar.add("37813");
+			  ar.add("16103");
+			  ar.add("5664");
+			  ar.add("9535");
+			  ar.add("70540");
+			  ar.add("70642");
+			  ar.add("34645");
+			  ar.add("14540");
+			  ar.add("29884");
+			  ar.add("30658");
+			  ar.add("6170");
+			  ar.add("30183");
+			  ar.add("31346");
+			  ar.add("51082");
+			  ar.add("34263");
+			  ar.add("71092");
+			  ar.add("34331");
+			  ar.add("8775");
+			  ar.add("33652");
+			  ar.add("33942");
+			  ar.add("34345");
+			  ar.add("34435");
+			  ar.add("34441");
+			  ar.add("34482");
+			  ar.add("34508");
+			  ar.add("35064");
+			  ar.add("44782");
+			  ar.add("54725");
+			  ar.add("58131");
+			  ar.add("58132");
+			  ar.add("58535");
+			  ar.add("92954");
+			  ar.add("33668");
+			  ar.add("78393");
+			  ar.add("33741");
+			  ar.add("35312");
+			  ar.add("35317");
+			  ar.add("57348");
+			  ar.add("69152");
+			  ar.add("74781");
+			  ar.add("75780");
+			  ar.add("77490");
+			  ar.add("77492");
+			  ar.add("78961");
+			  ar.add("79181");
+			  ar.add("2508");
+			  ar.add("27469");
+			  ar.add("78278");
+			  ar.add("78278");
+			  ar.add("50840");
+			  ar.add("50840");
+			  ar.add("17101");
+			  ar.add("17102");
+			  ar.add("17105");
+			  ar.add("17122");
+			  ar.add("17482");
+			  ar.add("17809");
+			  ar.add("37953");
+			  ar.add("68008");
+			  ar.add("80721");
+			  ar.add("79072");
+			  ar.add("15590");
+			  ar.add("37718");
+			  ar.add("37725");
+			  ar.add("37906");
+			  ar.add("37906");
+			  ar.add("39840");
+			  ar.add("39840");
+			  ar.add("69470");
+			  ar.add("44735");
+			  ar.add("45669");
+			  ar.add("45819");
+			  ar.add("17644");
+			  ar.add("13480");
+			  ar.add("41042");
+			  ar.add("38309");
+			  ar.add("38309");
+			  ar.add("39111");
+			  ar.add("46212");
+			  ar.add("16994");
+			  ar.add("16994");
+			  ar.add("39436");
+			  ar.add("39436");
+			  ar.add("39436");
+			  ar.add("39436");
+			  ar.add("511992");
+			  ar.add("35679");
+			  ar.add("52105");
+			  ar.add("50857");
+			  ar.add("12396");
+			  ar.add("34725");
+			  ar.add("41857");
+			  ar.add("42170");
+			  ar.add("48829");
+			  ar.add("52487");
+			  ar.add("54509");
+			  ar.add("55310");
+			  ar.add("49834");
+			  ar.add("49546");
+			  ar.add("47271");
+			  ar.add("32099");
+			  ar.add("46285");
+			  ar.add("51023");
+			  ar.add("31850");
+
+		
+
+		
+
+
 
 
 //			  
-//			  for(int i=0;i<ar.size();i++) {
+			  for(int i=0;i<ar.size();i++) {
 			  
 			  try {
-//System.out.println(ar.get(i));
-				QueryResult q2=nativeRepository.executeQueries("select teacher_id from teacher_profile where teacher_employee_code='"+empcode+"'");
+				QueryResult q2=nativeRepository.executeQueries("select teacher_id from teacher_profile where teacher_employee_code='"+ar.get(i)+"'");
 				
-				String query1="update public.teacher_profile set  verify_flag='TA' where teacher_employee_code='"+empcode+"'";
+				String query1="update public.teacher_profile set  verify_flag='TA' where teacher_employee_code='"+ar.get(i)+"'";
 		
 				nativeRepository.updateQueries(query1);
 				nativeRepository.updateQueries("update public.teacher_form_status set final_status='TA', form5_status='EC'  where teacher_id='"+String.valueOf(q2.getRowValue().get(0).get("teacher_id"))+"'");
 				nativeRepository.updateQueries("update transfer.transfer_teacher_check set unfrez_flag='Y'  where teacher_id='"+String.valueOf(q2.getRowValue().get(0).get("teacher_id"))+"'");
 //				
-				System.out.println("teacherId--->"+String.valueOf(q2.getRowValue().get(0).get("teacher_id")));
+//				System.out.println("teacherId--->"+String.valueOf(q2.getRowValue().get(0).get("teacher_id")));
 			mp.put("status", 1);
 			
 			  }catch(Exception ex) {
-				//  System.out.println(ar.get(i));
+				  System.out.println(ar.get(i));
 				  mp.put("status", 0);
 				  ex.printStackTrace();
 			  }
-//			  }
+			  }
 //			return mp;
 			  
 			  

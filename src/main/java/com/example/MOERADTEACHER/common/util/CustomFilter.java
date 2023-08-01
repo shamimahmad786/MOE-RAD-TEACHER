@@ -119,16 +119,20 @@ public class CustomFilter implements Filter {
 //		System.out.println("systemTeacherCode---->"+systemTeacherCode);
 		
 
-		if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&  req.getRequestURI().contains("sign-in")) {
-			System.out.println("usernameForLogin-->"+username);
-			LoginPermision	loginObj= loginPermisionRepository.findAllByTeacherEmployeeCode(username);
-			System.out.println(loginObj.getStatus());
-			if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&  !req.getRequestURI().contains("getkvsDashboardReport") &&  !req.getRequestURI().contains("getKey") &&  (loginObj ==null || loginObj.getStatus()==null || loginObj.getStatus().equalsIgnoreCase("0"))) {
-				throw new UserNotAuthorizedException("Unauthorized to login");	
-			}else {
-				System.out.println("in else condition");
-			}
-		}
+//		if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&  req.getRequestURI().contains("sign-in")) {
+//			System.out.println("usernameForLogin-->"+username);
+//			LoginPermision	loginObj= loginPermisionRepository.findAllByTeacherEmployeeCode(username);
+//			System.out.println(loginObj.getStatus());
+//			if(!req.getMethod().equalsIgnoreCase("OPTIONS") &&  !req.getRequestURI().contains("getkvsDashboardReport") &&  !req.getRequestURI().contains("getKey") &&  (loginObj ==null || loginObj.getStatus()==null || loginObj.getStatus().equalsIgnoreCase("0"))) {
+//				throw new UserNotAuthorizedException("Unauthorized to login");	
+//			}else {
+//				System.out.println("in else condition");
+//			}
+//		}  for restricted user only
+		
+//		if(!username.contains("kv_") && !req.getRequestURI().contains("national_") && !req.getRequestURI().contains("ro_")) {
+//			
+//		}
 		
 		System.out.println("pass----->");
 		
@@ -142,7 +146,8 @@ public class CustomFilter implements Filter {
 			System.out.println(tfs.getFinalStatus());
 		
 			if(loginType !=null && loginType.equalsIgnoreCase("t") && (tfs.getFinalStatus().equalsIgnoreCase("TTD") || tfs.getFinalStatus().equalsIgnoreCase("TTS") || tfs.getFinalStatus().equalsIgnoreCase("SA") ||  tfs.getFinalStatus().equalsIgnoreCase("TA") || tfs.getFinalStatus().equalsIgnoreCase("SE") || tfs.getFinalStatus().equalsIgnoreCase("SES"))) {
-				throw new UserNotAuthorizedException("Data Tempered");
+
+
 			}
 //			else if(loginType !=null && loginType.equalsIgnoreCase("s") && (tfs.getFinalStatus().equalsIgnoreCase("TTD") || tfs.getFinalStatus().equalsIgnoreCase("TTS") || tfs.getFinalStatus().equalsIgnoreCase("SA") || tfs.getFinalStatus().equalsIgnoreCase("TI"))){
 //				System.out.println("tempered");
