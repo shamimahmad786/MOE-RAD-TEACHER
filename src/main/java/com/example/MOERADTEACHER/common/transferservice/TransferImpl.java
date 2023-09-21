@@ -60,6 +60,7 @@ import com.example.MOERADTEACHER.common.util.NativeRepository;
 import com.example.MOERADTEACHER.common.util.QueryResult;
 import com.example.MOERADTEACHER.common.util.ResponseEntityBeans;
 import com.example.MOERADTEACHER.common.util.StaticReportBean;
+import com.example.MOERADTEACHER.security.LoginNativeRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -74,6 +75,9 @@ public class TransferImpl {
 
 	@Autowired
 	NativeRepository nativeRepository;
+	
+	@Autowired
+	private LoginNativeRepository loginNativeRepository;
 
 	@Autowired
 	TransferKVTeacherDetailsHistoryRepository transferKVTeacherDetailsHistoryRepository;
@@ -1472,7 +1476,113 @@ public Object	chckNull(Object value){
 		}
 	}
 	
+
+public QueryResult getTransferINByKvCode(String KvCode ) {
+	QueryResult qrObj = null;
+	try {
+		
+		String strGetResult = " select zed.teacher_id, zed.emp_code  as teacher_employee_code , zed.emp_name as teacher_name, zed.post_name ,\r\n"
+				+ "zed.subject_name , zed.allot_kv_code, zed.kv_name_alloted ,emp_transfer_status , apply_transfer_yn ,ground_level ,\r\n"
+				+ "tp.kv_code  as from_kv, ksm.kv_name as from_kv_name , '1' as trans_type, join_date, relieve_date ,join_relieve_flag\r\n"
+				+ "from public.z_emp_details_3107 zed , public.teacher_profile tp , kv.kv_school_master ksm \r\n"
+				+ "where allot_kv_code = '"+KvCode.toString()+"' \r\n"
+				+ "and zed.teacher_id =  tp.teacher_id \r\n"
+				+ "and tp.kv_code = ksm.kv_code \r\n"
+				+ "union\r\n"
+				+ "select zed.teacher_id, zed.emp_code  as teacher_employee_code , zed.emp_name as teacher_name, zed.post_name ,\r\n"
+				+ "zed.subject_name , zed.allot_kv_code, zed.kv_name_alloted ,emp_transfer_status , apply_transfer_yn ,ground_level ,\r\n"
+				+ "tp.kv_code  as from_kv, ksm.kv_name as from_kv_name, '2' as trans_type, join_date, relieve_date , join_relieve_flag\r\n"
+				+ "from public.z_emp_details_3107 zed , public.teacher_profile tp , kv.kv_school_master ksm \r\n"
+				+ "where allot_kv_code <> '-1'\r\n"
+				+ "and zed.present_kv_code = '"+KvCode.toString()+"'\r\n"
+				+ "and zed.teacher_id =  tp.teacher_id \r\n"
+				+ "and tp.kv_code = ksm.kv_code   ";
+		qrObj = nativeRepository.executeQueries(strGetResult.toString());
+			
+		
+		//System.out.println(qrObj.toString());
+	} catch (Exception ex) {
+		ex.printStackTrace();
+	}
+	return qrObj;
+}
+
+
+public QueryResult updateTransferINByKvCode(String teacherId , String doj, String KvCode, String emp_code) {
+	QueryResult qrObj = null;
+	try {
+		
+		System.out.println(teacherId+"  "+doj);
+		
+		String insertQueriesStringteacher_work_experience ="insert into public.teacher_work_experience "
+				+ "(work_experience_id , teacher_id, udise_sch_code, work_start_date,position_type, appointed_for_subject,udise_school_name,ground_for_transfer, "
+				+ "	currently_active_yn,kv_code) "
+				+ "select nextval('teacher_work_experience1_id3_seq'::regclass)+ 1,  zed.teacher_id, zed.allot_kv_code as udise_sch_code,"
+				+ "'"+doj+"' as work_start_date,position_type, appointed_for_subject, "
+				+ "zed.kv_name_alloted as udise_school_name,zed.ground_level as ground_for_transfer,'2' as currently_active_yn, zed.allot_kv_code as kv_code "
+				+ "from public.teacher_work_experience twe , public.z_emp_details_3107 zed "
+				+ "where twe.teacher_id ='"+ teacherId.toString() +"' and (currently_active_yn ='1' or currently_active_yn is null) "
+				+ "and zed.teacher_id = twe.teacher_id ";
+		
+		
+		
+		  nativeRepository.insertQueriesString(insertQueriesStringteacher_work_experience.toString());
+
+		String  updateQueriesStringteacher_work_experience= " update public.teacher_work_experience set work_end_date = '"+doj+"' , "
+				+ "    currently_active_yn ='0' "
+				+ " where teacher_id ='"+teacherId.toString() +"'  and (currently_active_yn ='1' or currently_active_yn is null)  " ; 
+		
+		int k=  nativeRepository.updateQueriesString(updateQueriesStringteacher_work_experience.toString());
+		
+		
+		String strUpdate =" update public.teacher_work_experience  set currently_active_yn ='1' ,  ground_for_transfer = null where teacher_id ='"+teacherId.toString() +"' and currently_active_yn ='2' ";
+		
+		int j=  nativeRepository.updateQueriesString(strUpdate.toString());
+		
+		
+		String strupdateQueriesStringteacher_profile = "update public.teacher_profile tp "
+				+ "set work_experience_work_start_date_present_kv = '"+doj+"',"
+				+ "    work_experience_id_present_kv =  twe.work_experience_id ,"
+				+ "    current_udise_sch_code = zed.allot_kv_code ,"
+				+ "    verify_flag = 'SI',\r\n"
+				+ "    kv_code = zed.allot_kv_code\r\n"
+				+ "from public.teacher_work_experience twe , public.z_emp_details_3107 zed \r\n"
+				+ "where tp.teacher_id ='"+teacherId.toString()+"' and currently_active_yn ='1'\r\n"
+				+ "and zed.teacher_id = twe.teacher_id and twe.teacher_id = tp.teacher_id " ;
+		
+		int i =  nativeRepository.updateQueriesString(strupdateQueriesStringteacher_profile.toString() );
+		
+		String updateFlag= "update public.z_emp_details_3107 set join_date =  '"+doj+"' , join_relieve_flag = '1'  where emp_code ='"+emp_code+"'";
+			
+		int n = nativeRepository.updateQueriesString(updateFlag);
+		String userroleupdate = " update public.role_user  set business_unit_type_code = '"+KvCode.toString()+"' where user_name ='"+emp_code.toString()+"' ";
+		int u = loginNativeRepository.updateQueriesString(userroleupdate);
+		//System.out.print("k  "+ updateQueriesStringteacher_work_experience.toString());
+		System.out.print(k+" "+j+"  "+i +" Queries  "+ strUpdate.toString()+"\r\n"+ updateQueriesStringteacher_work_experience.toString()+"\r\n"+insertQueriesStringteacher_work_experience+"\r\n"+strupdateQueriesStringteacher_profile.toString() +"\r\n"+updateQueriesStringteacher_work_experience.toString());
+		//System.out.print("t   "+insertQueriesStringteacher_work_experience);
+		//System.out.print("i  "+strupdateQueriesStringteacher_profile);
+		
+		//System.out.println(qrObj.toString());
+	} catch (Exception ex) {
+		ex.printStackTrace();
+	}
+	return qrObj;
+}
+
 	
-	
+public QueryResult updateTransferOutByKvCode( String doj, String emp_code) {
+	QueryResult qrObj = null;
+	try {
+		
+		String updateFlag= "update public.z_emp_details_3107 set relieve_date =  '"+doj+"' , join_relieve_flag = '2'  where emp_code ='"+emp_code+"'";
+			
+		int n = nativeRepository.updateQueriesString(updateFlag);
+		
+	} catch (Exception ex) {
+		ex.printStackTrace();
+	}
+	return qrObj;
+}
+
 
 }

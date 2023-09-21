@@ -99,7 +99,25 @@ public class NativeRepository {
 			return mp;
 	    }
  
-
+	  public int updateQueriesString(String queryString){  
+		   System.out.println("Update Query--->"+queryString);
+		  try {
+	      return  jdbcTemplate.update(queryString);
+		  }catch(Exception ex) {
+			  ex.printStackTrace();
+			  return 0;
+		  }
+			
+	    }
+	  
+	  public void insertQueriesString(String queryString){  
+		   System.out.println("Update Query--->"+queryString);
+		  try {
+	      jdbcTemplate.execute(queryString);
+		  }catch(Exception ex) {
+			  ex.printStackTrace();
+		  }
+	    }
 	  
 	  
 	  

@@ -37,12 +37,12 @@ public class UneecopsMasterPostSubjectMappingController {
 	}
 	@PostMapping("/fetch-post-subject-mapping-list")
 	public ResponseEntity<?> fetchPostSubjectMappingList(@RequestBody PostSubjectMappingSearchListReqVO postSubjectMappingSearchListReqVO, Pageable pageable)throws Exception{
-		log.debug("Request received in PostSubjectMappingController --> fetchPostSubjectMappingList()"+ postSubjectMappingSearchListReqVO.toString());
+		//log.debug("Request received in PostSubjectMappingController --> fetchPostSubjectMappingList()"+ postSubjectMappingSearchListReqVO.toString());
 		return new ResponseEntity<>(postSubjectMappingService.fetchPostSubjectMappingList(postSubjectMappingSearchListReqVO, pageable),HttpStatus.OK);
 	}
 	@PostMapping("/fetch-post-subject-mapping-list-with-staff-details")
 	public ResponseEntity<?> fetchPostSubjectMappingListWithStaffDetails(@RequestBody PostSubjectMappingSearchListReqVO postSubjectMappingSearchListReqVO, Pageable pageable)throws Exception{
-		log.debug("Request received in PostSubjectMappingController --> fetchPostSubjectMappingList()"+ postSubjectMappingSearchListReqVO.toString());
+	//	log.debug("Request received in PostSubjectMappingController --> fetchPostSubjectMappingList()"+ postSubjectMappingSearchListReqVO.toString());
 		return new ResponseEntity<>(postSubjectMappingService.fetchPostSubjectMappingListWithStaffDetails(postSubjectMappingSearchListReqVO, pageable),HttpStatus.OK);
 	}
 	

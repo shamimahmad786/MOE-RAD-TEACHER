@@ -15,4 +15,24 @@ public class StaffTypePostMappingReqVO {
 	@NotNull(message = "please enter  designation id")
 	private Integer designationId;
 	private boolean status;
+	public Integer getStaffTypeId() {
+		return staffTypeId;
+	}
+	public void setStaffTypeId(Integer staffTypeId) {
+		this.staffTypeId = staffTypeId;
+	}
+	public Integer getDesignationId() {
+		return designationId;
+	}
+	public void setDesignationId(Integer designationId) {
+		this.designationId = designationId;
+	}
+	public boolean isStatus() {
+		return status;
+	}
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	
+	
 }

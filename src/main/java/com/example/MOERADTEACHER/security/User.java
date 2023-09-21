@@ -242,4 +242,89 @@ public Integer getAccountnonexpired() {
 	            inverseJoinColumns = {
 	                    @JoinColumn(name = "role_id", referencedColumnName = "id")})
 	    private List<Role> roles;
+
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getParentuser() {
+		return parentuser;
+	}
+
+	public void setParentuser(String parentuser) {
+		this.parentuser = parentuser;
+	}
+
+	public Date getCreatedDateTime() {
+		return createdDateTime;
+	}
+
+	public void setCreatedDateTime(Date createdDateTime) {
+		this.createdDateTime = createdDateTime;
+	}
+
+	public String getUserHash() {
+		return userHash;
+	}
+
+	public void setUserHash(String userHash) {
+		this.userHash = userHash;
+	}
+
+	public String getBusinessUnitTypeCode() {
+		return businessUnitTypeCode;
+	}
+
+	public void setBusinessUnitTypeCode(String businessUnitTypeCode) {
+		this.businessUnitTypeCode = businessUnitTypeCode;
+	}
+
+	public String getTextPassword() {
+		return textPassword;
+	}
+
+	public void setTextPassword(String textPassword) {
+		this.textPassword = textPassword;
+	}
+
+	public String getVerifyFlag() {
+		return verifyFlag;
+	}
+
+	public void setVerifyFlag(String verifyFlag) {
+		this.verifyFlag = verifyFlag;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
 }

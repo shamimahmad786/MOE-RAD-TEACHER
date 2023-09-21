@@ -109,8 +109,16 @@ public class LoginNativeRepository {
 			return mp;
 	    }
  
-
-	  
+	  public int updateQueriesString(String queryString){  
+		 //  System.out.println("Update Query--->"+queryString);
+		  try {
+	      return  jdbcTemplate.update(queryString);
+		  }catch(Exception ex) {
+			  ex.printStackTrace();
+			  return 0;
+		  }
+			
+	    }
 	  
 	  
 }

@@ -13,4 +13,38 @@ public class StationMasterVo {
 
 	private Boolean status;
 
+	public Integer getId() {
+		return Id;
+	}
+
+	public void setId(Integer id) {
+		Id = id;
+	}
+
+	public Integer getStationCode() {
+		return stationCode;
+	}
+
+	public void setStationCode(Integer stationCode) {
+		this.stationCode = stationCode;
+	}
+
+	public String getStationName() {
+		return stationName;
+	}
+
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
+
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
+	}
+
+	
+	
 }

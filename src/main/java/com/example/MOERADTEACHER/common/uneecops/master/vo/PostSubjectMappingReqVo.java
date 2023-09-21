@@ -10,6 +10,19 @@ public class PostSubjectMappingReqVo {
 	@NotNull(message = "please enter subject id")
 	private int subjectId;
 	
+	public int getPostId() {
+		return postId;
+	}
+	public void setPostId(int postId) {
+		this.postId = postId;
+	}
+	public int getSubjectId() {
+		return subjectId;
+	}
+	public void setSubjectId(int subjectId) {
+		this.subjectId = subjectId;
+	}
+	
 	
 	
 	

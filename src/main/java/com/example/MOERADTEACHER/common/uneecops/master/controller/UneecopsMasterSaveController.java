@@ -120,35 +120,35 @@ public class UneecopsMasterSaveController {
 
 	@PostMapping("/update-staff-type")
 	public ResponseEntity<?> updateStaffType(@Valid @RequestBody StaffTypeUpdateMasterReqVO staffTypeUpdateReqVO){
-		log.debug("Request received in UneecopsMasterSaveController --> updateStaffType" + staffTypeUpdateReqVO.toString());			
+	//	log.debug("Request received in UneecopsMasterSaveController --> updateStaffType" + staffTypeUpdateReqVO.toString());			
 		uneecopsMasterService.updateStaffTypeMaster(staffTypeUpdateReqVO);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS,HttpStatus.OK);
 	}
 	
 	@PostMapping("/save-designation")
 	public ResponseEntity<?> saveDesignationMaster(@Valid @RequestBody DesignationMasterReqVO designationMasterReqVO){
-		log.debug("Request received in UneecopsMasterSaveController --> saveDesignationMaster" + designationMasterReqVO.toString());				
+	//	log.debug("Request received in UneecopsMasterSaveController --> saveDesignationMaster" + designationMasterReqVO.toString());				
 		uneecopsMasterService.saveDesignationMaster(designationMasterReqVO);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS,HttpStatus.OK);
 	}
 	
 	@PostMapping("/update-designation")
 	public ResponseEntity<?> updateDesignationMaster(@Valid @RequestBody DesignationUpdateMasterReqVO designationUpdateReqVO){
-		log.debug("Request received in UneecopsMasterSaveController --> updateDesignationMaster" + designationUpdateReqVO.toString());				
+	//	log.debug("Request received in UneecopsMasterSaveController --> updateDesignationMaster" + designationUpdateReqVO.toString());				
 		uneecopsMasterService.updateDesignationMaster(designationUpdateReqVO);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS,HttpStatus.OK);
 	}
 	
 	@PostMapping("/save-subject")
 	public ResponseEntity<?> saveSubjectMaster(@Valid @RequestBody SubjectMasterReqVO subjectMasterReqVO){
-		log.debug("Request received in UneecopsMasterSaveController --> saveSubjectMaster" + subjectMasterReqVO.toString());				
+	//	log.debug("Request received in UneecopsMasterSaveController --> saveSubjectMaster" + subjectMasterReqVO.toString());				
 		uneecopsMasterService.saveSubjectMaster(subjectMasterReqVO);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS,HttpStatus.OK);
 	}
 	
 	@PostMapping("/update-subject")
 	public ResponseEntity<?> updateSubjectMaster(@Valid @RequestBody SubjectMasterUpdateReqVO subUpdateReqVO){
-		log.debug("Request received in UneecopsMasterSaveController --> updateSubjectMaster" + subUpdateReqVO.toString());				
+	//	log.debug("Request received in UneecopsMasterSaveController --> updateSubjectMaster" + subUpdateReqVO.toString());				
 		uneecopsMasterService.updateSubjectMaster(subUpdateReqVO);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS,HttpStatus.OK);
 	}

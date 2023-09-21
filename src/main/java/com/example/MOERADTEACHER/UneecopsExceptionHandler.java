@@ -49,7 +49,7 @@ public class UneecopsExceptionHandler {
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<?> globalExcetionHanlder(Exception ex){
-		log.debug("Gloabal Excepiton handler called ------->   "+ex.getMessage());
+		//log.debug("Gloabal Excepiton handler called ------->   "+ex.getMessage());
 		String errorMsg = "Request can not be processed, please try again.";
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).contentType(MediaType.APPLICATION_JSON)
 				.body(errorMsg);

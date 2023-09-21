@@ -559,7 +559,26 @@ public class TransferController {
 		return ResponseEntity.ok(transferImpl.getTransferStationByEmployee(Integer.parseInt(mp.get("teacherId")),mp.get("regionCode")));
 	}
 	
+	@RequestMapping(value = "/getTransferINByKvCode", method = RequestMethod.POST)
+	public ResponseEntity<CustomResponse> getTransferINByKvCode(@RequestBody String data) throws Exception {		
+		Map<String,Object>  dataObj=customObjectMapper.getMapObject(data);
+		return ResponseEntity.ok(ResponseEntityBeans.reponseBoject(1, "sucess", transferImpl.getTransferINByKvCode(String.valueOf(dataObj.get("kvCode"))), HttpStatus.OK.toString()));
+	}
 	
+	
+	
+	@RequestMapping(value = "/updateTransferINByKvCode", method = RequestMethod.POST)
+	public ResponseEntity<CustomResponse> updateTransferINByKvCode(@RequestBody String data) throws Exception {		
+		Map<String,Object>  dataObj=customObjectMapper.getMapObject(data);
+		return ResponseEntity.ok(ResponseEntityBeans.reponseBoject(1, "sucess", transferImpl.updateTransferINByKvCode(String.valueOf(dataObj.get("teacherId")), String.valueOf(dataObj.get("doj")), String.valueOf(dataObj.get("kvCode")), String.valueOf(dataObj.get("emp_code"))), HttpStatus.OK.toString()));
+	}
+	
+	
+	@RequestMapping(value = "/updateTransferOutByKvCode", method = RequestMethod.POST)
+	public ResponseEntity<CustomResponse> updateTransferOutByKvCode(@RequestBody String data) throws Exception {		
+		Map<String,Object>  dataObj=customObjectMapper.getMapObject(data);
+		return ResponseEntity.ok(ResponseEntityBeans.reponseBoject(1, "sucess", transferImpl.updateTransferOutByKvCode(String.valueOf(dataObj.get("doj")),  String.valueOf(dataObj.get("emp_code"))), HttpStatus.OK.toString()));
+	}
 	
 
 }

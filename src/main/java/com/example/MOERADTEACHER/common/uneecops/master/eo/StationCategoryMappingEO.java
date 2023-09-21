@@ -41,6 +41,67 @@ public class StationCategoryMappingEO {
 	private String updatedBy;
 	@Column(name = "updated_date")
 	private Timestamp updatedDate;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public Integer getStationCode() {
+		return stationCode;
+	}
+	public void setStationCode(Integer stationCode) {
+		this.stationCode = stationCode;
+	}
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+	public LocalDate getFromDate() {
+		return fromDate;
+	}
+	public void setFromDate(LocalDate fromDate) {
+		this.fromDate = fromDate;
+	}
+	public LocalDate getToDate() {
+		return toDate;
+	}
+	public void setToDate(LocalDate toDate) {
+		this.toDate = toDate;
+	}
+	public boolean isStatus() {
+		return status;
+	}
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public Timestamp getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	public Timestamp getUpdatedDate() {
+		return updatedDate;
+	}
+	public void setUpdatedDate(Timestamp updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	
 	
 	
 	

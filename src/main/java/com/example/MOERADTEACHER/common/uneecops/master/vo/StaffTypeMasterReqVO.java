@@ -12,6 +12,22 @@ public class StaffTypeMasterReqVO {
 	
 	private boolean status;
 
+	public String getStaffType() {
+		return staffType;
+	}
+
+	public void setStaffType(String staffType) {
+		this.staffType = staffType;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
 
 	
 	

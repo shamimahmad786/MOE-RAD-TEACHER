@@ -37,8 +37,7 @@ public class UneecopsMasterMappingController {
 	@PostMapping("/region-stations")
 	public ResponseEntity<?> saveRegionStationsMapping(
 			@Valid @RequestBody RegionStationsMappingReqVo regionStationsMappingReqVo) {
-		log.debug("Request received in UneecopsMasterMappingController --> saveRegionStationsMapping()"
-				+ regionStationsMappingReqVo.toString());
+	//	log.debug("Request received in UneecopsMasterMappingController --> saveRegionStationsMapping()"				+ regionStationsMappingReqVo.toString());
 		uneecopsMasterMappingService.saveRegionStationsMapping(regionStationsMappingReqVo);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS, HttpStatus.OK);
 	}
@@ -46,8 +45,7 @@ public class UneecopsMasterMappingController {
 	// one to many
 	@PostMapping("/schools-station")
 	public ResponseEntity<?> saveStationSchoolsMapping(@Valid @RequestBody SchoolStationMappingReqVo reqVO) {
-		log.debug("Request received in UneecopsMasterMappingController --> saveStationSchoolsMapping()"
-				+ reqVO.toString());
+	//	log.debug("Request received in UneecopsMasterMappingController --> saveStationSchoolsMapping()"				+ reqVO.toString());
 		uneecopsMasterMappingService.saveStationSchoolsMapping(reqVO);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS, HttpStatus.OK);
 	}
@@ -55,8 +53,7 @@ public class UneecopsMasterMappingController {
 	@PostMapping("/station-category")
 	public ResponseEntity<?> saveStationCategoryMapping(
 			@Valid @RequestBody StationCategoryMappingReqVO stationCategoryMappingReqVO) {
-		log.debug("Request received in UneecopsMasterMappingController --> saveStationCategoryMapping()"
-				+ stationCategoryMappingReqVO.toString());
+	//	log.debug("Request received in UneecopsMasterMappingController --> saveStationCategoryMapping()"				+ stationCategoryMappingReqVO.toString());
 		uneecopsMasterMappingService.saveStationCategoryMapping(stationCategoryMappingReqVO);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS, HttpStatus.OK);
 	}
@@ -64,8 +61,7 @@ public class UneecopsMasterMappingController {
 	@PostMapping("/staff-type-post")
 	public ResponseEntity<?> saveStaffTypePostMapping(
 			@Valid @RequestBody StaffTypePostMappingReqVO reqVo) {
-		log.debug("Request received in UneecopsMasterMappingController --> saveStationCategoryMapping()"
-				+ reqVo.toString());
+	//	log.debug("Request received in UneecopsMasterMappingController --> saveStationCategoryMapping()"				+ reqVo.toString());
 		uneecopsMasterMappingService.saveStaffTypePostMapping(reqVo);
 		return new ResponseEntity<>(UneeApiResMsgEnum.SUCCESS, HttpStatus.OK);
 	}

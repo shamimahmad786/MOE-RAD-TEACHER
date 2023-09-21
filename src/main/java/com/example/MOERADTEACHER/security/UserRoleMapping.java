@@ -62,5 +62,117 @@ public class UserRoleMapping {
 	    
 	    @Column(name = "role_type")
 	    private String roleType;
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+
+		public Integer getUserId() {
+			return userId;
+		}
+
+		public void setUserId(Integer userId) {
+			this.userId = userId;
+		}
+
+		public Integer getRoleId() {
+			return roleId;
+		}
+
+		public void setRoleId(Integer roleId) {
+			this.roleId = roleId;
+		}
+
+		public Integer getApplicationId() {
+			return applicationId;
+		}
+
+		public void setApplicationId(Integer applicationId) {
+			this.applicationId = applicationId;
+		}
+
+		public String getApplicationName() {
+			return applicationName;
+		}
+
+		public void setApplicationName(String applicationName) {
+			this.applicationName = applicationName;
+		}
+
+		public Integer getApplicationRoleId() {
+			return applicationRoleId;
+		}
+
+		public void setApplicationRoleId(Integer applicationRoleId) {
+			this.applicationRoleId = applicationRoleId;
+		}
+
+		public Integer getUserLevelId() {
+			return userLevelId;
+		}
+
+		public void setUserLevelId(Integer userLevelId) {
+			this.userLevelId = userLevelId;
+		}
+
+		public String getUserLevelName() {
+			return userLevelName;
+		}
+
+		public void setUserLevelName(String userLevelName) {
+			this.userLevelName = userLevelName;
+		}
+
+		public String getRoleName() {
+			return roleName;
+		}
+
+		public void setRoleName(String roleName) {
+			this.roleName = roleName;
+		}
+
+		public String getPermision() {
+			return permision;
+		}
+
+		public void setPermision(String permision) {
+			this.permision = permision;
+		}
+
+		public String getContext() {
+			return context;
+		}
+
+		public void setContext(String context) {
+			this.context = context;
+		}
+
+		public Integer getOrganizationHierarchyMasterId() {
+			return organizationHierarchyMasterId;
+		}
+
+		public void setOrganizationHierarchyMasterId(Integer organizationHierarchyMasterId) {
+			this.organizationHierarchyMasterId = organizationHierarchyMasterId;
+		}
+
+		public String getUserName() {
+			return userName;
+		}
+
+		public void setUserName(String userName) {
+			this.userName = userName;
+		}
+
+		public String getRoleType() {
+			return roleType;
+		}
+
+		public void setRoleType(String roleType) {
+			this.roleType = roleType;
+		}
 	   
 }

@@ -32,6 +32,55 @@ public class DesignationMasterEO {
 	private Timestamp updatedDate;
 	@Column(name="status")
 	private boolean status;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getPostCode() {
+		return postCode;
+	}
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
+	}
+	public String getPostName() {
+		return postName;
+	}
+	public void setPostName(String postName) {
+		this.postName = postName;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public Timestamp getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	public Timestamp getUpdatedDate() {
+		return updatedDate;
+	}
+	public void setUpdatedDate(Timestamp updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	public boolean isStatus() {
+		return status;
+	}
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	
 	
 	
 }

@@ -13,5 +13,39 @@ public class RegionMasterVo {
 	 
 	private Boolean Status;
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getRegionCode() {
+		return regionCode;
+	}
+
+	public void setRegionCode(Integer regionCode) {
+		this.regionCode = regionCode;
+	}
+
+	public String getRegionName() {
+		return regionName;
+	}
+
+	public void setRegionName(String regionName) {
+		this.regionName = regionName;
+	}
+
+	public Boolean getStatus() {
+		return Status;
+	}
+
+	public void setStatus(Boolean status) {
+		Status = status;
+	}
+	
+	
+
 
 }
